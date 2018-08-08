@@ -24,7 +24,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText mNameEditText;
     private EditText mEmailEditText;
     private EditText mPasswordEditText;
     private Button mRegisterButton;
@@ -37,14 +36,11 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void register(View view) {
 
-        String name = mNameEditText.getText().toString().trim();
         String email = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
 
-        if(TextUtils.isEmpty(name)) {
-            showAlertDialog("Error!", "Name cannot be empty.");
-        }
-        else if(TextUtils.isEmpty(email)) {
+
+        if(TextUtils.isEmpty(email)) {
             showAlertDialog("Error!", "Email cannot be empty.");
         }
         else if(TextUtils.isEmpty(password)) {
@@ -56,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
             mDialog.show();
             mDialog.setCancelable(false);
 
-            registerUserToFirebase(email, password, name);
+            registerUserToFirebase(email, password);
         }
 
     }
@@ -84,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-    private void registerUserToFirebase(String email, String password, final String name) {
+    private void registerUserToFirebase(String email, String password) {
 
         mAuth.createUserWithEmailAndPassword(email, password)
                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -107,7 +103,6 @@ public class RegisterActivity extends AppCompatActivity {
                            final FirebaseUser currentUser = task.getResult().getUser();
 
                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                   .setDisplayName(name)
                                    .build();
 
                            currentUser.updateProfile(profileUpdates).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -115,8 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
                                public void onSuccess(Void aVoid) {
                                    userRegisteredSuccessfully = true;
 
-                                   com.tekapic.User newUser = new com.tekapic.User(currentUser.getDisplayName(), currentUser.getEmail(),
-                                           "", currentUser.getUid());
+                                   com.tekapic.User newUser = new com.tekapic.User(currentUser.getEmail(), currentUser.getUid());
                                    mUsersDB.child(currentUser.getUid()).setValue(newUser);
 
                                    showAlertDialog("Affirmation!", "You have successfully registered.");
@@ -136,7 +130,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        mNameEditText = findViewById(R.id.nameEditTextRegister);
         mEmailEditText = findViewById(R.id.emailEditTextRegister);
         mPasswordEditText = findViewById(R.id.passwordEditTextRegister);
         mRegisterButton = findViewById(R.id.registerButton);
