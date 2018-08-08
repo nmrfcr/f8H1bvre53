@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "939109862644",
+    "firebase_url": "https://tekapic.firebaseio.com",
+    "project_id": "tekapic",
+    "storage_bucket": "tekapic.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:939109862644:android:99da8ee5426b64ca",
+        "android_client_info": {
+          "package_name": "com.tekapic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "939109862644-s0ctskujqh5kurnpml61lj5efkh2051v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tekapic",
+            "certificate_hash": "862591d62e663fb241a710026e7b6ec5d72ec688"
+          }
+        },
+        {
+          "client_id": "939109862644-clct1q1dbp8bff6uqkvk8of5q4qlienf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfmeiQu4OktSf7VstBBBrkztRPmRkGFe8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "939109862644-clct1q1dbp8bff6uqkvk8of5q4qlienf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
