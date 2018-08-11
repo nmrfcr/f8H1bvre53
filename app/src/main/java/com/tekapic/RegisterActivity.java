@@ -110,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
                                public void onSuccess(Void aVoid) {
                                    userRegisteredSuccessfully = true;
 
-                                   com.tekapic.User newUser = new com.tekapic.User(currentUser.getEmail(), currentUser.getUid());
+                                   com.tekapic.model.User newUser = new com.tekapic.model.User(currentUser.getEmail(), currentUser.getUid());
                                    mUsersDB.child(currentUser.getUid()).setValue(newUser);
 
                                    showAlertDialog("Affirmation!", "You have successfully registered.");

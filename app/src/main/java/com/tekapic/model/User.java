@@ -1,4 +1,4 @@
-package com.tekapic;
+package com.tekapic.model;
 /**
  * Created by LEV on 28/07/2018.
  */
