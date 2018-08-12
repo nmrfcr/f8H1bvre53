@@ -13,6 +13,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -23,7 +24,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -32,8 +35,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
-import com.tekapic.model.Status;
+import com.tekapic.model.Picture;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -98,8 +102,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-
-
     private void goToLoginActivity() {
         finish();
         startActivity(new Intent(HomeActivity.this, LoginActivity.class));
@@ -136,18 +138,17 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onStart() {
         super.onStart();
 
         Query query = mStatusDB;
-        FirebaseRecyclerOptions<Status> options = new FirebaseRecyclerOptions.Builder<Status>()
-                .setQuery(query, Status.class)
+        FirebaseRecyclerOptions<Picture> options = new FirebaseRecyclerOptions.Builder<Picture>()
+                .setQuery(query, Picture.class)
                 .build();
 
         FirebaseRecyclerAdapter firebaseRecyclerAdapter =
-                new FirebaseRecyclerAdapter<Status, StatusViewHolder>(options) {
+                new FirebaseRecyclerAdapter<Picture, StatusViewHolder>(options) {
 
 
                     @NonNull
@@ -155,22 +156,23 @@ public class HomeActivity extends AppCompatActivity {
                     public StatusViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                         View view = LayoutInflater
                                 .from(parent.getContext())
-                                .inflate(R.layout.status_row, parent, false);
+                                .inflate(R.layout.pictures_row, parent, false);
 
                         return new StatusViewHolder(view);
                     }
 
                     @Override
-                    protected void onBindViewHolder(@NonNull final StatusViewHolder holder, int position, @NonNull final Status model) {
+                    protected void onBindViewHolder(@NonNull final StatusViewHolder holder, int position, @NonNull final Picture model) {
 
-                        try {
-                            holder.setPicture(getApplicationContext(), model.getPictureUrl());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                            // Toast.makeText(HomeActivity.this, "Position: " + position, Toast.LENGTH_SHORT).show();
+                            try {
+                                holder.setPictureInLeft(getApplicationContext(), model.getPictureUrl());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
 
                         //listen to image button clicks
-                        holder.userImageButton.setOnClickListener(new View.OnClickListener() {
+                        holder.imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 Toast.makeText(getApplicationContext(), "clicked!", Toast.LENGTH_SHORT).show();
@@ -191,29 +193,30 @@ public class HomeActivity extends AppCompatActivity {
     public static class StatusViewHolder extends RecyclerView.ViewHolder {
 
         View view;
-        public ImageButton userImageButton;
+        public ImageView imageView;
+
+
 
         public StatusViewHolder(View itemView) {
             super(itemView);
             this.view = itemView;
-            userImageButton = view.findViewById(R.id.userImageButton);
+            imageView = view.findViewById(R.id.rowImageView);
         }
 
-        public void setPicture(Context context, String pictureUrl) {
-            ImageButton userImageButton = view.findViewById(R.id.userImageButton);
-            Picasso.with(context).load(pictureUrl).placeholder(R.mipmap.ic_launcher).into(userImageButton);
+        public void setPictureInLeft(Context context, String pictureUrl) {
+            ImageView imageView = view.findViewById(R.id.rowImageView);
+            Picasso.with(context).load(pictureUrl).placeholder(R.mipmap.loading_icon).
+                    memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(imageView);
 
         }
-
-        public void setUserName(String name) {
-//            TextView userNameTextView = view.findViewById(R.id.userNameTextView);
-//            userNameTextView.setText(name);
-        }
-
-        public void setUserStatus(String status) {
-//            TextView userStatusTextView = view.findViewById(R.id.userStatusTextView);
-//            userStatusTextView.setText(status);
-        }
+//        public void setPictureInCenter(Context context, String pictureUrl) {
+//            ImageButton userImageButton = view.findViewById(R.id.userImageButton2);
+//            Picasso.with(context).load(pictureUrl).placeholder(R.mipmap.ic_launcher).into(userImageButton);
+//        }
+//        public void setPictureInRight(Context context, String pictureUrl) {
+//            ImageButton userImageButton = view.findViewById(R.id.userImageButton3);
+//            Picasso.with(context).load(pictureUrl).placeholder(R.mipmap.ic_launcher).into(userImageButton);
+//        }
 
     }
 
@@ -322,12 +325,19 @@ public class HomeActivity extends AppCompatActivity {
 
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+
+
         mRecyclerView = findViewById(R.id.homeRecyclerView);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        //take the latest data to RecyclerView
-        linearLayoutManager.setReverseLayout(true);
-        linearLayoutManager.setStackFromEnd(true);
+
+        GridLayoutManager mGridLayoutManager = new GridLayoutManager(HomeActivity.this, 3);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
+
+
+//        //take the latest data to RecyclerView
+//        linearLayoutManager.setReverseLayout(true);
+//        linearLayoutManager.setStackFromEnd(true);
     }
 }

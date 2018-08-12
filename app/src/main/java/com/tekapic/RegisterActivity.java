@@ -26,7 +26,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private EditText mEmailEditText;
     private EditText mPasswordEditText;
-    private Button mRegisterButton;
 
     private FirebaseAuth mAuth;
     private ProgressDialog mDialog;
@@ -76,7 +75,6 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
 
-
         builder.create().show();
     }
 
@@ -121,9 +119,7 @@ public class RegisterActivity extends AppCompatActivity {
                        }
                    }
                });
-
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +128,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         mEmailEditText = findViewById(R.id.emailEditTextRegister);
         mPasswordEditText = findViewById(R.id.passwordEditTextRegister);
-        mRegisterButton = findViewById(R.id.registerButton);
 
         mAuth = FirebaseAuth.getInstance();
         mUsersDB = FirebaseDatabase.getInstance().getReference().child("Users");

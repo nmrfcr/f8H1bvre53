@@ -23,7 +23,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText mEmailEditText;
     private EditText mPasswordEditText;
-    private Button mLoginButton;
 
     private FirebaseAuth mAuth;
     private ProgressDialog mDialog;
@@ -111,7 +110,6 @@ public class LoginActivity extends AppCompatActivity {
 
         mEmailEditText = findViewById(R.id.emailEditTextLogin);
         mPasswordEditText = findViewById(R.id.passwordEditTextLogin);
-        mLoginButton = findViewById(R.id.loginButton);
 
         mAuth = FirebaseAuth.getInstance();
         mDialog = new ProgressDialog(this);
