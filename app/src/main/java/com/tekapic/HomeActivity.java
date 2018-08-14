@@ -16,6 +16,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,15 +31,24 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.tekapic.model.Picture;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -49,6 +60,7 @@ public class HomeActivity extends AppCompatActivity {
     private DatabaseReference mUserDB;
     private RecyclerView mRecyclerView;
     private Uri mPhotoUri;
+
 
 
     public void popUpAlertDialog() {
@@ -118,7 +130,9 @@ public class HomeActivity extends AppCompatActivity {
                 popUpAlertDialog();
                 //allert dialog
                 return true;
-
+            case R.id.albums:
+                startActivity(new Intent(HomeActivity.this, AlbumsActivity.class));
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -164,12 +178,17 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     protected void onBindViewHolder(@NonNull final StatusViewHolder holder, int position, @NonNull final Picture model) {
 
-                            // Toast.makeText(HomeActivity.this, "Position: " + position, Toast.LENGTH_SHORT).show();
+//                        Log.i("model" , model.getPictureUrl());
+//                        if(model.getPets().equals("1"))
+
+
+
                             try {
                                 holder.setPictureInLeft(getApplicationContext(), model.getPictureUrl());
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
 
                         //listen to image button clicks
                         holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -204,9 +223,17 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         public void setPictureInLeft(Context context, String pictureUrl) {
+
             ImageView imageView = view.findViewById(R.id.rowImageView);
-            Picasso.with(context).load(pictureUrl).placeholder(R.mipmap.loading_icon).
-                    memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(imageView);
+
+            Glide.with(context)
+                    .load(pictureUrl)
+                    .apply(new RequestOptions().placeholder(R.mipmap.loading_icon))
+                    .into(imageView);
+
+
+//            Picasso.with(context).load(pictureUrl).placeholder(R.mipmap.loading_icon).
+//                    memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(imageView);
 
         }
 //        public void setPictureInCenter(Context context, String pictureUrl) {
@@ -337,7 +364,61 @@ public class HomeActivity extends AppCompatActivity {
 
 
 //        //take the latest data to RecyclerView
-//        linearLayoutManager.setReverseLayout(true);
-//        linearLayoutManager.setStackFromEnd(true);
+//        mGridLayoutManager.setReverseLayout(true);
+//        mGridLayoutManager.setStackFromEnd(true);
+
     }
+
+    public void getUsersPictures() {
+
+        //to fetch all the users of firebase Auth app
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+
+        DatabaseReference usersdRef = rootRef.child(mAuth.getUid());
+
+        ValueEventListener eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                    String date = ds.child("date").getValue(String.class);
+
+                    Log.d("Date from firebase", date);
+
+//                    array.add(name);
+
+                }
+//                ArrayAdapter<String> adapter = new ArrayAdapter(OtherUsersActivity.this, android.R.layout.simple_list_item_1, array);
+//
+//                mListView.setAdapter(adapter);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        usersdRef.addListenerForSingleValueEvent(eventListener);
+    }
+
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        unbindDrawables(findViewById(R.id.rowImageView));
+//        System.gc();
+//    }
+//
+//    private void unbindDrawables(View view) {
+//        if (view.getBackground() != null) {
+//            view.getBackground().setCallback(null);
+//        }
+//        if (view instanceof ViewGroup) {
+//            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+//                unbindDrawables(((ViewGroup) view).getChildAt(i));
+//            }
+//            ((ViewGroup) view).removeAllViews();
+//        }
+//    }
+
 }

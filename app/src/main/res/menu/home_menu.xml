@@ -9,6 +9,12 @@
         app:showAsAction="always"
         />
 
+    <item
+        android:title="Albums"
+        android:id="@+id/albums"
+        app:showAsAction="always"
+        />
+
 
 
     <item
