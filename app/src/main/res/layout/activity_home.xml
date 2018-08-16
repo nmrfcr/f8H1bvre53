@@ -4,15 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@android:color/black"
     android:layoutDirection="ltr"
+    android:orientation="vertical"
     tools:context="com.tekapic.HomeActivity">
 
 
+    <Button
+        android:id="@+id/addNewPicButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="buttonClick"
+        android:text="Add your first picture"
+        android:visibility="gone" />
+
     <android.support.v7.widget.RecyclerView
-        android:scrollbars="vertical"
         android:id="@+id/homeRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
 
 </LinearLayout>

@@ -1,13 +1,19 @@
 package com.tekapic;
 
 import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -42,10 +48,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.tekapic.model.Picture;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,14 +66,22 @@ public class HomeActivity extends AppCompatActivity {
 
     private static final int REQUEST_PHOTO_CAPTURE = 1;
     private static final int REQUEST_PHOTO_PICK = 2;
+    private static final String dstDir = Environment.getExternalStorageDirectory() +
+            File.separator + "Pictures" + File.separator + "Tekapic";
 
     private FirebaseAuth mAuth;
     private DatabaseReference mStatusDB;
-    private DatabaseReference mUserDB;
+//    private DatabaseReference mUserDB;
     private RecyclerView mRecyclerView;
     private Uri mPhotoUri;
+    private Button button;
+    private ProgressDialog mDialog;
 
 
+
+    public void buttonClick(View view) {
+        popUpAlertDialog();
+    }
 
     public void popUpAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
@@ -72,7 +92,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //Take a picture
-                Toast.makeText(HomeActivity.this, "Take a picture", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(HomeActivity.this, "Take a picture", Toast.LENGTH_SHORT).show();
+                dispatchTakePhotoIntent();
             }
         });
         builder.setNegativeButton("Choose a picture", new DialogInterface.OnClickListener() {
@@ -118,6 +139,7 @@ public class HomeActivity extends AppCompatActivity {
         finish();
         startActivity(new Intent(HomeActivity.this, LoginActivity.class));
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -194,11 +216,10 @@ public class HomeActivity extends AppCompatActivity {
                         holder.imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Toast.makeText(getApplicationContext(), "clicked!", Toast.LENGTH_SHORT).show();
-                                //go to ProfileActivity
-//                                Intent goToProfile = new Intent(HomeActivity.this, ProfileActivity.class);
-//                                goToProfile.putExtra("USER_ID", model.getUserId());
-//                                startActivity(goToProfile);
+                                //go to PictureActivity
+                                Intent intent = new Intent(HomeActivity.this, PictureActivity.class);
+                                intent.putExtra("MyClass", model);
+                                startActivity(intent);
                             }
                         });
                     }
@@ -259,15 +280,78 @@ public class HomeActivity extends AppCompatActivity {
             startActivityForResult(choosePhotoIntent, REQUEST_PHOTO_PICK);
         }
     }
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void dispatchTakePhotoIntent() {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{android.Manifest.permission.CAMERA}, REQUEST_PHOTO_CAPTURE);
+        }
+        else if(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},  REQUEST_PHOTO_CAPTURE);
+        }
+        else  {
+            Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if(takePhotoIntent.resolveActivity(getPackageManager()) != null) {
+
+
+
+                Log.i("perAsk","in else");
+                StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                StrictMode.setVmPolicy(builder.build());
+
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.TITLE, "New Picture");
+                values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+
+
+                mPhotoUri = getContentResolver().insert(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+
+
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
+
+
+
+                startActivityForResult(intent, REQUEST_PHOTO_CAPTURE);
+
+
+
+
+
+
+            }
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == REQUEST_PHOTO_CAPTURE && resultCode == RESULT_OK) {
-            //success taking photo
-//            mPhotoUri = data.getData();
-//            mUserImageView.setImageURI(mPhotoUri);
+
+
+
+            copyFileOrDirectory(getRealPathFromURI(mPhotoUri), dstDir);
+
+            File src = new File(getRealPathFromURI(mPhotoUri));
+
+            File file = new File(getRealPathFromURI(mPhotoUri));
+
+            file.delete();
+
+            File finalFile = new File(dstDir + File.separator + src.getName());
+
+            Uri uri = Uri.fromFile(finalFile);
+
+
+            PostActivity.pictureUri = uri;
+            Intent intent = new Intent(this, PostActivity.class);
+            startActivity(intent);
+
+
+
         }
         else if(requestCode == REQUEST_PHOTO_PICK && resultCode == RESULT_OK) {
             //success choosing photo
@@ -295,7 +379,7 @@ public class HomeActivity extends AppCompatActivity {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
 //                    Toast.makeText(getApplicationContext(), "Permission granted", Toast.LENGTH_SHORT).show();
-                    //dispatchTakePhotoIntent();
+                    dispatchTakePhotoIntent();
                 } else {
 
                     // permission denied, boo! Disable the
@@ -334,21 +418,24 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_home);
+//
+//        mDialog.setMessage("Please wait...");
+//        mDialog.show();
+//        mDialog.setCancelable(false);
 
         mAuth = FirebaseAuth.getInstance();
-        if(mAuth.getCurrentUser() == null) {
+        if (mAuth.getCurrentUser() == null) {
             goToLoginActivity();
             return;
         }
 
-
-        setContentView(R.layout.activity_home);
+        button = findViewById(R.id.addNewPicButton);
 
         mStatusDB = FirebaseDatabase.getInstance().getReference().child(mAuth.getUid());
 
 
-        mUserDB = FirebaseDatabase.getInstance().getReference().child("Users");
+//        mUserDB = FirebaseDatabase.getInstance().getReference().child("Users");
 
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -367,58 +454,175 @@ public class HomeActivity extends AppCompatActivity {
 //        mGridLayoutManager.setReverseLayout(true);
 //        mGridLayoutManager.setStackFromEnd(true);
 
-    }
-
-    public void getUsersPictures() {
-
-        //to fetch all the users of firebase Auth app
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-
-        DatabaseReference usersdRef = rootRef.child(mAuth.getUid());
-
-        ValueEventListener eventListener = new ValueEventListener() {
+        mStatusDB.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+            public void onDataChange(DataSnapshot snapshot) {
 
-                    String date = ds.child("date").getValue(String.class);
-
-                    Log.d("Date from firebase", date);
-
-//                    array.add(name);
-
+                if (!snapshot.exists()) {
+                    button.setVisibility(View.VISIBLE);
                 }
-//                ArrayAdapter<String> adapter = new ArrayAdapter(OtherUsersActivity.this, android.R.layout.simple_list_item_1, array);
-//
-//                mListView.setAdapter(adapter);
-
+                else {
+                    button.setVisibility(View.GONE);
+                }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        };
-        usersdRef.addListenerForSingleValueEvent(eventListener);
+        });
+
     }
 
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        unbindDrawables(findViewById(R.id.rowImageView));
-//        System.gc();
+
+    /****************The starting  proccess of the pictures making**************/
+
+
+    public static void copyFileOrDirectory(String srcDir, String dstDir) {
+
+        try {
+            File src = new File(srcDir);
+            File dst = new File(dstDir, src.getName());
+
+            if (src.isDirectory()) {
+
+                String files[] = src.list();
+
+                int filesLength = files.length;
+
+                for (int i = 0; i < filesLength; i++) {
+                    String src1 = (new File(src, files[i]).getPath());
+                    String dst1 = dst.getPath();
+                    copyFileOrDirectory(src1, dst1);
+                }
+            } else {
+                copyFile(src, dst);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+//
+//
+    public static void copyFile(File sourceFile, File destFile) throws IOException {
+
+        if (!destFile.getParentFile().exists())
+            destFile.getParentFile().mkdirs();
+        if (!destFile.exists()) {
+            destFile.createNewFile();
+        }
+        FileChannel source = null;
+        FileChannel destination = null;
+        try {
+
+            source = new FileInputStream(sourceFile).getChannel();
+            destination = new FileOutputStream(destFile).getChannel();
+            destination.transferFrom(source, 0, source.size());
+        }
+        finally {
+            if (source != null) {
+                source.close();
+            }
+            if (destination != null) {
+                destination.close();
+            }
+
+        }
+    }
+//
+//
+//    @RequiresApi(api = Build.VERSION_CODES.M)
+//
+//    public void takeAPicture(View view) {
+//        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//            requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE,android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+//        }else
+//        {
+//            Log.i("perAsk","in else");
+//            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+//            StrictMode.setVmPolicy(builder.build());
+//
+//            ContentValues values = new ContentValues();
+//            values.put(MediaStore.Images.Media.TITLE, "New Picture");
+//            values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+//
+//
+//            imageUri = getContentResolver().insert(
+//                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+//
+//
+//
+//            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+//
+//
+//
+//            startActivityForResult(intent, 111);
+//
+//        }
 //    }
 //
-//    private void unbindDrawables(View view) {
-//        if (view.getBackground() != null) {
-//            view.getBackground().setCallback(null);
-//        }
-//        if (view instanceof ViewGroup) {
-//            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-//                unbindDrawables(((ViewGroup) view).getChildAt(i));
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if(resultCode == -1) {
+//
+//            copyFileOrDirectory(getRealPathFromURI(imageUri), dstDir);
+//
+//            File src = new File(getRealPathFromURI(imageUri));
+//
+//            File file = new File(getRealPathFromURI(imageUri));
+//
+//            file.delete();
+//
+//            File finalFile = new File(dstDir + File.separator + src.getName());
+//
+//            Uri uri = Uri.fromFile(finalFile);
+//
+//            InputStream iStream = null;
+//            try {
+//                iStream = getContentResolver().openInputStream(uri);
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
 //            }
-//            ((ViewGroup) view).removeAllViews();
+//            try {
+//                pictureInByteArray = getBytes(iStream);
+//                openPostActivity();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 //        }
 //    }
+//
+//    public byte[] getBytes(InputStream inputStream) throws IOException {
+//        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+//        int bufferSize = 1024;
+//        byte[] buffer = new byte[bufferSize];
+//
+//        int len = 0;
+//        while ((len = inputStream.read(buffer)) != -1) {
+//            byteBuffer.write(buffer, 0, len);
+//        }
+//        return byteBuffer.toByteArray();
+//    }
+//
+    public String getRealPathFromURI(Uri contentUri) {
+
+        String[] proj = { MediaStore.Images.Media.DATA };
+        Cursor cursor = managedQuery(contentUri, proj, null, null, null);
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+
+        return cursor.getString(column_index);
+
+    }
+
+
+    /****************The end of the proccess of pictures making**************/
+
+
 
 }

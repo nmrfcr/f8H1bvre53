@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".App"
@@ -28,17 +29,23 @@
         <activity
             android:name=".RegisterActivity"
             android:parentActivityName=".LoginActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LoginActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".PostActivity"
             android:parentActivityName=".HomeActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AlbumsActivity"
+            android:parentActivityName=".HomeActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".AlbumsActivity" android:parentActivityName=".HomeActivity"
-            android:screenOrientation="portrait"></activity>
+        <activity android:name=".PictureActivity"
+            android:parentActivityName=".HomeActivity"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>
