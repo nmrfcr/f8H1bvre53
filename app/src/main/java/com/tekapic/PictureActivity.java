@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -32,11 +33,10 @@ import com.tekapic.model.Picture;
 public class PictureActivity extends AppCompatActivity {
 
     private ImageView imageView;
-    private Picture picture;
+    public static Picture picture;
     private DatabaseReference mStatusDB;
     private FirebaseAuth mAuth;
     private FirebaseStorage storageReference;
-
 
     private void deledePictureFromFirebase() {
         mStatusDB.child(picture.getPictureId()).removeValue();
@@ -97,7 +97,10 @@ public class PictureActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.editPictureMenu:
-                Toast.makeText(this, "Edit", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Edit", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(PictureActivity.this, EditActivity.class);
+//                intent.putExtra("MyClass", picture);
+                startActivity(intent);
                 return true;
             case R.id.deletePictureMenu:
                 popUpAlertDialog();
@@ -123,7 +126,7 @@ public class PictureActivity extends AppCompatActivity {
         mStatusDB = FirebaseDatabase.getInstance().getReference().child(mAuth.getUid());
         storageReference =  FirebaseStorage.getInstance().getReference().getStorage();
 
-        picture = (Picture) getIntent().getSerializableExtra("MyClass");
+//        picture = (Picture) getIntent().getSerializableExtra("MyClass");
         setPictureUrl(this, picture.getPictureUrl());
 
     }

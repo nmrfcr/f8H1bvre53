@@ -75,8 +75,31 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private Uri mPhotoUri;
     private Button button;
-    private ProgressDialog mDialog;
+    private ImageView imageViewIcon;
 
+    private void popUpAlertDialogLogOut() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+        builder.setMessage("Log Out of Tekapic?");
+
+        builder.setPositiveButton("Log Out", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mAuth.signOut();
+                goToLoginActivity();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
 
     public void buttonClick(View view) {
@@ -145,8 +168,7 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.logoutMenu:
-                mAuth.signOut();
-                goToLoginActivity();
+                popUpAlertDialogLogOut();
                 return true;
             case R.id.addNewMenu:
                 popUpAlertDialog();
@@ -165,6 +187,8 @@ public class HomeActivity extends AppCompatActivity {
         if(mAuth.getCurrentUser() == null) {
             goToLoginActivity();
         }
+        checkIfUserHasAnyPictures();
+
     }
 
     @Override
@@ -218,7 +242,8 @@ public class HomeActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 //go to PictureActivity
                                 Intent intent = new Intent(HomeActivity.this, PictureActivity.class);
-                                intent.putExtra("MyClass", model);
+//                                intent.putExtra("MyClass", model);
+                                PictureActivity.picture = model;
                                 startActivity(intent);
                             }
                         });
@@ -345,7 +370,7 @@ public class HomeActivity extends AppCompatActivity {
 
             Uri uri = Uri.fromFile(finalFile);
 
-
+            finish();
             PostActivity.pictureUri = uri;
             Intent intent = new Intent(this, PostActivity.class);
             startActivity(intent);
@@ -357,6 +382,7 @@ public class HomeActivity extends AppCompatActivity {
             //success choosing photo
             mPhotoUri = data.getData();
 
+            finish();
             PostActivity.pictureUri = mPhotoUri;
             Intent intent = new Intent(this, PostActivity.class);
             startActivity(intent);
@@ -425,12 +451,13 @@ public class HomeActivity extends AppCompatActivity {
 //        mDialog.setCancelable(false);
 
         mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() == null) {
-            goToLoginActivity();
-            return;
-        }
+//        if (mAuth.getCurrentUser() == null) {
+//            goToLoginActivity();
+//            return;
+//        }
 
         button = findViewById(R.id.addNewPicButton);
+        imageViewIcon = findViewById(R.id.imageViewHomeIcon);
 
         mStatusDB = FirebaseDatabase.getInstance().getReference().child(mAuth.getUid());
 
@@ -454,15 +481,23 @@ public class HomeActivity extends AppCompatActivity {
 //        mGridLayoutManager.setReverseLayout(true);
 //        mGridLayoutManager.setStackFromEnd(true);
 
+        checkIfUserHasAnyPictures();
+
+    }
+
+
+    public void checkIfUserHasAnyPictures() {
         mStatusDB.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
 
                 if (!snapshot.exists()) {
                     button.setVisibility(View.VISIBLE);
+                    imageViewIcon.setVisibility(View.VISIBLE);
                 }
                 else {
                     button.setVisibility(View.GONE);
+                    imageViewIcon.setVisibility(View.GONE);
                 }
             }
 
@@ -471,8 +506,8 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
-
     }
+
 
 
     /****************The starting  proccess of the pictures making**************/

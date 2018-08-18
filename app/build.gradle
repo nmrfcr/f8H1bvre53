@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.tekapic"
         minSdkVersion 16
         targetSdkVersion 27
@@ -32,7 +33,7 @@ dependencies {
     compile 'com.google.firebase:firebase-database:16.0.1'
     compile 'com.google.firebase:firebase-storage:16.0.1'
     compile 'com.google.firebase:firebase-crash:16.0.1'
-    compile 'com.google.firebase:firebase-auth:16.0.2'
+    compile 'com.google.firebase:firebase-auth:16.0.1'
 
 
     compile 'com.android.support:recyclerview-v7:27.0.0'

@@ -19,13 +19,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".HomeActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".RegisterActivity"
             android:parentActivityName=".LoginActivity"
@@ -41,11 +35,21 @@
             android:name=".AlbumsActivity"
             android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait" />
-
-        <activity android:name=".PictureActivity"
+        <activity
+            android:name=".PictureActivity"
             android:parentActivityName=".HomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LauncherActivity"
             android:screenOrientation="portrait"
-            />
+            android:theme="@style/LauncherTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".EditActivity" android:parentActivityName=".PictureActivity"></activity>
     </application>
 
 </manifest>
