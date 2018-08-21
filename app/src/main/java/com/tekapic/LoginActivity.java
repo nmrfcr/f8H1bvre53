@@ -27,17 +27,16 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private ProgressDialog mDialog;
 
-
     public void login(View view) {
 
         String email = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
 
         if(TextUtils.isEmpty(email)) {
-            showAlertDialog("Error!", "Email cannot be empty.");
+            showAlertDialog("Error", "Email cannot be empty.");
         }
         else if(TextUtils.isEmpty(password)) {
-            showAlertDialog("Error!", "Password cannot be empty.");
+            showAlertDialog("Error", "Password cannot be empty.");
         }
         else {
             //sign in with firebase
@@ -91,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.createAccountMenu:
+                finish();
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
                 return true;
         }

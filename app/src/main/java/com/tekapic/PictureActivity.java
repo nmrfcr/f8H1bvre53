@@ -1,5 +1,6 @@
 package com.tekapic;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -37,12 +39,24 @@ public class PictureActivity extends AppCompatActivity {
     private DatabaseReference mStatusDB;
     private FirebaseAuth mAuth;
     private FirebaseStorage storageReference;
+    private ProgressDialog mDialog;
 
     private void deledePictureFromFirebase() {
-        mStatusDB.child(picture.getPictureId()).removeValue();
-        Toast.makeText(this, "Picture deleted.", Toast.LENGTH_SHORT).show();
-        finish();
-        startActivity(new Intent(PictureActivity.this, HomeActivity.class));
+
+        mDialog.setMessage("Please wait...");
+        mDialog.show();
+        mDialog.setCancelable(false);
+
+        mStatusDB.child(picture.getPictureId()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                mDialog.dismiss();
+                Toast.makeText(getApplicationContext(), "Picture deleted.", Toast.LENGTH_SHORT).show();
+                finish();
+                startActivity(new Intent(PictureActivity.this, HomeActivity.class));
+            }
+        });
+
         StorageReference photoRef = storageReference.getReferenceFromUrl(picture.getPictureUrl());
 
         photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -119,6 +133,7 @@ public class PictureActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture);
+        mDialog = new ProgressDialog(this);
 
         imageView = findViewById(R.id.photo_view);
 

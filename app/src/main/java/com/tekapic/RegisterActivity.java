@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,10 +42,10 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         if(TextUtils.isEmpty(email)) {
-            showAlertDialog("Error!", "Email cannot be empty.");
+            showAlertDialog("Error", "Email cannot be empty.");
         }
         else if(TextUtils.isEmpty(password)) {
-            showAlertDialog("Error!", "Password cannot be empty.");
+            showAlertDialog("Error", "Password cannot be empty.");
         }
         else {
             //sign up with firebase
@@ -68,6 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
                 dialog.dismiss();
                 if(userRegisteredSuccessfully) {
                     mAuth.signOut();
+                    finish();
                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                     userRegisteredSuccessfully = false;
                 }
@@ -119,6 +122,23 @@ public class RegisterActivity extends AppCompatActivity {
                        }
                    }
                });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logInMenu:
+                finish();
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.register_activity_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

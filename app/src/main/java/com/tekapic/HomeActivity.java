@@ -76,6 +76,8 @@ public class HomeActivity extends AppCompatActivity {
     private Uri mPhotoUri;
     private Button button;
     private ImageView imageViewIcon;
+    private static int lastPosition = 0;
+    private boolean isUserhasPics = false;
 
     private void popUpAlertDialogLogOut() {
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
@@ -189,6 +191,10 @@ public class HomeActivity extends AppCompatActivity {
         }
         checkIfUserHasAnyPictures();
 
+        if(isUserhasPics) {
+            mRecyclerView.scrollToPosition(lastPosition);
+        }
+
     }
 
     @Override
@@ -199,8 +205,21 @@ public class HomeActivity extends AppCompatActivity {
 
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        if(isUserhasPics) {
+            mRecyclerView.scrollToPosition(lastPosition);
+        }
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
+
+        if(isUserhasPics) {
+            mRecyclerView.scrollToPosition(lastPosition);
+        }
 
         Query query = mStatusDB;
         FirebaseRecyclerOptions<Picture> options = new FirebaseRecyclerOptions.Builder<Picture>()
@@ -222,7 +241,7 @@ public class HomeActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    protected void onBindViewHolder(@NonNull final StatusViewHolder holder, int position, @NonNull final Picture model) {
+                    protected void onBindViewHolder(@NonNull final StatusViewHolder holder, final int position, @NonNull final Picture model) {
 
 //                        Log.i("model" , model.getPictureUrl());
 //                        if(model.getPets().equals("1"))
@@ -240,6 +259,13 @@ public class HomeActivity extends AppCompatActivity {
                         holder.imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+
+                                if(model.getPictureUrl().equals("none")) {
+                                    return;
+                                }
+
+                                lastPosition = position;
+//                                Log.i("pic", model.getPictureUrl());
                                 //go to PictureActivity
                                 Intent intent = new Intent(HomeActivity.this, PictureActivity.class);
 //                                intent.putExtra("MyClass", model);
@@ -440,6 +466,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
+
     //****************onCreate()********************//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -472,8 +499,10 @@ public class HomeActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-
         GridLayoutManager mGridLayoutManager = new GridLayoutManager(HomeActivity.this, 3);
+
+//        mGridLayoutManager.setReverseLayout(true);
+
         mRecyclerView.setLayoutManager(mGridLayoutManager);
 
 
@@ -494,10 +523,12 @@ public class HomeActivity extends AppCompatActivity {
                 if (!snapshot.exists()) {
                     button.setVisibility(View.VISIBLE);
                     imageViewIcon.setVisibility(View.VISIBLE);
+                    isUserhasPics = false;
                 }
                 else {
                     button.setVisibility(View.GONE);
                     imageViewIcon.setVisibility(View.GONE);
+                    isUserhasPics = true;
                 }
             }
 
