@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -78,6 +79,23 @@ public class HomeActivity extends AppCompatActivity {
     private ImageView imageViewIcon;
     private static int lastPosition = 0;
     private boolean isUserhasPics = false;
+    public static final String MY_PREFS_NAME = "MyPrefsFile";
+
+//    public void save(int lastPosition) {
+//        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+//        editor.putInt("lastPosition", lastPosition);
+//        editor.apply();
+//    }
+//    public void restore() {
+//        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+//        int restoredText = prefs.getInt("lastPosition", -1);
+//        if (restoredText != -1) {
+//            int p = prefs.getInt("lastPosition", -1); //0 is the default value.
+//            mRecyclerView.scrollToPosition(p);
+//
+//        }
+//    }
+
 
     private void popUpAlertDialogLogOut() {
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
@@ -177,7 +195,12 @@ public class HomeActivity extends AppCompatActivity {
                 //allert dialog
                 return true;
             case R.id.albums:
-                startActivity(new Intent(HomeActivity.this, AlbumsActivity.class));
+                if(isUserhasPics) {
+                    startActivity(new Intent(HomeActivity.this, AlbumsActivity.class));
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Please add pictures first.", Toast.LENGTH_SHORT).show();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -191,9 +214,10 @@ public class HomeActivity extends AppCompatActivity {
         }
         checkIfUserHasAnyPictures();
 
-        if(isUserhasPics) {
-            mRecyclerView.scrollToPosition(lastPosition);
-        }
+//        if(isUserhasPics) {
+//            mRecyclerView.scrollToPosition(lastPosition);
+//        }
+//        save(lastPosition);
 
     }
 
@@ -203,26 +227,28 @@ public class HomeActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-
-        if(isUserhasPics) {
-            mRecyclerView.scrollToPosition(lastPosition);
-        }
-    }
+//
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//
+//        if(isUserhasPics) {
+//            mRecyclerView.scrollToPosition(lastPosition);
+//        }
+//    }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        if(isUserhasPics) {
-            mRecyclerView.scrollToPosition(lastPosition);
-        }
+//        restore();
+
+//        if(isUserhasPics) {
+//            mRecyclerView.scrollToPosition(lastPosition);
+//        }
 
         Query query = mStatusDB;
-        FirebaseRecyclerOptions<Picture> options = new FirebaseRecyclerOptions.Builder<Picture>()
+        final FirebaseRecyclerOptions<Picture> options = new FirebaseRecyclerOptions.Builder<Picture>()
                 .setQuery(query, Picture.class)
                 .build();
 
@@ -247,12 +273,15 @@ public class HomeActivity extends AppCompatActivity {
 //                        if(model.getPets().equals("1"))
 
 
+//                            if(model.getMe().equals("1")) {
+                                try {
+                                    holder.setPictureInLeft(getApplicationContext(), model.getPictureUrl());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+//                            }
 
-                            try {
-                                holder.setPictureInLeft(getApplicationContext(), model.getPictureUrl());
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            lastPosition = position;
 
 
                         //listen to image button clicks
@@ -270,6 +299,8 @@ public class HomeActivity extends AppCompatActivity {
                                 Intent intent = new Intent(HomeActivity.this, PictureActivity.class);
 //                                intent.putExtra("MyClass", model);
                                 PictureActivity.picture = model;
+                                PictureActivity.isPictureFromAlbum = false;
+
                                 startActivity(intent);
                             }
                         });
@@ -464,8 +495,39 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+//
+//    @Override
+//    public void onSaveInstanceState(Bundle savedInstanceState) {
+//        super.onSaveInstanceState(savedInstanceState);
+//        // Save UI state changes to the savedInstanceState.
+//        // This bundle will be passed to onCreate if the process is
+//        // killed and restarted.
+//        savedInstanceState.putInt("MyInt", lastPosition);
+//        Log.i("onSaveInstanceState", Integer.toString(lastPosition));
+//
+//        // etc.
+//    }
+
+//    @Override
+//    public void onRestoreInstanceState(Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        // Restore UI state from the savedInstanceState.
+//        // This bundle has also been passed to onCreate.
+//        int myInt = savedInstanceState.getInt("MyInt");
+//        Log.i("onRestoreInstanceState", Integer.toString(myInt));
+//        mRecyclerView.scrollToPosition(myInt);
+//
+//    }
 
 
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
+    }
 
     //****************onCreate()********************//
     @Override

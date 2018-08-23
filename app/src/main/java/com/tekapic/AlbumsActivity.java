@@ -61,6 +61,7 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
                 boolean thingsDoesntExist = true, funnyDoesntExist = true, placesDoesntExist = true;
                 boolean artDoesntExist = true;
 
+
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
                     String me = ds.child("me").getValue(String.class);
@@ -324,6 +325,11 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
 
     }
 
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        startActivity(new Intent(AlbumsActivity.this, HomeActivity.class));
+    }
 
     @SuppressLint("ResourceType")
     @Override
@@ -378,11 +384,10 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
 
     @Override
     public void onListItemClick(int clickedItemIndex, String album) {
-
-
-
-        Toast.makeText(getApplicationContext(), "clickedItemIndex = " + clickedItemIndex + "  album: " + album, Toast.LENGTH_SHORT).show();
-
-
+            PicturesActivity.wantedAlbum = album;
+//        Toast.makeText(getApplicationContext(), "clickedItemIndex = " + clickedItemIndex + "  album: " + album, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(AlbumsActivity.this, PicturesActivity.class);
+//        intent.putExtra("wanted_album", album);
+        startActivity(intent);
     }
 }

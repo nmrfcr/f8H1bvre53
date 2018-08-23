@@ -36,10 +36,12 @@ public class PictureActivity extends AppCompatActivity {
 
     private ImageView imageView;
     public static Picture picture;
+    public static boolean isPictureFromAlbum;
     private DatabaseReference mStatusDB;
     private FirebaseAuth mAuth;
     private FirebaseStorage storageReference;
     private ProgressDialog mDialog;
+
 
     private void deledePictureFromFirebase() {
 
@@ -119,6 +121,10 @@ public class PictureActivity extends AppCompatActivity {
             case R.id.deletePictureMenu:
                 popUpAlertDialog();
                 return true;
+
+            case android.R.id.home:
+                goBack();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -144,5 +150,21 @@ public class PictureActivity extends AppCompatActivity {
 //        picture = (Picture) getIntent().getSerializableExtra("MyClass");
         setPictureUrl(this, picture.getPictureUrl());
 
+    }
+
+    private void goBack() {
+        if(isPictureFromAlbum) {
+            startActivity(new Intent(PictureActivity.this, PicturesActivity.class));
+        }
+        else {
+            startActivity(new Intent(PictureActivity.this, HomeActivity.class));
+
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        goBack();
     }
 }

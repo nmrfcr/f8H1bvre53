@@ -17,35 +17,34 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.ValueEventListener;
 import com.tekapic.model.Album;
+import com.tekapic.model.Picture;
 
 import java.util.ArrayList;
 
 /**
- * Created by LEV on 21/08/2018.
+ * Created by LEV on 23/08/2018.
  */
-public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecyclerViewAdapter.MyViewHolder> {
+public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRecyclerViewAdapter.MyViewHolder> {
 
-    int mNumberOfItems;
-    Context context;
-    private ArrayList<Album> albumsList=new ArrayList<Album>() ;
+    private int mNumberOfItems;
+    private Context context;
     private ListItemClickListener mOnClickListener;
-
-    private ArrayList<String> albums=new ArrayList<String>() ;
+    private ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
     private ArrayList<Integer> positions=new ArrayList<Integer>() ;
 
 
 
 
-    public AlbumsRecyclerViewAdapter(ArrayList<Album> albumsList, ListItemClickListener v1, Context v2) {
+    public PicturesRecyclerViewAdapter(ArrayList<Picture> picturesList, ListItemClickListener v1, Context v2) {
 
-        this.albumsList=albumsList;
+        this.picturesList=picturesList;
         this.mOnClickListener =  v1;
         this.context= v2;
     }
 
 
     public interface ListItemClickListener {
-        void onListItemClick(int clickedItemIndex, String album);
+        void onListItemClick(int clickedItemIndex, Picture picture);
     }
 
     /*  public MyRecyclerViewAdapter(int numberOfItems, ListItemClickListener mOnClickListener){
@@ -74,7 +73,7 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
         */
 
         // View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.albums_row, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.pictures_row, parent, false);
         MyViewHolder myViewHolder= new MyViewHolder(v);
 
         return myViewHolder;
@@ -86,11 +85,10 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
 //        Log.i("xxx", "blat");
 
         Glide.with(context)
-                .load(albumsList.get(position).getPicture())
+                .load(picturesList.get(position).getPictureUrl())
                 .apply(new RequestOptions().placeholder(R.mipmap.loading_icon))
-                .into(holder.versionImage);
+                .into(holder.imageView);
 
-        albums.add(albumsList.get(position).getName());
         positions.add(position);
 
 
@@ -98,32 +96,32 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
 
     @Override
     public int getItemCount() {
-        return albumsList.size(); //mNumberOfItems;
+        return picturesList.size(); //mNumberOfItems;
     }
 
     public  class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
 
-        ImageView versionImage;
+        ImageView imageView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            versionImage= itemView.findViewById(R.id.rowAlbum);
+            imageView= itemView.findViewById(R.id.rowImageView);
             itemView.setOnClickListener(this);
 
         }
         void bind (int listIndex){
             //ItemNumberTv.setText(String.valueOf(listIndex));
             //itemNumberTextTv.setText("ViewHolder index :"+String.valueOf(listIndex));
-            versionImage.setImageResource(albumsList.get(listIndex).getPicture());
+//            imageView.setImageResource(pictureUrlList.get(listIndex).getPicture());
         }
 
         @Override
         public void onClick(View view) {
 
             int clickedPosition = getAdapterPosition();
-            String album = "";
+
             int i = 0;
             int j = 0;
 
@@ -135,15 +133,15 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
                 i++;
             }
 
-            for(String a: albums) {
+            for(Picture picture: picturesList) {
                 if(j == i) {
-                   album = a;
-                   break;
+                    mOnClickListener.onListItemClick(clickedPosition, picture);
+                    break;
                 }
                 j++;
             }
 
-            mOnClickListener.onListItemClick(clickedPosition, album);
+
         }
     }
 }
