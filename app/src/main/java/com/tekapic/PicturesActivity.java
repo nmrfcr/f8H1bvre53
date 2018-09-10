@@ -2,8 +2,11 @@ package com.tekapic;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -45,11 +48,13 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                boolean hasAnyPicture = false;
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
                     String albumValue = ds.child(wantedAlbum).getValue(String.class);
                     if(albumValue.equals("1")) {
+
+                        hasAnyPicture = true;
 
                         String pictureUrl = ds.child("pictureUrl").getValue(String.class);
 
@@ -78,6 +83,11 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
 
                         picturesList.add(picture);
                     }
+                }
+
+                if(hasAnyPicture == false) {
+                    startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
+                    return;
                 }
 
                 adapter = new PicturesRecyclerViewAdapter(picturesList,mOnClickListener,context);
@@ -127,8 +137,50 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
 
     }
 
+
+    private void popUpAlertDialogConnectionError() {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setTitle("Error");
+        builder1.setMessage("There might be problems with the server or network connection.");
+        builder1.setCancelable(false);
+
+        builder1.setPositiveButton(
+                "TRY AGAIN",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+//                        if(isNetworkConnected() == false) {
+//                            popUpAlertDialogConnectionError();
+//                        }
+
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(isNetworkConnected() == false) {
+            popUpAlertDialogConnectionError();
+        }
+    }
+
     @Override
     public void onListItemClick(int clickedItemIndex, Picture picture) {
+
+        if(isNetworkConnected() == false) {
+            popUpAlertDialogConnectionError();
+            return;
+        }
 
 //        Toast.makeText(getApplicationContext(), "clickedItemIndex = " + clickedItemIndex, Toast.LENGTH_SHORT).show();
 //        Log.i("pictureUrl", pictureUrl);

@@ -122,6 +122,8 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
         @Override
         public void onClick(View view) {
 
+
+
             int clickedPosition = getAdapterPosition();
             String album = "";
             int i = 0;

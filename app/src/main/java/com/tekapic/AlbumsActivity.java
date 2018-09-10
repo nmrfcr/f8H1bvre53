@@ -5,10 +5,13 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -381,9 +384,50 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
 
 
     }
+    private void popUpAlertDialogConnectionError() {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setTitle("Error");
+        builder1.setMessage("There might be problems with the server or network connection.");
+        builder1.setCancelable(false);
+
+        builder1.setPositiveButton(
+                "TRY AGAIN",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+//                        if(isNetworkConnected() == false) {
+//                            popUpAlertDialogConnectionError();
+//                        }
+
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(isNetworkConnected() == false) {
+            popUpAlertDialogConnectionError();
+        }
+    }
 
     @Override
     public void onListItemClick(int clickedItemIndex, String album) {
+
+        if(isNetworkConnected() == false) {
+            popUpAlertDialogConnectionError();
+            return;
+        }
+
             PicturesActivity.wantedAlbum = album;
 //        Toast.makeText(getApplicationContext(), "clickedItemIndex = " + clickedItemIndex + "  album: " + album, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(AlbumsActivity.this, PicturesActivity.class);

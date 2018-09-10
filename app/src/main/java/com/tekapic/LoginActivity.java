@@ -1,7 +1,9 @@
 package com.tekapic;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +30,11 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog mDialog;
 
     public void login(View view) {
+
+        if(isNetworkConnected() == false) {
+            popUpAlertDialogConnectionError();
+            return;
+        }
 
         String email = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
@@ -102,6 +109,53 @@ public class LoginActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.login_activity_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
+    }
+
+
+    private void popUpAlertDialogConnectionError() {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setTitle("Error");
+        builder1.setMessage("There might be problems with the server or network connection.");
+        builder1.setCancelable(false);
+
+        builder1.setPositiveButton(
+                "TRY AGAIN",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+//                        if(isNetworkConnected() == false) {
+//                            popUpAlertDialogConnectionError();
+//                        }
+
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(isNetworkConnected() == false) {
+            popUpAlertDialogConnectionError();
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

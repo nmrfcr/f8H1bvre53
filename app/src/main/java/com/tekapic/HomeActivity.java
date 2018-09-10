@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -96,6 +97,13 @@ public class HomeActivity extends AppCompatActivity {
 //        }
 //    }
 
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+
+
 
     private void popUpAlertDialogLogOut() {
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
@@ -124,6 +132,28 @@ public class HomeActivity extends AppCompatActivity {
 
     public void buttonClick(View view) {
         popUpAlertDialog();
+    }
+
+    private void popUpAlertDialogConnectionError() {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setTitle("Error");
+        builder1.setMessage("There might be problems with the server or network connection.");
+        builder1.setCancelable(false);
+
+        builder1.setPositiveButton(
+                "TRY AGAIN",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+//                        if(isNetworkConnected() == false) {
+//                            popUpAlertDialogConnectionError();
+//                        }
+
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
     }
 
     public void popUpAlertDialog() {
@@ -186,6 +216,12 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(isNetworkConnected() == false) {
+            popUpAlertDialogConnectionError();
+            return false;
+        }
+
         switch (item.getItemId()) {
             case R.id.logoutMenu:
                 popUpAlertDialogLogOut();
@@ -218,6 +254,10 @@ public class HomeActivity extends AppCompatActivity {
 //            mRecyclerView.scrollToPosition(lastPosition);
 //        }
 //        save(lastPosition);
+//        Toast.makeText(this, "onResume", Toast.LENGTH_SHORT).show();
+        if(!isNetworkConnected()) {
+            popUpAlertDialogConnectionError();
+        }
 
     }
 
@@ -288,6 +328,11 @@ public class HomeActivity extends AppCompatActivity {
                         holder.imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+
+                                if(isNetworkConnected() == false) {
+                                    popUpAlertDialogConnectionError();
+                                    return;
+                                }
 
                                 if(model.getPictureUrl().equals("none")) {
                                     return;

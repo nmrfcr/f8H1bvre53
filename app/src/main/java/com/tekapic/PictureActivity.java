@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -85,6 +86,13 @@ public class PictureActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                //check network state
+                if(isNetworkConnected() == false) {
+                    popUpAlertDialogConnectionError();
+                    return;
+                }
+
                 deledePictureFromFirebase();
             }
         });
@@ -111,6 +119,12 @@ public class PictureActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(isNetworkConnected() == false) {
+            popUpAlertDialogConnectionError();
+            return false;
+        }
+
         switch (item.getItemId()) {
             case R.id.editPictureMenu:
 //                Toast.makeText(this, "Edit", Toast.LENGTH_SHORT).show();
@@ -166,5 +180,42 @@ public class PictureActivity extends AppCompatActivity {
     public void onBackPressed() {
 //        super.onBackPressed();
         goBack();
+    }
+
+
+    private void popUpAlertDialogConnectionError() {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setTitle("Error");
+        builder1.setMessage("There might be problems with the server or network connection.");
+        builder1.setCancelable(false);
+
+        builder1.setPositiveButton(
+                "TRY AGAIN",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+//                        if(isNetworkConnected() == false) {
+//                            popUpAlertDialogConnectionError();
+//                        }
+
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(isNetworkConnected() == false) {
+            popUpAlertDialogConnectionError();
+        }
     }
 }
