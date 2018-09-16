@@ -7,5 +7,10 @@
         android:id="@+id/createAccountMenu"
         app:showAsAction="never"
         />
+    <item
+        android:title="Forgot Password?"
+        android:id="@+id/forgotPasswordMenu"
+        app:showAsAction="never"
+        />
 
 </menu>

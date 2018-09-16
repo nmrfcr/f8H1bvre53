@@ -113,6 +113,12 @@ public class HomeActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                if(isNetworkConnected() == false) {
+                    popUpAlertDialogConnectionError();
+                    return;
+                }
+
                 mAuth.signOut();
                 goToLoginActivity();
             }

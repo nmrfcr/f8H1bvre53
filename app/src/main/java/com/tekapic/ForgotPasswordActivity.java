@@ -1,4 +1,5 @@
 package com.tekapic;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,50 +10,73 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class LoginActivity extends AppCompatActivity {
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class ForgotPasswordActivity extends AppCompatActivity {
 
     private EditText mEmailEditText;
-    private EditText mPasswordEditText;
-
     private FirebaseAuth mAuth;
     private ProgressDialog mDialog;
+    private boolean isPasswordSent = false;
 
-    public void login(View view) {
+
+    private   boolean isValidEmailAddress(String email) {
+
+        Pattern VALID_EMAIL_ADDRESS_REGEX =
+                Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(email);
+
+        if(matcher.find() == false) {
+            //Wrong email format
+            return false;
+        }
+
+        return true;
+    }
+
+    public void resetPassword(View view) {
+
 
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
             return;
         }
 
-        String email = mEmailEditText.getText().toString().trim();
-        String password = mPasswordEditText.getText().toString().trim();
+        String email = mEmailEditText.getText().toString();
 
         if(TextUtils.isEmpty(email)) {
             showAlertDialog("Error", "Email cannot be empty.");
         }
-        else if(TextUtils.isEmpty(password)) {
-            showAlertDialog("Error", "Password cannot be empty.");
+        else if(isValidEmailAddress(email) == false) { // check email format
+            showAlertDialog("Error", "Enter a correct Email Address.");
         }
         else {
-            //sign in with firebase
             mDialog.setMessage("Please wait...");
             mDialog.show();
             mDialog.setCancelable(false);
-
-            loginViaFirebase(email, password);
+            //send email to server for password reseting
+            mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    mDialog.dismiss();
+                    if(task.isSuccessful()) {
+                        isPasswordSent = true;
+                        showAlertDialog("", "Please check your email account.");
+                    }
+                    else {
+                        showAlertDialog("Error", task.getException().getMessage());
+                    }
+                }
+            });
         }
 
     }
@@ -61,68 +85,22 @@ public class LoginActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
         builder.setMessage(message);
-        builder.setCancelable(false);
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                if(isPasswordSent) {
+                    startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class));
+                }
             }
         });
         builder.create().show();
     }
 
-    private void loginViaFirebase(String email, String password) {
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                mDialog.dismiss();
-
-                if(!task.isSuccessful()) {
-                    //error registering users
-                    Log.i("info", "error Login users");
-                    Log.i("info", task.getException().getMessage());
-
-                    showAlertDialog("Error", task.getException().getMessage());
-                }
-                else {
-                    //Login success
-                    //take the user to HomeActivity
-                    finish();
-                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                }
-            }
-        });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.createAccountMenu:
-                finish();
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-                return true;
-            case R.id.forgotPasswordMenu:
-                startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.login_activity_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public void onBackPressed() {
 //        super.onBackPressed();
-        Intent startMain = new Intent(Intent.ACTION_MAIN);
-        startMain.addCategory(Intent.CATEGORY_HOME);
-        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(startMain);
+        startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class));
     }
-
 
     private void popUpAlertDialogConnectionError() {
 
@@ -160,16 +138,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        mEmailEditText = findViewById(R.id.emailEditTextLogin);
-        mPasswordEditText = findViewById(R.id.passwordEditTextLogin);
+        setContentView(R.layout.activity_forgot_password);
 
         mAuth = FirebaseAuth.getInstance();
+        mEmailEditText = findViewById(R.id.emailEditTextForgotPassword);
         mDialog = new ProgressDialog(this);
 
     }

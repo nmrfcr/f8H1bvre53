@@ -52,10 +52,15 @@
         <activity
             android:name=".EditActivity"
             android:parentActivityName=".PictureActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PicturesActivity"
+            android:parentActivityName=".AlbumsActivity"
             android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".PicturesActivity"
-            android:parentActivityName=".AlbumsActivity"
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:parentActivityName=".LoginActivity"
             android:screenOrientation="portrait">
         </activity>
 
