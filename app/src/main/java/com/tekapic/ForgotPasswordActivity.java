@@ -28,7 +28,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private boolean isPasswordSent = false;
 
 
-    private   boolean isValidEmailAddress(String email) {
+    private  boolean isValidEmailAddress(String email) {
 
         Pattern VALID_EMAIL_ADDRESS_REGEX =
                 Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -83,6 +83,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     private void showAlertDialog(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
         builder.setTitle(title);
         builder.setMessage(message);
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {

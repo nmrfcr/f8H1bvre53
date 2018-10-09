@@ -24,6 +24,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -33,6 +34,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,7 +47,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -81,6 +90,9 @@ public class HomeActivity extends AppCompatActivity {
     private static int lastPosition = 0;
     private boolean isUserhasPics = false;
     public static final String MY_PREFS_NAME = "MyPrefsFile";
+
+    boolean[] checkedCategories = new boolean[Picture.numberOfAlbums+1];
+    EditText emailEditText, passwordEditText;
 
 //    public void save(int lastPosition) {
 //        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
@@ -219,6 +231,123 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(new Intent(HomeActivity.this, LoginActivity.class));
     }
 
+    private void updateEmail() {
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Update Email");
+
+
+        dialog.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+//                Toast.makeText(HomeActivity.this, emailEditText.getText().toString() + " " + passwordEditText.getText().toString(), Toast.LENGTH_SHORT).show();
+                final String email, password;
+
+                email = emailEditText.getText().toString();
+                password = passwordEditText.getText().toString();
+
+                if(email.isEmpty()) {
+                    Toast.makeText(HomeActivity.this, "Email cannot be empty.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(password.isEmpty()) {
+                    Toast.makeText(HomeActivity.this, "Password cannot be empty.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(email.equals(mAuth.getCurrentUser().getEmail())) {
+                    Toast.makeText(HomeActivity.this, "Enter new email.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                // Get auth credentials from the user for re-authentication
+                AuthCredential credential = EmailAuthProvider
+                        .getCredential(mAuth.getCurrentUser().getEmail(), password); // Current Login Credentials \\
+                // Prompt the user to re-provide their sign-in credentials
+                user.reauthenticate(credential)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+                                if(task.isSuccessful()) {
+                                    Log.d("User re-authenticated.", "User re-authenticated.");
+                                    //Now change your email address \\
+                                    //----------------Code for Changing Email Address----------\\
+                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                    user.updateEmail(email)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Log.d("email updated", "User email address updated.");
+                                                        Toast.makeText(HomeActivity.this, "Email address updated.", Toast.LENGTH_LONG).show();
+
+                                                        //here
+
+                                                        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+                                                        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                                                        rootRef.child("Users").child(uid).child("email").setValue(email);
+
+                                                    }
+                                                    else {
+                                                        Toast.makeText(HomeActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                            });
+                                    //----------------------------------------------------------\\
+                                }
+                                else {
+                                    Toast.makeText(HomeActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+
+                                }
+
+
+                            }
+                        });
+
+
+
+
+            }
+        });
+        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+
+
+
+
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+// Add a TextView here for the "Title" label, as noted in the comments
+        emailEditText = new EditText(this);
+        emailEditText.setHint("Enter new email");
+        emailEditText.setText(mAuth.getCurrentUser().getEmail());
+        layout.addView(emailEditText); // Notice this is an add method
+
+// Add another TextView here for the "Description" label
+        passwordEditText = new EditText(this);
+        passwordEditText.setHint("Enter your password");
+        passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        layout.addView(passwordEditText); // Another add method
+
+        dialog.setView(layout); // Again this is a set method, not add
+
+
+        AlertDialog alertDialog = dialog.create();
+        alertDialog.show();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -244,6 +373,13 @@ public class HomeActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Please add pictures first.", Toast.LENGTH_SHORT).show();
                 }
                 return true;
+            case R.id.updateEmailMenu:
+                updateEmail();
+                return true;
+//            case R.id.SortMenu:
+//                sort();
+//                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -285,6 +421,8 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+
+
         super.onStart();
 
 //        restore();
@@ -318,6 +456,7 @@ public class HomeActivity extends AppCompatActivity {
 //                        Log.i("model" , model.getPictureUrl());
 //                        if(model.getPets().equals("1"))
 
+                        checkIfUserHasAnyPictures();
 
 //                            if(model.getMe().equals("1")) {
                                 try {
@@ -625,6 +764,8 @@ public class HomeActivity extends AppCompatActivity {
 
         checkIfUserHasAnyPictures();
 
+        initialSorting();
+
     }
 
 
@@ -799,8 +940,168 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-
     /****************The end of the proccess of pictures making**************/
+
+    //*************Sorting ***************************////
+
+    public void initialSorting() {
+        for(int i = 0; i < Picture.numberOfAlbums+1; i++) {
+            checkedCategories[i] = true;
+        }
+    }
+
+
+    public void sort() {
+        final ArrayList<String> categories = new ArrayList<String>();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select categories:");
+
+// add a checkbox list
+        builder.setMultiChoiceItems(Picture.albumsNames, checkedCategories, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                // user checked or unchecked a box
+                switch (which) {
+                    case 0:
+                        if(isChecked) {
+                            categories.add("me");
+                        }
+                        else {
+                            categories.remove("me");
+                        }
+                    case 1:
+                        if(isChecked) {
+                            categories.add("family");
+                        }
+                        else {
+                            categories.remove("family");
+                        }
+                    case 2:
+                        if(isChecked) {
+                            categories.add("friends");
+                        }
+                        else {
+                            categories.remove("friends");
+                        }
+                    case 3:
+                        if(isChecked) {
+                            categories.add("love");
+                        }
+                        else {
+                            categories.remove("love");
+                        }
+                    case 4:
+                        if(isChecked) {
+                            categories.add("pets");
+                        }
+                        else {
+                            categories.remove("pets");
+                        }
+                    case 5:
+                        if(isChecked) {
+                            categories.add("nature");
+                        }
+                        else {
+                            categories.remove("nature");
+                        }
+                    case 6:
+                        if(isChecked) {
+                            categories.add("sport");
+                        }
+                        else {
+                            categories.remove("sport");
+                        }
+                    case 7:
+                        if(isChecked) {
+                            categories.add("persons");
+                        }
+                        else {
+                            categories.remove("persons");
+                        }
+                    case 8:
+                        if(isChecked) {
+                            categories.add("animals");
+                        }
+                        else {
+                            categories.remove("animals");
+                        }
+                    case 9:
+                        if(isChecked) {
+                            categories.add("vehicles");
+                        }
+                        else {
+                            categories.remove("vehicles");
+                        }
+
+                    case 10:
+                        if(isChecked) {
+                            categories.add("views");
+                        }
+                        else {
+                            categories.remove("views");
+                        }
+                    case 11:
+                        if(isChecked) {
+                            categories.add("food");
+                        }
+                        else {
+                            categories.remove("food");
+                        }
+
+                    case 12:
+                        if(isChecked) {
+                            categories.add("things");
+                        }
+                        else {
+                            categories.remove("things");
+                        }
+                    case 13:
+                        if(isChecked) {
+                            categories.add("funny");
+                        }
+                        else {
+                            categories.remove("funny");
+                        }
+                    case 14:
+                        if(isChecked) {
+                            categories.add("places");
+                        }
+                        else {
+                            categories.remove("places");
+                        }
+                    case 15:
+                        if(isChecked) {
+                            categories.add("art");
+                        }
+                        else {
+                            categories.remove("art");
+                        }
+
+                }
+
+            }
+        });
+
+// add OK and Cancel buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // user clicked OK
+
+                for(String category: categories) {
+                    Log.i("category ", category);
+                }
+            }
+        });
+//        builder.setNegativeButton("Cancel", null);
+
+// create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+
+    }
+
 
 
 

@@ -26,6 +26,9 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText mEmailEditText;
@@ -35,6 +38,61 @@ public class RegisterActivity extends AppCompatActivity {
     private ProgressDialog mDialog;
     private boolean userRegisteredSuccessfully;
     private DatabaseReference mUsersDB;
+
+
+    private  boolean isValidEmailAddress(String email) {
+
+        Pattern VALID_EMAIL_ADDRESS_REGEX =
+                Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(email);
+
+        if(matcher.find() == false) {
+            //Wrong email format
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isPasswordStrong(String password) {
+
+        boolean hasLetter = false;
+        boolean hasDigit = false;
+
+//        if (password.length() >= 6) {
+            for (int i = 0; i < password.length(); i++) {
+                char x = password.charAt(i);
+                if (Character.isLetter(x)) {
+
+                    hasLetter = true;
+                }
+
+                else if (Character.isDigit(x)) {
+
+                    hasDigit = true;
+                }
+
+                // no need to check further, break the loop
+                if(hasLetter && hasDigit){
+
+                    break;
+                }
+
+            }
+            if (hasLetter && hasDigit) {
+//                System.out.println("STRONG");
+                return true;
+            } else {
+//                System.out.println("NOT STRONG");
+                return false;
+            }
+//        } else {
+//            System.out.println("HAVE AT LEAST 8 CHARACTERS");
+//        }
+
+
+    }
 
 
     public void register(View view) {
@@ -50,18 +108,34 @@ public class RegisterActivity extends AppCompatActivity {
 
         if(TextUtils.isEmpty(email)) {
             showAlertDialog("Error", "Email cannot be empty.");
+            return;
         }
-        else if(TextUtils.isEmpty(password)) {
+        if(TextUtils.isEmpty(password)) {
             showAlertDialog("Error", "Password cannot be empty.");
+            return;
         }
-        else {
+
+        if(isValidEmailAddress(email) == false) {
+            showAlertDialog("Error", "Enter a correct Email Address.");
+            return;
+        }
+
+        if(password.length() < 6) {
+            showAlertDialog("Error", "Password must be at least 6 characters.");
+            return;
+        }
+         if(isPasswordStrong(password) == false) {
+            showAlertDialog("Error", "Please choose a stronger password. try a mix of letters and digits.");
+            return;
+        }
+//        else {
             //sign up with firebase
             mDialog.setMessage("Please wait...");
             mDialog.show();
             mDialog.setCancelable(false);
 
             registerUserToFirebase(email, password);
-        }
+//        }
 
     }
 

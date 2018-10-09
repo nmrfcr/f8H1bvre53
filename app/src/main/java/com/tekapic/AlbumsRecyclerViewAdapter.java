@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.flags.impl.DataUtils;
 import com.google.firebase.database.ValueEventListener;
 import com.tekapic.model.Album;
 
@@ -85,10 +86,18 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
 //        holder.versionImage.setImageResource(albumsList.get(position).getPicture());
 //        Log.i("xxx", "blat");
 
+        String cap = albumsList.get(position).getName().substring(0, 1).toUpperCase() + albumsList.get(position).getName().substring(1);
+        holder.albumName.setText(cap);
+
+
+//        holder.albumName.setText(albumsList.get(position).getName());
+
+
         Glide.with(context)
                 .load(albumsList.get(position).getPicture())
                 .apply(new RequestOptions().placeholder(R.mipmap.loading_icon))
                 .into(holder.versionImage);
+
 
         albums.add(albumsList.get(position).getName());
         positions.add(position);
@@ -105,11 +114,13 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
     {
 
         ImageView versionImage;
+        TextView albumName;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
             versionImage= itemView.findViewById(R.id.rowAlbum);
+            albumName = itemView.findViewById(R.id.textViewAlbum);
             itemView.setOnClickListener(this);
 
         }
@@ -117,6 +128,7 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
             //ItemNumberTv.setText(String.valueOf(listIndex));
             //itemNumberTextTv.setText("ViewHolder index :"+String.valueOf(listIndex));
             versionImage.setImageResource(albumsList.get(listIndex).getPicture());
+            albumName.setText(albumsList.get(listIndex).getName());
         }
 
         @Override

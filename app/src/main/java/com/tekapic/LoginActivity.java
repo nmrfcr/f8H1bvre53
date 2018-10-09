@@ -22,6 +22,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class LoginActivity extends AppCompatActivity {
 
     private EditText mEmailEditText;
@@ -29,6 +32,23 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private ProgressDialog mDialog;
+
+
+    private  boolean isValidEmailAddress(String email) {
+
+        Pattern VALID_EMAIL_ADDRESS_REGEX =
+                Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(email);
+
+        if(matcher.find() == false) {
+            //Wrong email format
+            return false;
+        }
+
+        return true;
+    }
+
 
     public void login(View view) {
 
@@ -39,6 +59,12 @@ public class LoginActivity extends AppCompatActivity {
 
         String email = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
+
+
+        if(isValidEmailAddress(email) == false) {
+            showAlertDialog("Error", "Enter a correct Email Address.");
+            return;
+        }
 
         if(TextUtils.isEmpty(email)) {
             showAlertDialog("Error", "Email cannot be empty.");
