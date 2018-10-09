@@ -93,6 +93,8 @@ public class HomeActivity extends AppCompatActivity {
 
     boolean[] checkedCategories = new boolean[Picture.numberOfAlbums+1];
     EditText emailEditText, passwordEditText;
+    private ProgressDialog mDialog;
+
 
 //    public void save(int lastPosition) {
 //        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
@@ -231,16 +233,36 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(new Intent(HomeActivity.this, LoginActivity.class));
     }
 
+    private void showAlertDialog(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setCancelable(true);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
     private void updateEmail() {
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Update Email");
+        dialog.setCancelable(false);
 
 
-        dialog.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+        dialog.setPositiveButton("Update", new DialogInterface.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                if(isNetworkConnected() == false) {
+                    popUpAlertDialogConnectionError();
+                    return;
+                }
 
 //                Toast.makeText(HomeActivity.this, emailEditText.getText().toString() + " " + passwordEditText.getText().toString(), Toast.LENGTH_SHORT).show();
                 final String email, password;
@@ -249,18 +271,21 @@ public class HomeActivity extends AppCompatActivity {
                 password = passwordEditText.getText().toString();
 
                 if(email.isEmpty()) {
-                    Toast.makeText(HomeActivity.this, "Email cannot be empty.", Toast.LENGTH_SHORT).show();
+                    showAlertDialog("Error", "Email cannot be empty.");
                     return;
                 }
                 if(password.isEmpty()) {
-                    Toast.makeText(HomeActivity.this, "Password cannot be empty.", Toast.LENGTH_SHORT).show();
+                    showAlertDialog("Error", "Password cannot be empty.");
                     return;
                 }
                 if(email.equals(mAuth.getCurrentUser().getEmail())) {
-                    Toast.makeText(HomeActivity.this, "Enter new email.", Toast.LENGTH_SHORT).show();
+                    showAlertDialog("Error", "Enter new email.");
                     return;
                 }
 
+                mDialog.setMessage("Please wait...");
+                mDialog.show();
+                mDialog.setCancelable(false);
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 // Get auth credentials from the user for re-authentication
@@ -271,19 +296,28 @@ public class HomeActivity extends AppCompatActivity {
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
+                                mDialog.dismiss();
 
                                 if(task.isSuccessful()) {
                                     Log.d("User re-authenticated.", "User re-authenticated.");
                                     //Now change your email address \\
                                     //----------------Code for Changing Email Address----------\\
                                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                                    mDialog.setMessage("Please wait...");
+                                    mDialog.show();
+                                    mDialog.setCancelable(false);
+
                                     user.updateEmail(email)
                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
+
+                                                    mDialog.dismiss();
+
                                                     if (task.isSuccessful()) {
                                                         Log.d("email updated", "User email address updated.");
-                                                        Toast.makeText(HomeActivity.this, "Email address updated.", Toast.LENGTH_LONG).show();
+                                                        showAlertDialog("Attention!", "Your email address has been successfully changed.");
 
                                                         //here
 
@@ -294,15 +328,15 @@ public class HomeActivity extends AppCompatActivity {
 
                                                     }
                                                     else {
-                                                        Toast.makeText(HomeActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                                        showAlertDialog("Error", task.getException().getMessage());
+
                                                     }
                                                 }
                                             });
                                     //----------------------------------------------------------\\
                                 }
                                 else {
-                                    Toast.makeText(HomeActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-
+                                    showAlertDialog("Error", task.getException().getMessage());
                                 }
 
 
@@ -724,6 +758,9 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        mDialog = new ProgressDialog(this);
+
 //
 //        mDialog.setMessage("Please wait...");
 //        mDialog.show();
