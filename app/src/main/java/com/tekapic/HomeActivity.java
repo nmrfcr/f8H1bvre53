@@ -180,7 +180,7 @@ public class HomeActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
         builder.setMessage("How would you like to add a picture?");
 
-        builder.setPositiveButton("Take a picture", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("   Take a picture", new DialogInterface.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -189,7 +189,9 @@ public class HomeActivity extends AppCompatActivity {
                 dispatchTakePhotoIntent();
             }
         });
-        builder.setNegativeButton("Choose a picture", new DialogInterface.OnClickListener() {
+
+
+        builder.setNegativeButton("   Choose a picture", new DialogInterface.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -197,7 +199,7 @@ public class HomeActivity extends AppCompatActivity {
                 dispatchChoosePhotoIntent();
             }
         });
-        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton("   Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //cancel
@@ -225,6 +227,19 @@ public class HomeActivity extends AppCompatActivity {
         positiveButton.setLayoutParams(positiveButtonLL);
         negativeButton.setLayoutParams(negativeButtonLL);
         neutralButton.setLayoutParams(neutralButtonLL);
+
+        positiveButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_photo_camera_black_24dp, 0, 0, 0);
+        negativeButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_image_black_24dp, 0, 0, 0);
+        neutralButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cancel_black_24dp, 0, 0, 0);
+
+        negativeButtonLL.leftMargin = 45;
+        negativeButton.setLayoutParams(negativeButtonLL);
+
+        neutralButtonLL.rightMargin = 100;
+        neutralButton.setLayoutParams(neutralButtonLL);
+
+
+
     }
 
 
