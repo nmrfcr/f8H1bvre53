@@ -231,11 +231,11 @@ public class HomeActivity extends AppCompatActivity {
         positiveButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_photo_camera_black_24dp, 0, 0, 0);
         negativeButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_image_black_24dp, 0, 0, 0);
         neutralButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cancel_black_24dp, 0, 0, 0);
-
-        negativeButtonLL.leftMargin = 45;
+//
+//        negativeButtonLL.leftMargin = 45;
         negativeButton.setLayoutParams(negativeButtonLL);
-
-        neutralButtonLL.rightMargin = 100;
+//
+//        neutralButtonLL.rightMargin = 100;
         neutralButton.setLayoutParams(neutralButtonLL);
 
 
@@ -599,6 +599,25 @@ public class HomeActivity extends AppCompatActivity {
             Intent choosePhotoIntent = new Intent(Intent.ACTION_PICK);
             choosePhotoIntent.setType("image/*");
             startActivityForResult(choosePhotoIntent, REQUEST_PHOTO_PICK);
+
+
+//            Intent intent = new Intent();
+//            intent.setType("image/*");
+//            intent.setAction(Intent.ACTION_GET_CONTENT);
+//            startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_PHOTO_PICK);
+
+
+
+//            Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+//            getIntent.setType("image/*");
+//
+//            Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//            pickIntent.setType("image/*");
+//
+//            Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+//            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+
+//            startActivityForResult(chooserIntent, REQUEST_PHOTO_PICK);
         }
     }
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -611,8 +630,9 @@ public class HomeActivity extends AppCompatActivity {
             requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},  REQUEST_PHOTO_CAPTURE);
         }
         else  {
-            Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if(takePhotoIntent.resolveActivity(getPackageManager()) != null) {
+
+//            Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//            if(takePhotoIntent.resolveActivity(getPackageManager()) != null) {
 
 
 
@@ -642,7 +662,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-            }
+//            }
         }
     }
 
@@ -666,7 +686,7 @@ public class HomeActivity extends AppCompatActivity {
 
             Uri uri = Uri.fromFile(finalFile);
 
-            finish();
+//            finish();
             PostActivity.pictureUri = uri;
             Intent intent = new Intent(this, PostActivity.class);
             startActivity(intent);
@@ -678,7 +698,7 @@ public class HomeActivity extends AppCompatActivity {
             //success choosing photo
             mPhotoUri = data.getData();
 
-            finish();
+//            finish();
             PostActivity.pictureUri = mPhotoUri;
             Intent intent = new Intent(this, PostActivity.class);
             startActivity(intent);

@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -18,19 +20,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
+            android:grantUriPermissions="true"
             android:name=".HomeActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".RegisterActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait" />
+
         <activity
+            android:grantUriPermissions="true"
             android:name=".PostActivity"
             android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".AlbumsActivity"
             android:parentActivityName=".HomeActivity"
