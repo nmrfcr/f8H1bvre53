@@ -14,8 +14,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -40,6 +42,7 @@ import java.util.Map;
 
 public class EditActivity extends AppCompatActivity {
 
+    private ImageView imageView;
     private CheckBox me, family, friends, love, pets, nature, sport;
     private CheckBox persons, animals, vehicles, views, food, things, funny;
     private CheckBox places, art;
@@ -192,6 +195,10 @@ public class EditActivity extends AppCompatActivity {
         mUsersDB = FirebaseDatabase.getInstance().getReference().child(currentUser.getUid());
 
         picture = PictureActivity.picture;
+
+        imageView = findViewById(R.id.imageViewEdit);
+        Glide.with(this).load(picture.getPictureUrl()).into(imageView);
+
 
         getAlbums();
 

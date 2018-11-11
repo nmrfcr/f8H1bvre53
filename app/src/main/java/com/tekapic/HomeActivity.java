@@ -19,6 +19,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -37,6 +38,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -68,9 +70,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
@@ -87,13 +92,15 @@ public class HomeActivity extends AppCompatActivity {
     private Uri mPhotoUri;
     private Button button;
     private ImageView imageViewIcon;
-    private static int lastPosition = 0;
+    public static int lastPosition = 0;
     private boolean isUserhasPics = false;
     public static final String MY_PREFS_NAME = "MyPrefsFile";
 
     boolean[] checkedCategories = new boolean[Picture.numberOfAlbums+1];
     EditText emailEditText, passwordEditText;
     private ProgressDialog mDialog;
+    private String mCurrentPhotoPath;
+    private boolean isLowSdk = false;
 
 
 //    public void save(int lastPosition) {
@@ -496,11 +503,15 @@ public class HomeActivity extends AppCompatActivity {
                                 .from(parent.getContext())
                                 .inflate(R.layout.pictures_row, parent, false);
 
+//                        view.setMinimumHeight();
+
                         return new StatusViewHolder(view);
                     }
 
                     @Override
                     protected void onBindViewHolder(@NonNull final StatusViewHolder holder, final int position, @NonNull final Picture model) {
+
+//                        holder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
 //                        Log.i("model" , model.getPictureUrl());
 //                        if(model.getPets().equals("1"))
@@ -549,6 +560,11 @@ public class HomeActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
 
+//        mRecyclerView.scrollToPosition(lastPosition);
+//        Toast.makeText(this, Integer.toString(lastPosition), Toast.LENGTH_SHORT).show();
+
+        lastPosition = 0;
+
     }
 
     public static class StatusViewHolder extends RecyclerView.ViewHolder {
@@ -568,9 +584,13 @@ public class HomeActivity extends AppCompatActivity {
 
             ImageView imageView = view.findViewById(R.id.rowImageView);
 
+//            Glide.with(context)
+//                    .load(pictureUrl)
+//                    .apply(new RequestOptions().placeholder(R.mipmap.loading_icon))
+//                    .into(imageView);
+
             Glide.with(context)
                     .load(pictureUrl)
-                    .apply(new RequestOptions().placeholder(R.mipmap.loading_icon))
                     .into(imageView);
 
 
@@ -630,40 +650,42 @@ public class HomeActivity extends AppCompatActivity {
             requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},  REQUEST_PHOTO_CAPTURE);
         }
         else  {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                // Ensure that there's a camera activity to handle the intent
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    // Create the File where the photo should go
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                    } catch (IOException ex) {
+                        // Error occurred while creating the File
 
-//            Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//            if(takePhotoIntent.resolveActivity(getPackageManager()) != null) {
-
-
-
-                Log.i("perAsk","in else");
-                StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-                StrictMode.setVmPolicy(builder.build());
-
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.TITLE, "New Picture");
-                values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
-
-
-                mPhotoUri = getContentResolver().insert(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-
-
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
-
-
-
-                startActivityForResult(intent, REQUEST_PHOTO_CAPTURE);
-
-
-
-
-
-
-//            }
+                    }
+                    // Continue only if the File was successfully created
+                    if (photoFile != null) {
+                        mPhotoUri = FileProvider.getUriForFile(this,
+                                "com.example.android.fileprovider",
+                                photoFile);
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
+                        startActivityForResult(takePictureIntent, REQUEST_PHOTO_CAPTURE);
+                    }
+                }
         }
+    }
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 
     @Override
@@ -672,38 +694,27 @@ public class HomeActivity extends AppCompatActivity {
 
         if(requestCode == REQUEST_PHOTO_CAPTURE && resultCode == RESULT_OK) {
 
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                File f = new File(mCurrentPhotoPath);
+                Uri contentUri = Uri.fromFile(f);
+                mediaScanIntent.setData(contentUri);
+                this.sendBroadcast(mediaScanIntent);
 
+                PostActivity.pictureUri = contentUri;
+                Intent intent = new Intent(this, PostActivity.class);
+                startActivity(intent);
 
-            copyFileOrDirectory(getRealPathFromURI(mPhotoUri), dstDir);
-
-            File src = new File(getRealPathFromURI(mPhotoUri));
-
-            File file = new File(getRealPathFromURI(mPhotoUri));
-
-            file.delete();
-
-            File finalFile = new File(dstDir + File.separator + src.getName());
-
-            Uri uri = Uri.fromFile(finalFile);
-
-//            finish();
-            PostActivity.pictureUri = uri;
-            Intent intent = new Intent(this, PostActivity.class);
-            startActivity(intent);
-
-
+                copyFileOrDirectory(mCurrentPhotoPath, dstDir);
 
         }
         else if(requestCode == REQUEST_PHOTO_PICK && resultCode == RESULT_OK) {
             //success choosing photo
             mPhotoUri = data.getData();
 
-//            finish();
             PostActivity.pictureUri = mPhotoUri;
             Intent intent = new Intent(this, PostActivity.class);
             startActivity(intent);
 
-//            mUserImageView.setImageURI(mPhotoUri);
         }
 
     }
@@ -821,11 +832,19 @@ public class HomeActivity extends AppCompatActivity {
 
         mRecyclerView = findViewById(R.id.homeRecyclerView);
         mRecyclerView.setHasFixedSize(true);
+
+        GridLayoutManager mGridLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
+
+
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        GridLayoutManager mGridLayoutManager = new GridLayoutManager(HomeActivity.this, 3);
+
 
 //        mGridLayoutManager.setReverseLayout(true);
+
+
+//        int spacingInPixels = 50;
+//        mRecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
 
         mRecyclerView.setLayoutManager(mGridLayoutManager);
 

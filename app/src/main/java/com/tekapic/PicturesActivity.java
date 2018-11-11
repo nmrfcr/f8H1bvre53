@@ -93,8 +93,8 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
                 adapter = new PicturesRecyclerViewAdapter(picturesList,mOnClickListener,context);
                 mRecyclerView.setAdapter(adapter);
 
-                GridLayoutManager mGridLayoutManager = new GridLayoutManager(PicturesActivity.this, 3);
-                mRecyclerView.setLayoutManager(mGridLayoutManager);
+//                GridLayoutManager mGridLayoutManager = new GridLayoutManager(PicturesActivity.this, 3);
+//                mRecyclerView.setLayoutManager(mGridLayoutManager);
 
             }
 
@@ -127,11 +127,17 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
 
 //        wantedAlbum = getIntent().getStringExtra("wanted_album");
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
         mRecyclerView = findViewById(R.id.picturesRecyclerView);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(linearLayoutManager);
+
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),3);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+
+
+//        mRecyclerView.setLayoutManager(linearLayoutManager);
 
         getPicturesByAlbum();
 

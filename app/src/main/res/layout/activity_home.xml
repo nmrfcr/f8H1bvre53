@@ -24,6 +24,7 @@
         android:id="@+id/addNewPicButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/roundedbutton"
         android:onClick="buttonClick"
         android:text="Add your first picture"
         android:visibility="gone" />
