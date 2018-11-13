@@ -26,139 +26,336 @@
         app:srcCompat="@mipmap/ic_launcher_foreground" />
 
     <TextView
+        android:layout_marginBottom="15dp"
         android:id="@+id/textViewEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
         android:text="Select Albums:"
         android:textAlignment="center"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
     <ScrollView
+
         android:fadeScrollbars="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
-            <CheckBox
-                android:id="@+id/checkBox_me_edit"
+
+            <GridLayout
+
+                android:columnCount="3"
+                android:rowCount="6"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Me"
-                android:textSize="18sp" />
+                android:layout_height="match_parent">
 
-            <CheckBox
-                android:id="@+id/checkBox_family_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Family"
-                android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            <CheckBox
-                android:id="@+id/checkBox_friends_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Friends"
-                android:textSize="18sp" />
+                    <CheckBox
+                        android:textColor="#FFFFFF"
+                        android:id="@+id/checkBox_me_edit"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/me" />
 
-            <CheckBox
-                android:id="@+id/checkBox_love_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Love"
-                android:textSize="18sp" />
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Me" />
+                </LinearLayout>
 
-            <CheckBox
-                android:id="@+id/checkBox_pets_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Pets"
-                android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            <CheckBox
-                android:id="@+id/checkBox_nature_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Nature"
-                android:textSize="18sp" />
+                    <CheckBox
+                        android:id="@+id/checkBox_family_edit"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/family" />
 
-            <CheckBox
-                android:id="@+id/checkBox_sport_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sport"
-                android:textSize="18sp" />
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Family" />
+                </LinearLayout>
 
-            <CheckBox
-                android:id="@+id/checkBox_persons_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Persons"
-                android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            <CheckBox
-                android:id="@+id/checkBox_animals_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Animals"
-                android:textSize="18sp" />
+                    <CheckBox
+                        android:id="@+id/checkBox_friends_edit"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/friends" />
 
-            <CheckBox
-                android:id="@+id/checkBox_vehicles_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Vehicles"
-                android:textSize="18sp" />
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Friends" />
+                </LinearLayout>
 
-            <CheckBox
-                android:id="@+id/checkBox_views_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Views"
-                android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            <CheckBox
-                android:id="@+id/checkBox_food_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Food"
-                android:textSize="18sp" />
+                    <CheckBox
+                        android:id="@+id/checkBox_love_edit"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/love" />
 
-            <CheckBox
-                android:id="@+id/checkBox_things_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Things"
-                android:textSize="18sp" />
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Love" />
+                </LinearLayout>
 
-            <CheckBox
-                android:id="@+id/checkBox_funny_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Funny"
-                android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            <CheckBox
-                android:id="@+id/checkBox_places_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Places"
-                android:textSize="18sp" />
+                    <CheckBox
+                        android:id="@+id/checkBox_pets_edit"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/pets" />
 
-            <CheckBox
-                android:id="@+id/checkBox_art_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Art"
-                android:textSize="18sp" />
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pets" />
+                </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/checkBox_nature_edit"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/nature" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nature" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/checkBox_sport_edit"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/sport" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sport" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/checkBox_persons_edit"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/persons" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Persons" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/checkBox_animals_edit"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/animals" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Animals" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/checkBox_vehicles_edit"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/vehicles" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Vehicles" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/checkBox_views_edit"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/views" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Views" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/checkBox_food_edit"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/food" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Food" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/checkBox_things_edit"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/things" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Things" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/checkBox_funny_edit"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/funny" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Funny" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/checkBox_places_edit"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/places" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Places" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/checkBox_art_edit"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/art" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Art" />
+                </LinearLayout>
+
+
+
+            </GridLayout>
         </LinearLayout>
     </ScrollView>
+
+
 
 
 </LinearLayout>
