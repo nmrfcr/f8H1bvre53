@@ -134,6 +134,8 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),3);
         mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.addItemDecoration(new SpacesItemDecoration(3));
+
 
 
 

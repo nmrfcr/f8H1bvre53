@@ -584,14 +584,14 @@ public class HomeActivity extends AppCompatActivity {
 
             ImageView imageView = view.findViewById(R.id.rowImageView);
 
-//            Glide.with(context)
-//                    .load(pictureUrl)
-//                    .apply(new RequestOptions().placeholder(R.mipmap.loading_icon))
-//                    .into(imageView);
-
             Glide.with(context)
                     .load(pictureUrl)
+                    .apply(new RequestOptions().placeholder(R.drawable.b))
                     .into(imageView);
+
+//            Glide.with(context)
+//                    .load(pictureUrl)
+//                    .into(imageView);
 
 
 //            Picasso.with(context).load(pictureUrl).placeholder(R.mipmap.loading_icon).
@@ -844,7 +844,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
 //        int spacingInPixels = 50;
-//        mRecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
+        mRecyclerView.addItemDecoration(new SpacesItemDecoration(3));
 
         mRecyclerView.setLayoutManager(mGridLayoutManager);
 

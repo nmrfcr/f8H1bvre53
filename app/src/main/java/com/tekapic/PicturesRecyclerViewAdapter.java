@@ -86,6 +86,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
 
         Glide.with(context)
                 .load(picturesList.get(position).getPictureUrl())
+                .apply(new RequestOptions().placeholder(R.drawable.b))
                 .into(holder.imageView);
 
         positions.add(position);
