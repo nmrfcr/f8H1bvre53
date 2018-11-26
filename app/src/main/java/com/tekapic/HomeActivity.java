@@ -14,10 +14,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
+import android.os.PersistableBundle;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.internal.ParcelableSparseArray;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -92,38 +95,20 @@ public class HomeActivity extends AppCompatActivity {
     private Uri mPhotoUri;
     private Button button;
     private ImageView imageViewIcon;
-    public static int lastPosition = 0;
     private boolean isUserhasPics = false;
-    public static final String MY_PREFS_NAME = "MyPrefsFile";
 
     boolean[] checkedCategories = new boolean[Picture.numberOfAlbums+1];
-    EditText emailEditText, passwordEditText;
+    private EditText emailEditText, passwordEditText;
     private ProgressDialog mDialog;
     private String mCurrentPhotoPath;
-    private boolean isLowSdk = false;
+    private LinearLayoutManager linearLayoutManager;
+    static int lastFirstVisiblePosition = 0;
 
-
-//    public void save(int lastPosition) {
-//        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-//        editor.putInt("lastPosition", lastPosition);
-//        editor.apply();
-//    }
-//    public void restore() {
-//        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-//        int restoredText = prefs.getInt("lastPosition", -1);
-//        if (restoredText != -1) {
-//            int p = prefs.getInt("lastPosition", -1); //0 is the default value.
-//            mRecyclerView.scrollToPosition(p);
-//
-//        }
-//    }
 
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;
     }
-
-
 
 
     private void popUpAlertDialogLogOut() {
@@ -141,7 +126,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
 
                 mAuth.signOut();
-                goToLoginActivity();
+                goToMainActivity();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -250,9 +235,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    private void goToLoginActivity() {
+    private void goToMainActivity() {
         finish();
-        startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+        startActivity(new Intent(HomeActivity.this, MainActivity.class));
     }
 
     private void showAlertDialog(String title, String message) {
@@ -379,10 +364,6 @@ public class HomeActivity extends AppCompatActivity {
         });
 
 
-
-
-
-
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
 
@@ -440,19 +421,21 @@ public class HomeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
+
+//        mRecyclerView.scrollToPosition(lastFirstVisiblePosition);
+
+//        ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(lastFirstVisiblePosition,0);
+//        (mRecyclerView.getLayoutManager()).scrollToPosition(lastFirstVisiblePosition);
+
         if(mAuth.getCurrentUser() == null) {
-            goToLoginActivity();
+            goToMainActivity();
         }
         checkIfUserHasAnyPictures();
 
-//        if(isUserhasPics) {
-//            mRecyclerView.scrollToPosition(lastPosition);
-//        }
-//        save(lastPosition);
-//        Toast.makeText(this, "onResume", Toast.LENGTH_SHORT).show();
         if(!isNetworkConnected()) {
             popUpAlertDialogConnectionError();
         }
@@ -465,27 +448,10 @@ public class HomeActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-//
-//    @Override
-//    protected void onRestart() {
-//        super.onRestart();
-//
-//        if(isUserhasPics) {
-//            mRecyclerView.scrollToPosition(lastPosition);
-//        }
-//    }
-
     @Override
     protected void onStart() {
 
-
         super.onStart();
-
-//        restore();
-
-//        if(isUserhasPics) {
-//            mRecyclerView.scrollToPosition(lastPosition);
-//        }
 
         Query query = mStatusDB;
         final FirebaseRecyclerOptions<Picture> options = new FirebaseRecyclerOptions.Builder<Picture>()
@@ -495,39 +461,26 @@ public class HomeActivity extends AppCompatActivity {
         FirebaseRecyclerAdapter firebaseRecyclerAdapter =
                 new FirebaseRecyclerAdapter<Picture, StatusViewHolder>(options) {
 
-
                     @NonNull
                     @Override
                     public StatusViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                         View view = LayoutInflater
                                 .from(parent.getContext())
                                 .inflate(R.layout.pictures_row, parent, false);
-
 //                        view.setMinimumHeight();
-
                         return new StatusViewHolder(view);
                     }
 
                     @Override
                     protected void onBindViewHolder(@NonNull final StatusViewHolder holder, final int position, @NonNull final Picture model) {
 
-//                        holder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-//                        Log.i("model" , model.getPictureUrl());
-//                        if(model.getPets().equals("1"))
-
                         checkIfUserHasAnyPictures();
 
-//                            if(model.getMe().equals("1")) {
                                 try {
-                                    holder.setPictureInLeft(getApplicationContext(), model.getPictureUrl());
+                                    holder.setPicture(getApplicationContext(), model.getPictureUrl());
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-//                            }
-
-                            lastPosition = position;
-
 
                         //listen to image button clicks
                         holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -542,9 +495,6 @@ public class HomeActivity extends AppCompatActivity {
                                 if(model.getPictureUrl().equals("none")) {
                                     return;
                                 }
-
-                                lastPosition = position;
-//                                Log.i("pic", model.getPictureUrl());
                                 //go to PictureActivity
                                 Intent intent = new Intent(HomeActivity.this, PictureActivity.class);
 //                                intent.putExtra("MyClass", model);
@@ -560,10 +510,7 @@ public class HomeActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
 
-//        mRecyclerView.scrollToPosition(lastPosition);
-//        Toast.makeText(this, Integer.toString(lastPosition), Toast.LENGTH_SHORT).show();
-
-        lastPosition = 0;
+        mRecyclerView.scrollToPosition(lastFirstVisiblePosition);
 
     }
 
@@ -573,14 +520,13 @@ public class HomeActivity extends AppCompatActivity {
         public ImageView imageView;
 
 
-
         public StatusViewHolder(View itemView) {
             super(itemView);
             this.view = itemView;
             imageView = view.findViewById(R.id.rowImageView);
         }
 
-        public void setPictureInLeft(Context context, String pictureUrl) {
+        public void setPicture(Context context, String pictureUrl) {
 
             ImageView imageView = view.findViewById(R.id.rowImageView);
 
@@ -598,15 +544,6 @@ public class HomeActivity extends AppCompatActivity {
 //                    memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(imageView);
 
         }
-//        public void setPictureInCenter(Context context, String pictureUrl) {
-//            ImageButton userImageButton = view.findViewById(R.id.userImageButton2);
-//            Picasso.with(context).load(pictureUrl).placeholder(R.mipmap.ic_launcher).into(userImageButton);
-//        }
-//        public void setPictureInRight(Context context, String pictureUrl) {
-//            ImageButton userImageButton = view.findViewById(R.id.userImageButton3);
-//            Picasso.with(context).load(pictureUrl).placeholder(R.mipmap.ic_launcher).into(userImageButton);
-//        }
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -764,32 +701,6 @@ public class HomeActivity extends AppCompatActivity {
             // permissions this app might request
         }
     }
-
-//
-//    @Override
-//    public void onSaveInstanceState(Bundle savedInstanceState) {
-//        super.onSaveInstanceState(savedInstanceState);
-//        // Save UI state changes to the savedInstanceState.
-//        // This bundle will be passed to onCreate if the process is
-//        // killed and restarted.
-//        savedInstanceState.putInt("MyInt", lastPosition);
-//        Log.i("onSaveInstanceState", Integer.toString(lastPosition));
-//
-//        // etc.
-//    }
-
-//    @Override
-//    public void onRestoreInstanceState(Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//        // Restore UI state from the savedInstanceState.
-//        // This bundle has also been passed to onCreate.
-//        int myInt = savedInstanceState.getInt("MyInt");
-//        Log.i("onRestoreInstanceState", Integer.toString(myInt));
-//        mRecyclerView.scrollToPosition(myInt);
-//
-//    }
-
-
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
@@ -807,10 +718,6 @@ public class HomeActivity extends AppCompatActivity {
 
         mDialog = new ProgressDialog(this);
 
-//
-//        mDialog.setMessage("Please wait...");
-//        mDialog.show();
-//        mDialog.setCancelable(false);
 
         mAuth = FirebaseAuth.getInstance();
 //        if (mAuth.getCurrentUser() == null) {
@@ -827,7 +734,7 @@ public class HomeActivity extends AppCompatActivity {
 //        mUserDB = FirebaseDatabase.getInstance().getReference().child("Users");
 
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager = new LinearLayoutManager(this);
 
 
         mRecyclerView = findViewById(R.id.homeRecyclerView);
@@ -840,23 +747,14 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-//        mGridLayoutManager.setReverseLayout(true);
-
-
-//        int spacingInPixels = 50;
         mRecyclerView.addItemDecoration(new SpacesItemDecoration(3));
 
         mRecyclerView.setLayoutManager(mGridLayoutManager);
 
-
 //        //take the latest data to RecyclerView
 //        mGridLayoutManager.setReverseLayout(true);
 //        mGridLayoutManager.setStackFromEnd(true);
-
         checkIfUserHasAnyPictures();
-
-        initialSorting();
-
     }
 
 
@@ -883,11 +781,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
     /****************The starting  proccess of the pictures making**************/
-
 
     public static void copyFileOrDirectory(String srcDir, String dstDir) {
 
@@ -914,8 +808,7 @@ public class HomeActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-//
-//
+
     public static void copyFile(File sourceFile, File destFile) throws IOException {
 
         if (!destFile.getParentFile().exists())
@@ -941,96 +834,6 @@ public class HomeActivity extends AppCompatActivity {
 
         }
     }
-//
-//
-//    @RequiresApi(api = Build.VERSION_CODES.M)
-//
-//    public void takeAPicture(View view) {
-//        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-//            requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE,android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-//        }else
-//        {
-//            Log.i("perAsk","in else");
-//            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-//            StrictMode.setVmPolicy(builder.build());
-//
-//            ContentValues values = new ContentValues();
-//            values.put(MediaStore.Images.Media.TITLE, "New Picture");
-//            values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
-//
-//
-//            imageUri = getContentResolver().insert(
-//                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-//
-//
-//
-//            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-//
-//
-//
-//            startActivityForResult(intent, 111);
-//
-//        }
-//    }
-//
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if(resultCode == -1) {
-//
-//            copyFileOrDirectory(getRealPathFromURI(imageUri), dstDir);
-//
-//            File src = new File(getRealPathFromURI(imageUri));
-//
-//            File file = new File(getRealPathFromURI(imageUri));
-//
-//            file.delete();
-//
-//            File finalFile = new File(dstDir + File.separator + src.getName());
-//
-//            Uri uri = Uri.fromFile(finalFile);
-//
-//            InputStream iStream = null;
-//            try {
-//                iStream = getContentResolver().openInputStream(uri);
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//            try {
-//                pictureInByteArray = getBytes(iStream);
-//                openPostActivity();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-//
-//    public byte[] getBytes(InputStream inputStream) throws IOException {
-//        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-//        int bufferSize = 1024;
-//        byte[] buffer = new byte[bufferSize];
-//
-//        int len = 0;
-//        while ((len = inputStream.read(buffer)) != -1) {
-//            byteBuffer.write(buffer, 0, len);
-//        }
-//        return byteBuffer.toByteArray();
-//    }
-//
-    public String getRealPathFromURI(Uri contentUri) {
-
-        String[] proj = { MediaStore.Images.Media.DATA };
-        Cursor cursor = managedQuery(contentUri, proj, null, null, null);
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-
-        return cursor.getString(column_index);
-
-    }
-
     /****************The end of the proccess of pictures making**************/
 
     //*************Sorting ***************************////
@@ -1040,7 +843,6 @@ public class HomeActivity extends AppCompatActivity {
             checkedCategories[i] = true;
         }
     }
-
 
     public void sort() {
         final ArrayList<String> categories = new ArrayList<String>();
@@ -1192,8 +994,15 @@ public class HomeActivity extends AppCompatActivity {
 
 
     }
+    //////////////////***************//////////////////
 
 
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//
+//        lastFirstVisiblePosition = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+//    }
 
 
 }

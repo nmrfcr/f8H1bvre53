@@ -43,10 +43,6 @@
         android:onClick="register"
         android:text="Register" />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/login_icon" />
+
 
 </LinearLayout>

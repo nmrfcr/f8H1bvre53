@@ -18,13 +18,11 @@ public class LauncherActivity extends AppCompatActivity {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-
+                finish();
                 if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-                    finish();
-                    startActivity(new Intent(LauncherActivity.this, LoginActivity.class));
+                    startActivity(new Intent(LauncherActivity.this, MainActivity.class));
                 }
                 else {
-                    finish();
                     startActivity(new Intent(LauncherActivity.this, HomeActivity.class));
                 }
 

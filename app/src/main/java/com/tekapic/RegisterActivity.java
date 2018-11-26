@@ -205,26 +205,12 @@ public class RegisterActivity extends AppCompatActivity {
                });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.logInMenu:
-                finish();
-                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.register_activity_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+
+
 
     public void onBackPressed() {
-//        super.onBackPressed();
-        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
     }
 
 

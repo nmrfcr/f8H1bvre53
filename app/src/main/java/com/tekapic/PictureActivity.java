@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Build;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
@@ -46,19 +47,33 @@ public class PictureActivity extends AppCompatActivity {
 
     private void deledePictureFromFirebase() {
 
-        mDialog.setMessage("Please wait...");
+        mDialog.setMessage("Deleting...");
         mDialog.show();
         mDialog.setCancelable(false);
+//        Toast.makeText(getApplicationContext(), "Deleting..", Toast.LENGTH_SHORT).show();
+
 
         mStatusDB.child(picture.getPictureId()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 mDialog.dismiss();
-                Toast.makeText(getApplicationContext(), "Picture deleted.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "Picture deleted.", Toast.LENGTH_SHORT).show();
                 finish();
                 startActivity(new Intent(PictureActivity.this, HomeActivity.class));
             }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Uh-oh, an error occurred!
+                mDialog.dismiss();
+
+                Toast.makeText(getApplicationContext(), "Error! picture wasn't deleted.", Toast.LENGTH_SHORT).show();
+            }
         });
+
+
+
+
 
         StorageReference photoRef = storageReference.getReferenceFromUrl(picture.getPictureUrl());
 
@@ -153,6 +168,7 @@ public class PictureActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture);
+
         mDialog = new ProgressDialog(this);
 
         imageView = findViewById(R.id.photo_view);

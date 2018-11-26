@@ -4,7 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +16,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +39,16 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
     private Context context;
     private PicturesRecyclerViewAdapter.ListItemClickListener mOnClickListener;
     private ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
+    RecyclerView.LayoutManager layoutManager;
+    Parcelable mListState;
+    public static int positionIndex = -1;
+    static int topView;
 
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        positionIndex = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+//    }
 
 
     private void getPicturesByAlbum() {
@@ -132,7 +145,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
         mRecyclerView = findViewById(R.id.picturesRecyclerView);
         mRecyclerView.setHasFixedSize(true);
 
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),3);
+        layoutManager = new GridLayoutManager(getApplicationContext(),3);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new SpacesItemDecoration(3));
 
@@ -142,6 +155,10 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
 //        mRecyclerView.setLayoutManager(linearLayoutManager);
 
         getPicturesByAlbum();
+
+        if(positionIndex != -1) {
+            mRecyclerView.scrollToPosition(positionIndex);
+        }
 
     }
 
@@ -177,6 +194,11 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
     protected void onResume() {
         super.onResume();
 
+
+//        mRecyclerView.scrollToPosition(positionIndex);
+
+
+
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
         }
@@ -185,13 +207,14 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
     @Override
     public void onListItemClick(int clickedItemIndex, Picture picture) {
 
+
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
             return;
         }
 
 //        Toast.makeText(getApplicationContext(), "clickedItemIndex = " + clickedItemIndex, Toast.LENGTH_SHORT).show();
-//        Log.i("pictureUrl", pictureUrl);
+//        Log.i("pictureUrl", picture.getPictureUrl());
 
         PictureActivity.picture = picture;
         PictureActivity.isPictureFromAlbum = true;

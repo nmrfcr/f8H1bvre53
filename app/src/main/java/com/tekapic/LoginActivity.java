@@ -123,10 +123,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.createAccountMenu:
-                finish();
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-                return true;
             case R.id.forgotPasswordMenu:
                 startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
                 return true;
@@ -142,11 +138,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
-        Intent startMain = new Intent(Intent.ACTION_MAIN);
-        startMain.addCategory(Intent.CATEGORY_HOME);
-        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(startMain);
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
     }
 
 

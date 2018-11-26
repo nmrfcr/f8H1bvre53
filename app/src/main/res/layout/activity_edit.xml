@@ -68,10 +68,11 @@
                         android:background="@drawable/me" />
 
                     <TextView
-                        android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Me" />
+                        android:layout_gravity="center"
+                        android:text="Me"
+                        android:textColor="@android:color/black" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -87,6 +88,7 @@
                         android:background="@drawable/family" />
 
                     <TextView
+                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -105,6 +107,7 @@
                         android:background="@drawable/friends" />
 
                     <TextView
+                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -123,6 +126,7 @@
                         android:background="@drawable/love" />
 
                     <TextView
+                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -142,6 +146,7 @@
                         android:background="@drawable/pets" />
 
                     <TextView
+                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -160,6 +165,7 @@
                         android:background="@drawable/nature" />
 
                     <TextView
+                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -178,6 +184,7 @@
                         android:background="@drawable/sport" />
 
                     <TextView
+                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -197,6 +204,7 @@
                         android:background="@drawable/persons" />
 
                     <TextView
+                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -215,6 +223,7 @@
                         android:background="@drawable/animals" />
 
                     <TextView
+                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -233,6 +242,7 @@
                         android:background="@drawable/vehicles" />
 
                     <TextView
+                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -252,6 +262,7 @@
                         android:background="@drawable/views" />
 
                     <TextView
+                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -270,6 +281,7 @@
                         android:background="@drawable/food" />
 
                     <TextView
+                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -288,6 +300,7 @@
                         android:background="@drawable/things" />
 
                     <TextView
+                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -307,6 +320,7 @@
                         android:background="@drawable/funny" />
 
                     <TextView
+                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -325,6 +339,7 @@
                         android:background="@drawable/places" />
 
                     <TextView
+                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -343,6 +358,7 @@
                         android:background="@drawable/art" />
 
                     <TextView
+                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

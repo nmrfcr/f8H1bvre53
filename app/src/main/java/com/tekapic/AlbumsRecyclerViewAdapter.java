@@ -95,7 +95,7 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
 
         Glide.with(context)
                 .load(albumsList.get(position).getPicture())
-                .apply(new RequestOptions().placeholder(R.drawable.b))
+                .apply(new RequestOptions().placeholder(R.drawable.grad))
                 .into(holder.versionImage);
 
 
