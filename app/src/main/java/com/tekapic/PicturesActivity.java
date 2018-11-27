@@ -1,11 +1,17 @@
 package com.tekapic;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -16,7 +22,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +34,7 @@ import com.tekapic.model.Album;
 import com.tekapic.model.Picture;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class PicturesActivity extends AppCompatActivity implements PicturesRecyclerViewAdapter.ListItemClickListener {
 
@@ -40,8 +46,6 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
     private PicturesRecyclerViewAdapter.ListItemClickListener mOnClickListener;
     private ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
     RecyclerView.LayoutManager layoutManager;
-    Parcelable mListState;
-    public static int positionIndex = -1;
     static int topView;
 
 //    @Override
@@ -102,7 +106,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
                     startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
                     return;
                 }
-
+                Collections.reverse(picturesList);
                 adapter = new PicturesRecyclerViewAdapter(picturesList,mOnClickListener,context);
                 mRecyclerView.setAdapter(adapter);
 
@@ -156,9 +160,57 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
 
         getPicturesByAlbum();
 
-        if(positionIndex != -1) {
-            mRecyclerView.scrollToPosition(positionIndex);
+        if(PostActivity.flag) {
+            check();
         }
+
+    }
+
+    private void check() {
+
+        Log.i("check", "inCheck()");
+
+        final Thread t1 = new Thread(new Runnable() {
+//            Handler handler = new Handler();
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Thread.sleep(100);
+                        Log.i("while", "in Loop !!!!!!!!!!!!!!!!!!");
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if(PostActivity.flag == false) {
+
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @SuppressLint("NewApi")
+                            @Override
+                            public void run() {
+
+                                adapter.notifyItemRangeRemoved(0, picturesList.size());
+                                adapter.notifyItemRangeInserted(0, picturesList.size() + 1 );
+
+                                picturesList.clear();
+
+                                getPicturesByAlbum();
+                            }
+                        });
+//                        handler.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//
+//                            }
+//                        });
+                        break;
+                    }
+
+                }
+            }
+        });
+
+        t1.start();
 
     }
 

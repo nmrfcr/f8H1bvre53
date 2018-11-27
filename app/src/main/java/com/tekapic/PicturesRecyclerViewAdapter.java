@@ -43,6 +43,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
     }
 
 
+
     public interface ListItemClickListener {
         void onListItemClick(int clickedItemIndex, Picture picture);
     }

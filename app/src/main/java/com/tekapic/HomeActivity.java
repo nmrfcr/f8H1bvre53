@@ -1,7 +1,9 @@
 package com.tekapic;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +16,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.os.StrictMode;
@@ -81,7 +85,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements PicturesRecyclerViewAdapter.ListItemClickListener {
 
     private static final int REQUEST_PHOTO_CAPTURE = 1;
     private static final int REQUEST_PHOTO_PICK = 2;
@@ -102,7 +106,19 @@ public class HomeActivity extends AppCompatActivity {
     private ProgressDialog mDialog;
     private String mCurrentPhotoPath;
     private LinearLayoutManager linearLayoutManager;
-    static int lastFirstVisiblePosition = 0;
+    RecyclerView.LayoutManager layoutManager;
+
+    //    static int lastFirstVisiblePosition = 0;
+    private int size;
+    private int pos;
+    private PicturesRecyclerViewAdapter adapter;
+    private ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
+    private PicturesRecyclerViewAdapter.ListItemClickListener mOnClickListener;
+    private Context context;
+
+
+
+
 
 
     private boolean isNetworkConnected() {
@@ -448,103 +464,117 @@ public class HomeActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    protected void onStart() {
-
-        super.onStart();
-
-        Query query = mStatusDB;
-        final FirebaseRecyclerOptions<Picture> options = new FirebaseRecyclerOptions.Builder<Picture>()
-                .setQuery(query, Picture.class)
-                .build();
-
-        FirebaseRecyclerAdapter firebaseRecyclerAdapter =
-                new FirebaseRecyclerAdapter<Picture, StatusViewHolder>(options) {
-
-                    @NonNull
-                    @Override
-                    public StatusViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                        View view = LayoutInflater
-                                .from(parent.getContext())
-                                .inflate(R.layout.pictures_row, parent, false);
-//                        view.setMinimumHeight();
-                        return new StatusViewHolder(view);
-                    }
-
-                    @Override
-                    protected void onBindViewHolder(@NonNull final StatusViewHolder holder, final int position, @NonNull final Picture model) {
-
-                        checkIfUserHasAnyPictures();
-
-                                try {
-                                    holder.setPicture(getApplicationContext(), model.getPictureUrl());
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                        //listen to image button clicks
-                        holder.imageView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                if(isNetworkConnected() == false) {
-                                    popUpAlertDialogConnectionError();
-                                    return;
-                                }
-
-                                if(model.getPictureUrl().equals("none")) {
-                                    return;
-                                }
-                                //go to PictureActivity
-                                Intent intent = new Intent(HomeActivity.this, PictureActivity.class);
-//                                intent.putExtra("MyClass", model);
-                                PictureActivity.picture = model;
-                                PictureActivity.isPictureFromAlbum = false;
-
-                                startActivity(intent);
-                            }
-                        });
-                    }
-                };
-
-        mRecyclerView.setAdapter(firebaseRecyclerAdapter);
-        firebaseRecyclerAdapter.startListening();
-
-        mRecyclerView.scrollToPosition(lastFirstVisiblePosition);
-
-    }
-
-    public static class StatusViewHolder extends RecyclerView.ViewHolder {
-
-        View view;
-        public ImageView imageView;
 
 
-        public StatusViewHolder(View itemView) {
-            super(itemView);
-            this.view = itemView;
-            imageView = view.findViewById(R.id.rowImageView);
-        }
+//    @Override
+//    protected void onStart() {
+//
+//        super.onStart();
+//
+//        Query query = mStatusDB;
+//
+//        final FirebaseRecyclerOptions<Picture> options = new FirebaseRecyclerOptions.Builder<Picture>()
+//                .setQuery(query, Picture.class)
+//                .build();
+//
+//        FirebaseRecyclerAdapter firebaseRecyclerAdapter =
+//                new FirebaseRecyclerAdapter<Picture, StatusViewHolder>(options) {
+//
+//                    @NonNull
+//                    @Override
+//                    public StatusViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+//                        View view = LayoutInflater
+//                                .from(parent.getContext())
+//                                .inflate(R.layout.pictures_row, parent, false);
+////                        view.setMinimumHeight();
+//                        return new StatusViewHolder(view);
+//                    }
+//
+//
+//
+//                    @Override
+//                    protected void onBindViewHolder(@NonNull final StatusViewHolder holder, final int position, @NonNull final Picture model) {
+//
+//                        checkIfUserHasAnyPictures();
+//
+////                        pos = position;
+//
+//                                try {
+//                                    holder.setPicture(getApplicationContext(), model.getPictureUrl());
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//
+//                        //listen to image button clicks
+//                        holder.imageView.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//
+//                                if(isNetworkConnected() == false) {
+//                                    popUpAlertDialogConnectionError();
+//                                    return;
+//                                }
+//
+//                                if(model.getPictureUrl().equals("none")) {
+//                                    return;
+//                                }
+//                                //go to PictureActivity
+//                                Intent intent = new Intent(HomeActivity.this, PictureActivity.class);
+////                                intent.putExtra("MyClass", model);
+//                                PictureActivity.picture = model;
+//                                PictureActivity.isPictureFromAlbum = false;
+//
+//                                startActivity(intent);
+//                            }
+//                        });
+//                    }
+//
+////                    @Override
+////                    public int getItemCount() {
+////                        return size - 1 - pos; //mNumberOfItems;
+////                    }
+//
+//                };
+//
+//        mRecyclerView.setAdapter(firebaseRecyclerAdapter);
+//        firebaseRecyclerAdapter.startListening();
+//
+////        mRecyclerView.scrollToPosition(lastFirstVisiblePosition);
+//
+//    }
 
-        public void setPicture(Context context, String pictureUrl) {
-
-            ImageView imageView = view.findViewById(R.id.rowImageView);
-
-            Glide.with(context)
-                    .load(pictureUrl)
-                    .apply(new RequestOptions().placeholder(R.drawable.b))
-                    .into(imageView);
-
+//    public static class StatusViewHolder extends RecyclerView.ViewHolder {
+//
+//        View view;
+//        public ImageView imageView;
+//
+//
+//        public StatusViewHolder(View itemView) {
+//            super(itemView);
+//            this.view = itemView;
+//            imageView = view.findViewById(R.id.rowImageView);
+//        }
+//
+//
+//        public void setPicture(Context context, String pictureUrl) {
+//
+//            ImageView imageView = view.findViewById(R.id.rowImageView);
+//
 //            Glide.with(context)
 //                    .load(pictureUrl)
+//                    .apply(new RequestOptions().placeholder(R.drawable.b))
 //                    .into(imageView);
-
-
-//            Picasso.with(context).load(pictureUrl).placeholder(R.mipmap.loading_icon).
-//                    memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(imageView);
-
-        }
-    }
+//
+////            Glide.with(context)
+////                    .load(pictureUrl)
+////                    .into(imageView);
+//
+//
+////            Picasso.with(context).load(pictureUrl).placeholder(R.mipmap.loading_icon).
+////                    memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(imageView);
+//
+//        }
+//    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void dispatchChoosePhotoIntent() {
@@ -734,27 +764,174 @@ public class HomeActivity extends AppCompatActivity {
 //        mUserDB = FirebaseDatabase.getInstance().getReference().child("Users");
 
 
-        linearLayoutManager = new LinearLayoutManager(this);
-
-
-        mRecyclerView = findViewById(R.id.homeRecyclerView);
-        mRecyclerView.setHasFixedSize(true);
-
-        GridLayoutManager mGridLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
-
-
-        mRecyclerView.setLayoutManager(linearLayoutManager);
-
-
-
-        mRecyclerView.addItemDecoration(new SpacesItemDecoration(3));
-
-        mRecyclerView.setLayoutManager(mGridLayoutManager);
+//        linearLayoutManager = new LinearLayoutManager(this);
+//
+//
+//        mRecyclerView = findViewById(R.id.homeRecyclerView);
+//        mRecyclerView.setHasFixedSize(true);
+//
+//        GridLayoutManager mGridLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
+//
+//
+//        mRecyclerView.setLayoutManager(linearLayoutManager);
+//
+//
+//
+//        mRecyclerView.addItemDecoration(new SpacesItemDecoration(3));
+//
+//        mRecyclerView.setLayoutManager(mGridLayoutManager);
 
 //        //take the latest data to RecyclerView
 //        mGridLayoutManager.setReverseLayout(true);
 //        mGridLayoutManager.setStackFromEnd(true);
         checkIfUserHasAnyPictures();
+
+        mRecyclerView = findViewById(R.id.homeRecyclerView);
+        mRecyclerView.setHasFixedSize(true);
+
+        layoutManager = new GridLayoutManager(getApplicationContext(),3);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.addItemDecoration(new SpacesItemDecoration(3));
+
+        mOnClickListener = this;
+        context = this;
+
+        getPictures();
+
+        if(PostActivity.flag) {
+            check();
+        }
+
+
+    }
+
+
+    private void check() {
+
+        Log.i("check", "inCheck()");
+
+        final Thread t1 = new Thread(new Runnable() {
+            //            Handler handler = new Handler();
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Thread.sleep(100);
+                        Log.i("while", "in Loop !!!!!!!!!!!!!!!!!!");
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if(PostActivity.flag == false) {
+
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @SuppressLint("NewApi")
+                            @Override
+                            public void run() {
+
+                                adapter.notifyItemRangeRemoved(0, picturesList.size());
+                                adapter.notifyItemRangeInserted(0, picturesList.size() + 1 );
+
+                                picturesList.clear();
+                                getPictures();
+                            }
+                        });
+//                        handler.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//
+//                            }
+//                        });
+                        break;
+                    }
+
+                }
+            }
+        });
+
+        t1.start();
+
+    }
+
+
+    private void getPictures() {
+
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference usersdRef = rootRef.child(mAuth.getUid());
+
+        ValueEventListener eventListener = new ValueEventListener() {
+
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                        String pictureUrl = ds.child("pictureUrl").getValue(String.class);
+
+                        String date = ds.child("date").getValue(String.class);
+
+                        String pictureId = ds.child("pictureId").getValue(String.class);
+
+                        String me = ds.child("me").getValue(String.class);
+                        String family = ds.child("family").getValue(String.class);
+                        String friends = ds.child("friends").getValue(String.class);
+                        String love = ds.child("love").getValue(String.class);
+                        String pets = ds.child("pets").getValue(String.class);
+                        String nature = ds.child("nature").getValue(String.class);
+                        String sport = ds.child("sport").getValue(String.class);
+                        String persons = ds.child("persons").getValue(String.class);
+                        String animals = ds.child("animals").getValue(String.class);
+                        String vehicles = ds.child("vehicles").getValue(String.class);
+                        String views = ds.child("views").getValue(String.class);
+                        String food = ds.child("food").getValue(String.class);
+                        String things = ds.child("things").getValue(String.class);
+                        String funny = ds.child("funny").getValue(String.class);
+                        String places = ds.child("places").getValue(String.class);
+                        String art = ds.child("art").getValue(String.class);
+
+                        Picture picture = new Picture(pictureId, pictureUrl, date, me, family,friends,love, pets,  nature,  sport,  persons, animals,  vehicles, views, food, things, funny, places,  art);
+
+                        picturesList.add(picture);
+
+                }
+
+
+                Collections.reverse(picturesList);
+                adapter = new PicturesRecyclerViewAdapter(picturesList, mOnClickListener, context);
+                mRecyclerView.setAdapter(adapter);
+
+//                GridLayoutManager mGridLayoutManager = new GridLayoutManager(PicturesActivity.this, 3);
+//                mRecyclerView.setLayoutManager(mGridLayoutManager);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        usersdRef.addListenerForSingleValueEvent(eventListener);
+
+
+    }
+
+    @Override
+    public void onListItemClick(int clickedItemIndex, Picture picture) {
+
+
+        if(isNetworkConnected() == false) {
+            popUpAlertDialogConnectionError();
+            return;
+        }
+
+//        Toast.makeText(getApplicationContext(), "clickedItemIndex = " + clickedItemIndex, Toast.LENGTH_SHORT).show();
+//        Log.i("pictureUrl", picture.getPictureUrl());
+
+        PictureActivity.picture = picture;
+        PictureActivity.isPictureFromAlbum = false;
+        Intent intent = new Intent(HomeActivity.this, PictureActivity.class);
+        startActivity(intent);
+
     }
 
 

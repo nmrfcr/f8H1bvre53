@@ -42,7 +42,7 @@
         android:id="@+id/registerButtonMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="35dp"
         android:background="@drawable/roundedbutton"
         android:onClick="register"
         android:text="Create account"
@@ -52,7 +52,7 @@
         android:id="@+id/loginButtonMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:background="@drawable/roundedbutton"
         android:onClick="login"
         android:text="Log in" />
