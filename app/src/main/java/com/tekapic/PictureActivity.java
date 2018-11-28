@@ -128,8 +128,14 @@ public class PictureActivity extends AppCompatActivity {
 
         Glide.with(context)
                 .load(pictureUrl)
-                .apply(new RequestOptions().placeholder(R.mipmap.loading_icon))
                 .into(imageView);
+//
+//        Glide
+//                .with( context )
+//                .load(pictureUrl)
+//                .thumbnail( 0.1f )
+//                .into(imageView);
+
     }
 
     @Override
@@ -183,6 +189,7 @@ public class PictureActivity extends AppCompatActivity {
     }
 
     private void goBack() {
+        finish();
         if(isPictureFromAlbum) {
             startActivity(new Intent(PictureActivity.this, PicturesActivity.class));
         }

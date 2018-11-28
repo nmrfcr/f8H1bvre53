@@ -47,6 +47,8 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
     private ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
     RecyclerView.LayoutManager layoutManager;
     static int topView;
+    public static int fVisibleItemPosition = 0;
+
 
 //    @Override
 //    protected void onPause() {
@@ -164,6 +166,9 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
             check();
         }
 
+        ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPosition(fVisibleItemPosition);
+        fVisibleItemPosition = 0;
+
     }
 
     private void check() {
@@ -272,6 +277,16 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
         PictureActivity.isPictureFromAlbum = true;
         Intent intent = new Intent(PicturesActivity.this, PictureActivity.class);
         startActivity(intent);
+
+        finish();
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        fVisibleItemPosition = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
 
     }
 }

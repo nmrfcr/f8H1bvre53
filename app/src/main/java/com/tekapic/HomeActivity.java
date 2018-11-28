@@ -99,14 +99,14 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     private Uri mPhotoUri;
     private Button button;
     private ImageView imageViewIcon;
-    private boolean isUserhasPics = false;
+    public static boolean isUserhasPics = false;
 
     boolean[] checkedCategories = new boolean[Picture.numberOfAlbums+1];
     private EditText emailEditText, passwordEditText;
     private ProgressDialog mDialog;
     private String mCurrentPhotoPath;
     private LinearLayoutManager linearLayoutManager;
-    RecyclerView.LayoutManager layoutManager;
+//    RecyclerView.LayoutManager layoutManager;
 
     //    static int lastFirstVisiblePosition = 0;
     private int size;
@@ -115,9 +115,11 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     private ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
     private PicturesRecyclerViewAdapter.ListItemClickListener mOnClickListener;
     private Context context;
+    public static int firstVisibleItemPosition = 0;
 
-
-
+    private Parcelable mLayoutManagerState;
+    private static final String LAYOUT_MANAGER_STATE = "LAYOUT_MANAGER_STATE";
+    public  static Bundle state;
 
 
 
@@ -442,6 +444,17 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     protected void onResume() {
         super.onResume();
 
+
+        if(!isNetworkConnected()) {
+            popUpAlertDialogConnectionError();
+        }
+
+
+//        if (state != null) {
+//            mLayoutManagerState = state.getParcelable(LAYOUT_MANAGER_STATE);
+//            mRecyclerView.getLayoutManager().onRestoreInstanceState(mLayoutManagerState);
+//        }
+
 //        mRecyclerView.scrollToPosition(lastFirstVisiblePosition);
 
 //        ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(lastFirstVisiblePosition,0);
@@ -452,9 +465,14 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
         }
         checkIfUserHasAnyPictures();
 
-        if(!isNetworkConnected()) {
-            popUpAlertDialogConnectionError();
-        }
+
+//
+//        if(isUserhasPics) {
+////            Toast.makeText(getApplicationContext(), "onResume: " + firstVisibleItemPosition, Toast.LENGTH_SHORT).show();
+//            picturesList.clear();
+//            getPictures();
+//            mRecyclerView.scrollToPosition(firstVisibleItemPosition);
+//        }
 
     }
 
@@ -746,6 +764,8 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        state = savedInstanceState;
+
         mDialog = new ProgressDialog(this);
 
 
@@ -786,23 +806,56 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 //        mGridLayoutManager.setStackFromEnd(true);
         checkIfUserHasAnyPictures();
 
+
+
         mRecyclerView = findViewById(R.id.homeRecyclerView);
-        mRecyclerView.setHasFixedSize(true);
-
-        layoutManager = new GridLayoutManager(getApplicationContext(),3);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.addItemDecoration(new SpacesItemDecoration(3));
-
-        mOnClickListener = this;
-        context = this;
-
-        getPictures();
-
-        if(PostActivity.flag) {
-            check();
-        }
 
 
+            mRecyclerView.setHasFixedSize(true);
+
+            linearLayoutManager = new GridLayoutManager(getApplicationContext(),3);
+
+            mRecyclerView.setLayoutManager(linearLayoutManager);
+            mRecyclerView.addItemDecoration(new SpacesItemDecoration(3));
+
+            mOnClickListener = this;
+            context = this;
+
+            getPictures();
+
+            if(PostActivity.flag) {
+                check();
+            }
+
+            ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPosition(firstVisibleItemPosition);
+            firstVisibleItemPosition = 0;
+
+
+
+
+
+
+
+
+
+
+
+//        RecyclerView.ViewHolder viewHolder  = mRecyclerView.findViewHolderForLayoutPosition(firstVisibleItemPosition);
+
+//        linearLayoutManager.scrollToPositionWithOffset(firstVisibleItemPosition, Offset);
+
+
+
+//        mRecyclerView.scrollToPosition(6);
+//        mRecyclerView.scrollBy(50, 0);
+//        mRecyclerView.getLayoutManager().scrollToPositionWithOffset(index, 0);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+
+        outState.putParcelable(LAYOUT_MANAGER_STATE, mLayoutManagerState);
     }
 
 
@@ -856,6 +909,9 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
     private void getPictures() {
 
+        checkIfUserHasAnyPictures();
+
+
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference usersdRef = rootRef.child(mAuth.getUid());
 
@@ -891,7 +947,9 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
                         Picture picture = new Picture(pictureId, pictureUrl, date, me, family,friends,love, pets,  nature,  sport,  persons, animals,  vehicles, views, food, things, funny, places,  art);
 
-                        picturesList.add(picture);
+
+
+                    picturesList.add(picture);
 
                 }
 
@@ -899,6 +957,9 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                 Collections.reverse(picturesList);
                 adapter = new PicturesRecyclerViewAdapter(picturesList, mOnClickListener, context);
                 mRecyclerView.setAdapter(adapter);
+
+//                mRecyclerView.scrollToPosition(0);
+
 
 //                GridLayoutManager mGridLayoutManager = new GridLayoutManager(PicturesActivity.this, 3);
 //                mRecyclerView.setLayoutManager(mGridLayoutManager);
@@ -918,13 +979,12 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     @Override
     public void onListItemClick(int clickedItemIndex, Picture picture) {
 
-
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
             return;
         }
 
-//        Toast.makeText(getApplicationContext(), "clickedItemIndex = " + clickedItemIndex, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(), "Clicked Item Index = " + clickedItemIndex, Toast.LENGTH_SHORT).show();
 //        Log.i("pictureUrl", picture.getPictureUrl());
 
         PictureActivity.picture = picture;
@@ -932,10 +992,12 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
         Intent intent = new Intent(HomeActivity.this, PictureActivity.class);
         startActivity(intent);
 
+        finish();
+
     }
 
 
-    public void checkIfUserHasAnyPictures() {
+    private void checkIfUserHasAnyPictures() {
         mStatusDB.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -1174,12 +1236,25 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     //////////////////***************//////////////////
 
 
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//
-//        lastFirstVisiblePosition = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-//    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+            firstVisibleItemPosition = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+
+
+//        mLayoutManagerState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+
+//        firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+
+//        Toast.makeText(getApplicationContext(), "onPause: " + firstVisibleItemPosition, Toast.LENGTH_SHORT).show();
+    }
+
+    /****************************************************************************************/
+
+
+
+
 
 
 }

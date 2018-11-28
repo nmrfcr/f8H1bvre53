@@ -90,7 +90,14 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
                 .apply(new RequestOptions().placeholder(R.drawable.b))
                 .into(holder.imageView);
 
-        positions.add(position);
+//        Glide
+//                .with( context )
+//                .load(picturesList.get(position).getPictureUrl())
+//                .thumbnail( 0.1f )
+//                .apply(new RequestOptions().placeholder(R.drawable.b))
+//                .into(holder.imageView);
+
+//        positions.add(position);
 
 
     }
@@ -99,6 +106,19 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
     public int getItemCount() {
         return picturesList.size(); //mNumberOfItems;
     }
+
+//    @Override
+//    public long getItemId(int position) {
+//        return position;
+//    }
+//
+//    @Override
+//    public int getItemViewType(int position) {
+//        return position;
+//    }
+
+
+
 
     public  class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
@@ -118,31 +138,46 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
 //            imageView.setImageResource(pictureUrlList.get(listIndex).getPicture());
         }
 
+
         @Override
         public void onClick(View view) {
 
             int clickedPosition = getAdapterPosition();
+            int x = 0;
 
-            int i = 0;
-            int j = 0;
-
-
-            for(int p: positions) {
-                if(p == clickedPosition) {
-                    break;
-                }
-                i++;
-            }
-
-            for(Picture picture: picturesList) {
-                if(j == i) {
+            for(Picture picture : picturesList) {
+                if(x++ == clickedPosition) {
                     mOnClickListener.onListItemClick(clickedPosition, picture);
                     break;
                 }
-                j++;
             }
+
+
+//            Log.i("getAdapterPosition()", Integer.toString(getAdapterPosition()));
+
+
+
+//            int i = 0;
+//            int j = 0;
+//
+//
+//            for(int p: positions) {
+//                if(p == clickedPosition) {
+//                    break;
+//                }
+//                i++;
+//            }
+//
+//            for(Picture picture: picturesList) {
+//                if(j == i) {
+//                    mOnClickListener.onListItemClick(clickedPosition, picture);
+//                    break;
+//                }
+//                j++;
+//            }
 
 
         }
     }
+
 }

@@ -18,6 +18,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.flags.impl.DataUtils;
 import com.google.firebase.database.ValueEventListener;
 import com.tekapic.model.Album;
+import com.tekapic.model.Picture;
 
 import java.util.ArrayList;
 
@@ -99,9 +100,9 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
                 .into(holder.versionImage);
 
 
-
-        albums.add(albumsList.get(position).getName());
-        positions.add(position);
+//
+//        albums.add(albumsList.get(position).getName());
+//        positions.add(position);
 
 
     }
@@ -135,30 +136,38 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
         @Override
         public void onClick(View view) {
 
-
-
             int clickedPosition = getAdapterPosition();
-            String album = "";
-            int i = 0;
-            int j = 0;
+            int x = 0;
 
-
-            for(int p: positions) {
-                if(p == clickedPosition) {
+            for(Album album : albumsList) {
+                if(x++ == clickedPosition) {
+                    mOnClickListener.onListItemClick(clickedPosition, album.getName());
                     break;
                 }
-                i++;
             }
 
-            for(String a: albums) {
-                if(j == i) {
-                   album = a;
-                   break;
-                }
-                j++;
-            }
-
-            mOnClickListener.onListItemClick(clickedPosition, album);
+//            int clickedPosition = getAdapterPosition();
+//            String album = "";
+//            int i = 0;
+//            int j = 0;
+//
+//
+//            for(int p: positions) {
+//                if(p == clickedPosition) {
+//                    break;
+//                }
+//                i++;
+//            }
+//
+//            for(String a: albums) {
+//                if(j == i) {
+//                   album = a;
+//                   break;
+//                }
+//                j++;
+//            }
+//
+//            mOnClickListener.onListItemClick(clickedPosition, album);
         }
     }
 }
