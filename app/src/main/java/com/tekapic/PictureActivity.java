@@ -4,11 +4,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +20,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,7 +29,11 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,6 +45,7 @@ import com.tekapic.model.Picture;
 
 import java.util.ArrayList;
 
+
 public class PictureActivity extends AppCompatActivity {
 
     private ImageView imageView;
@@ -45,6 +55,8 @@ public class PictureActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseStorage storageReference;
     private ProgressDialog mDialog;
+    private CircularProgressDrawable circularProgressDrawable;
+    private ProgressBar progressBar;
 
     public static int clickedItemIndex;
     public static int picturesListSize;
@@ -134,9 +146,39 @@ public class PictureActivity extends AppCompatActivity {
 
     private void setPictureUrl(Context context, String pictureUrl) {
 
+
         Glide.with(context)
-                .load(pictureUrl)
+                .load(pictureUrl).apply(new RequestOptions().override(1000, 1000))
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                        progressBar.setVisibility(View.GONE);
+//                        Toast.makeText(getApplicationContext(), "onLoadFailed", Toast.LENGTH_SHORT).show();
+//                        imageView.setImageResource(R.drawable.b);
+
+
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
+                        imageView.setImageDrawable(resource);
+//                        imageView.setImageResource(R.drawable.b);
+//                        Toast.makeText(getApplicationContext(), "onResourceReady", Toast.LENGTH_SHORT).show();
+
+                        return false;
+                    }
+                })
                 .into(imageView);
+
+//        Glide.with(context)
+//                .load(pictureUrl)
+//                .into(imageView);
+
+//        Glide.with(context)
+//                .load(pictureUrl).apply(new RequestOptions().placeholder(circularProgressDrawable))
+//                .into(imageView);
 //
 //        Glide
 //                .with( context )
@@ -187,6 +229,16 @@ public class PictureActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.photo_view);
 
+        progressBar = findViewById(R.id.progress);
+
+//        circularProgressDrawable = new CircularProgressDrawable(this);
+//        circularProgressDrawable.setStrokeWidth(5f);
+//        circularProgressDrawable.setCenterRadius(150f);
+//        circularProgressDrawable.setBackgroundColor(R.color.white);
+//        circularProgressDrawable.start();
+
+
+
         mAuth = FirebaseAuth.getInstance();
         mStatusDB = FirebaseDatabase.getInstance().getReference().child(mAuth.getUid());
         storageReference =  FirebaseStorage.getInstance().getReference().getStorage();
@@ -210,12 +262,9 @@ public class PictureActivity extends AppCompatActivity {
                 if(clickedItemIndex == 0) {
                     return;
                 }
-
-//                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.VISIBLE);
                 setPictureUrl(getApplicationContext(), picturesList.get(clickedItemIndex-1).getPictureUrl());
                 --clickedItemIndex;
-
-
 
             }
             public void onSwipeLeft() {
@@ -232,16 +281,15 @@ public class PictureActivity extends AppCompatActivity {
                 if((clickedItemIndex + 1) == picturesListSize) {
                     return;
                 }
-
-//                Toast.makeText(getApplicationContext(), "left", Toast.LENGTH_SHORT).show();
-
+                progressBar.setVisibility(View.VISIBLE);
                 setPictureUrl(getApplicationContext(), picturesList.get(clickedItemIndex+1).getPictureUrl());
                 ++clickedItemIndex;
-
 
             }
 
         });
+
+
 
 
 
