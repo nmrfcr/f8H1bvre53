@@ -262,13 +262,17 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
     }
 
     @Override
-    public void onListItemClick(int clickedItemIndex, Picture picture) {
-
+    public void onListItemClick(int clickedItemIndex, Picture picture, int picturesListSize, ArrayList<Picture> picturesList) {
 
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
             return;
         }
+
+        PictureActivity.picturesListSize = picturesListSize;
+        PictureActivity.clickedItemIndex = clickedItemIndex;
+        PictureActivity.picturesList = picturesList;
+
 
 //        Toast.makeText(getApplicationContext(), "clickedItemIndex = " + clickedItemIndex, Toast.LENGTH_SHORT).show();
 //        Log.i("pictureUrl", picture.getPictureUrl());

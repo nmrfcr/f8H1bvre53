@@ -45,7 +45,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
 
 
     public interface ListItemClickListener {
-        void onListItemClick(int clickedItemIndex, Picture picture);
+        void onListItemClick(int clickedItemIndex, Picture picture, int picturesListSize, ArrayList<Picture> picturesList);
     }
 
     /*  public MyRecyclerViewAdapter(int numberOfItems, ListItemClickListener mOnClickListener){
@@ -147,7 +147,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
 
             for(Picture picture : picturesList) {
                 if(x++ == clickedPosition) {
-                    mOnClickListener.onListItemClick(clickedPosition, picture);
+                    mOnClickListener.onListItemClick(clickedPosition, picture, getItemCount(), picturesList);
                     break;
                 }
             }

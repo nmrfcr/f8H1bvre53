@@ -660,7 +660,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String imageFileName = "PIC_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
@@ -977,12 +977,17 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     }
 
     @Override
-    public void onListItemClick(int clickedItemIndex, Picture picture) {
+    public void onListItemClick(int clickedItemIndex, Picture picture, int picturesListSize, ArrayList<Picture> picturesList) {
 
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
             return;
         }
+
+        PictureActivity.picturesListSize = picturesListSize;
+        PictureActivity.clickedItemIndex = clickedItemIndex;
+        PictureActivity.picturesList = picturesList;
+
 
 //        Toast.makeText(getApplicationContext(), "Clicked Item Index = " + clickedItemIndex, Toast.LENGTH_SHORT).show();
 //        Log.i("pictureUrl", picture.getPictureUrl());

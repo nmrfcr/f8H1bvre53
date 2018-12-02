@@ -34,6 +34,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.tekapic.model.Picture;
 
+import java.util.ArrayList;
+
 public class PictureActivity extends AppCompatActivity {
 
     private ImageView imageView;
@@ -43,6 +45,12 @@ public class PictureActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseStorage storageReference;
     private ProgressDialog mDialog;
+
+    public static int clickedItemIndex;
+    public static int picturesListSize;
+    public static ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
+
+
 
 
     private void deledePictureFromFirebase() {
@@ -185,6 +193,57 @@ public class PictureActivity extends AppCompatActivity {
 
 //        picture = (Picture) getIntent().getSerializableExtra("MyClass");
         setPictureUrl(this, picture.getPictureUrl());
+
+
+        imageView.setOnTouchListener(new OnSwipeTouchListener(PictureActivity.this) {
+            public void onSwipeRight() {
+
+                if(isNetworkConnected() == false) {
+                    popUpAlertDialogConnectionError();
+                    return;
+                }
+
+                if(clickedItemIndex == 0 && picturesListSize == 0) {
+                    return;
+                }
+
+                if(clickedItemIndex == 0) {
+                    return;
+                }
+
+//                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+                setPictureUrl(getApplicationContext(), picturesList.get(clickedItemIndex-1).getPictureUrl());
+                --clickedItemIndex;
+
+
+
+            }
+            public void onSwipeLeft() {
+
+                if(isNetworkConnected() == false) {
+                    popUpAlertDialogConnectionError();
+                    return;
+                }
+
+                if(clickedItemIndex == 0 && picturesListSize == 1) {
+                    return;
+                }
+
+                if((clickedItemIndex + 1) == picturesListSize) {
+                    return;
+                }
+
+//                Toast.makeText(getApplicationContext(), "left", Toast.LENGTH_SHORT).show();
+
+                setPictureUrl(getApplicationContext(), picturesList.get(clickedItemIndex+1).getPictureUrl());
+                ++clickedItemIndex;
+
+
+            }
+
+        });
+
+
 
     }
 
