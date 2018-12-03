@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">Tekapic</string>
+    <string name="welcome_to_tekapic">Welcome To Tekapic !</string>
+    <string name="login">Log In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="forgot_password">Forgot Password ?</string>
+    <string name="profile">Profile</string>
+    <string name="albums">Albums</string>
+    <string name="picture">Picture</string>
+    <string name="update_albums">Update Albums</string>
+    <string name="add_new_picture">Add New Picture</string>
+
+
+
+
+
+
+
+
 </resources>

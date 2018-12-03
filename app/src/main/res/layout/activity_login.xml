@@ -13,7 +13,7 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login to your account"
+        android:text="Log in to your account"
         android:textAlignment="center"
         android:textStyle="bold" />
 
@@ -41,7 +41,7 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/roundedbutton"
         android:onClick="login"
-        android:text="Login" />
+        android:text="Log in" />
 
 
 

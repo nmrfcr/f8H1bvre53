@@ -45,7 +45,7 @@
         android:layout_marginTop="35dp"
         android:background="@drawable/roundedbutton"
         android:onClick="register"
-        android:text="Create account"
+        android:text="@string/sign_up"
         tools:ignore="OnClick" />
 
     <Button
@@ -55,7 +55,7 @@
         android:layout_marginTop="15dp"
         android:background="@drawable/roundedbutton"
         android:onClick="login"
-        android:text="Log in" />
+        android:text="@string/login" />
 
 
 </LinearLayout>

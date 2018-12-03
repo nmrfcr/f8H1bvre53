@@ -137,6 +137,10 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        String album = wantedAlbum.substring(0, 1).toUpperCase() + wantedAlbum.substring(1);
+        setTitle(album);
+
         setContentView(R.layout.activity_pictures);
 
         context = this;

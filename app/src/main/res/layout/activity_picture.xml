@@ -2,25 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/picture_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
     android:layoutDirection="ltr"
-    tools:context="com.tekapic.PictureActivity"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    tools:context="com.tekapic.PictureActivity">
 
     <ProgressBar
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
         android:id="@+id/progress"
         android:layout_width="match_parent"
-        android:layout_height="100dp" />
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:theme="@style/ProgressBarTheme" />
 
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/photo_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="match_parent" />
 
 
 </LinearLayout>

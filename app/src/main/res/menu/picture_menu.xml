@@ -5,13 +5,13 @@
 
 
     <item
-        android:title="Edit"
+        android:title="Update Albums"
         android:id="@+id/editPictureMenu"
         app:showAsAction="never"
         />
 
     <item
-        android:title="Delete"
+        android:title="Delete Picture"
         android:id="@+id/deletePictureMenu"
         app:showAsAction="never"
         />

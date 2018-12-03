@@ -1,5 +1,6 @@
 package com.tekapic;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -220,6 +221,7 @@ public class PictureActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @SuppressLint({"ResourceAsColor", "ClickableViewAccessibility"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -230,6 +232,10 @@ public class PictureActivity extends AppCompatActivity {
         imageView = findViewById(R.id.photo_view);
 
         progressBar = findViewById(R.id.progress);
+
+
+//        progressBar.setIndeterminate(true);
+//        progressBar.getIndeterminateDrawable().setColorFilter(R.color.white, android.graphics.PorterDuff.Mode.MULTIPLY);
 
 //        circularProgressDrawable = new CircularProgressDrawable(this);
 //        circularProgressDrawable.setStrokeWidth(5f);
@@ -246,7 +252,7 @@ public class PictureActivity extends AppCompatActivity {
 //        picture = (Picture) getIntent().getSerializableExtra("MyClass");
         setPictureUrl(this, picture.getPictureUrl());
 
-
+//        LinearLayout linearLayout = findViewById(R.id.picture_linear_layout);
         imageView.setOnTouchListener(new OnSwipeTouchListener(PictureActivity.this) {
             public void onSwipeRight() {
 
