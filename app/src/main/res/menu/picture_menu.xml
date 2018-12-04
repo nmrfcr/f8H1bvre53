@@ -2,7 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item
 
+        android:title="Previous"
+        android:id="@+id/previous_pic"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:title="Next"
+        android:id="@+id/next_pic"
+        app:showAsAction="always"
+        />
 
     <item
         android:title="Update Albums"

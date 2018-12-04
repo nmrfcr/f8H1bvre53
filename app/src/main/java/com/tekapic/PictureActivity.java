@@ -62,7 +62,7 @@ public class PictureActivity extends AppCompatActivity {
     public static int clickedItemIndex;
     public static int picturesListSize;
     public static ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
-
+    private LinearLayout linearLayout;
 
 
 
@@ -198,6 +198,10 @@ public class PictureActivity extends AppCompatActivity {
         }
 
         switch (item.getItemId()) {
+
+
+
+
             case R.id.editPictureMenu:
 //                Toast.makeText(this, "Edit", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(PictureActivity.this, EditActivity.class);
@@ -208,11 +212,48 @@ public class PictureActivity extends AppCompatActivity {
                 popUpAlertDialog();
                 return true;
 
+            case R.id.previous_pic:
+                previousPicture();
+                return true;
+
+            case R.id.next_pic:
+                nextPicture();
+                return true;
+
             case android.R.id.home:
                 goBack();
                 return true;
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void nextPicture() {
+
+        if(clickedItemIndex == 0 && picturesListSize == 1) {
+            return;
+        }
+
+        if((clickedItemIndex + 1) == picturesListSize) {
+            return;
+        }
+        progressBar.setVisibility(View.VISIBLE);
+        setPictureUrl(getApplicationContext(), picturesList.get(clickedItemIndex+1).getPictureUrl());
+        ++clickedItemIndex;
+    }
+
+    private void previousPicture() {
+
+        if(clickedItemIndex == 0 && picturesListSize == 0) {
+            return;
+        }
+
+        if(clickedItemIndex == 0) {
+            return;
+        }
+        progressBar.setVisibility(View.VISIBLE);
+        setPictureUrl(getApplicationContext(), picturesList.get(clickedItemIndex-1).getPictureUrl());
+        --clickedItemIndex;
     }
 
     @Override
@@ -252,48 +293,47 @@ public class PictureActivity extends AppCompatActivity {
 //        picture = (Picture) getIntent().getSerializableExtra("MyClass");
         setPictureUrl(this, picture.getPictureUrl());
 
-//        LinearLayout linearLayout = findViewById(R.id.picture_linear_layout);
-        imageView.setOnTouchListener(new OnSwipeTouchListener(PictureActivity.this) {
-            public void onSwipeRight() {
-
-                if(isNetworkConnected() == false) {
-                    popUpAlertDialogConnectionError();
-                    return;
-                }
-
-                if(clickedItemIndex == 0 && picturesListSize == 0) {
-                    return;
-                }
-
-                if(clickedItemIndex == 0) {
-                    return;
-                }
-                progressBar.setVisibility(View.VISIBLE);
-                setPictureUrl(getApplicationContext(), picturesList.get(clickedItemIndex-1).getPictureUrl());
-                --clickedItemIndex;
-
-            }
-            public void onSwipeLeft() {
-
-                if(isNetworkConnected() == false) {
-                    popUpAlertDialogConnectionError();
-                    return;
-                }
-
-                if(clickedItemIndex == 0 && picturesListSize == 1) {
-                    return;
-                }
-
-                if((clickedItemIndex + 1) == picturesListSize) {
-                    return;
-                }
-                progressBar.setVisibility(View.VISIBLE);
-                setPictureUrl(getApplicationContext(), picturesList.get(clickedItemIndex+1).getPictureUrl());
-                ++clickedItemIndex;
-
-            }
-
-        });
+//        imageView.setOnTouchListener(new OnSwipeTouchListener(PictureActivity.this) {
+//            public void onSwipeRight() {
+//
+//                if(isNetworkConnected() == false) {
+//                    popUpAlertDialogConnectionError();
+//                    return;
+//                }
+//
+//                if(clickedItemIndex == 0 && picturesListSize == 0) {
+//                    return;
+//                }
+//
+//                if(clickedItemIndex == 0) {
+//                    return;
+//                }
+//                progressBar.setVisibility(View.VISIBLE);
+//                setPictureUrl(getApplicationContext(), picturesList.get(clickedItemIndex-1).getPictureUrl());
+//                --clickedItemIndex;
+//
+//            }
+//            public void onSwipeLeft() {
+//
+//                if(isNetworkConnected() == false) {
+//                    popUpAlertDialogConnectionError();
+//                    return;
+//                }
+//
+//                if(clickedItemIndex == 0 && picturesListSize == 1) {
+//                    return;
+//                }
+//
+//                if((clickedItemIndex + 1) == picturesListSize) {
+//                    return;
+//                }
+//                progressBar.setVisibility(View.VISIBLE);
+//                setPictureUrl(getApplicationContext(), picturesList.get(clickedItemIndex+1).getPictureUrl());
+//                ++clickedItemIndex;
+//
+//            }
+//
+//        });
 
 
 
