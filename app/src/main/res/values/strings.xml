@@ -6,10 +6,32 @@
     <string name="forgot_password">Forgot Password ?</string>
     <string name="profile">Profile</string>
     <string name="albums">Albums</string>
-    <string name="picture">Picture</string>
+    <string name="picture"></string>
     <string name="update_albums">Update Albums</string>
     <string name="add_new_picture">Add New Picture</string>
     <string name="app_description">Sort pictures by albums</string>
+
+    <string name="prev">
+
+    <![CDATA[
+
+    <<Prev
+
+     ]]>
+
+     </string>
+
+    <string name="next">
+
+    <![CDATA[
+
+    Next>>
+
+     ]]>
+
+     </string>
+
+
 
 
 

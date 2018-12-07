@@ -2,8 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!--<item-->
+        <!--android:enabled="false"-->
+        <!--android:title="(0)"-->
+        <!--android:id="@+id/total_pics_home_menu"-->
+        <!--app:showAsAction="always"-->
+        <!--/>-->
+
 
     <item
+        android:icon="@drawable/ic_add_box_black_24dp"
         android:title="Add New"
         android:id="@+id/addNewMenu"
         app:showAsAction="always"
@@ -16,6 +24,7 @@
         <!--/>-->
 
     <item
+        android:icon="@drawable/ic_photo_album_black_24dp"
         android:title="Albums"
         android:id="@+id/albums"
         app:showAsAction="always"
@@ -32,6 +41,8 @@
         android:id="@+id/logoutMenu"
         app:showAsAction="never"
         />
+
+
 
 
 

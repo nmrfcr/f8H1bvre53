@@ -2,6 +2,8 @@ package com.tekapic;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ContentValues;
@@ -23,6 +25,7 @@ import android.os.PersistableBundle;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.internal.ParcelableSparseArray;
 import android.support.v4.app.ActivityCompat;
@@ -85,6 +88,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+
 public class HomeActivity extends AppCompatActivity implements PicturesRecyclerViewAdapter.ListItemClickListener {
 
     private static final int REQUEST_PHOTO_CAPTURE = 1;
@@ -109,17 +113,20 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 //    RecyclerView.LayoutManager layoutManager;
 
     //    static int lastFirstVisiblePosition = 0;
-    private int size;
-    private int pos;
+//    private int size;
     private PicturesRecyclerViewAdapter adapter;
     private ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
     private PicturesRecyclerViewAdapter.ListItemClickListener mOnClickListener;
     private Context context;
     public static int firstVisibleItemPosition = 0;
 
-    private Parcelable mLayoutManagerState;
-    private static final String LAYOUT_MANAGER_STATE = "LAYOUT_MANAGER_STATE";
-    public  static Bundle state;
+//    private Parcelable mLayoutManagerState;
+//    private static final String LAYOUT_MANAGER_STATE = "LAYOUT_MANAGER_STATE";
+//    private  Menu menuItem;
+//    private   boolean flag = false;
+    private android.support.v7.app.ActionBar actionBar;
+
+
 
 
 
@@ -479,120 +486,34 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_menu, menu);
+
+//        menuItem = menu;
+//
+//        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+//        final DatabaseReference usersdRef = rootRef.child(mAuth.getUid());
+//
+//
+//        mStatusDB.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                // get total available quest
+//                size = (int) dataSnapshot.getChildrenCount();
+//                MenuItem item = menuItem.findItem(R.id.total_pics_home_menu);
+//                item.setTitle("(" + Integer.toString(size) +")");
+//
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//        flag = true;
         return super.onCreateOptionsMenu(menu);
+
     }
 
 
-
-//    @Override
-//    protected void onStart() {
-//
-//        super.onStart();
-//
-//        Query query = mStatusDB;
-//
-//        final FirebaseRecyclerOptions<Picture> options = new FirebaseRecyclerOptions.Builder<Picture>()
-//                .setQuery(query, Picture.class)
-//                .build();
-//
-//        FirebaseRecyclerAdapter firebaseRecyclerAdapter =
-//                new FirebaseRecyclerAdapter<Picture, StatusViewHolder>(options) {
-//
-//                    @NonNull
-//                    @Override
-//                    public StatusViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//                        View view = LayoutInflater
-//                                .from(parent.getContext())
-//                                .inflate(R.layout.pictures_row, parent, false);
-////                        view.setMinimumHeight();
-//                        return new StatusViewHolder(view);
-//                    }
-//
-//
-//
-//                    @Override
-//                    protected void onBindViewHolder(@NonNull final StatusViewHolder holder, final int position, @NonNull final Picture model) {
-//
-//                        checkIfUserHasAnyPictures();
-//
-////                        pos = position;
-//
-//                                try {
-//                                    holder.setPicture(getApplicationContext(), model.getPictureUrl());
-//                                } catch (Exception e) {
-//                                    e.printStackTrace();
-//                                }
-//
-//                        //listen to image button clicks
-//                        holder.imageView.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//
-//                                if(isNetworkConnected() == false) {
-//                                    popUpAlertDialogConnectionError();
-//                                    return;
-//                                }
-//
-//                                if(model.getPictureUrl().equals("none")) {
-//                                    return;
-//                                }
-//                                //go to PictureActivity
-//                                Intent intent = new Intent(HomeActivity.this, PictureActivity.class);
-////                                intent.putExtra("MyClass", model);
-//                                PictureActivity.picture = model;
-//                                PictureActivity.isPictureFromAlbum = false;
-//
-//                                startActivity(intent);
-//                            }
-//                        });
-//                    }
-//
-////                    @Override
-////                    public int getItemCount() {
-////                        return size - 1 - pos; //mNumberOfItems;
-////                    }
-//
-//                };
-//
-//        mRecyclerView.setAdapter(firebaseRecyclerAdapter);
-//        firebaseRecyclerAdapter.startListening();
-//
-////        mRecyclerView.scrollToPosition(lastFirstVisiblePosition);
-//
-//    }
-
-//    public static class StatusViewHolder extends RecyclerView.ViewHolder {
-//
-//        View view;
-//        public ImageView imageView;
-//
-//
-//        public StatusViewHolder(View itemView) {
-//            super(itemView);
-//            this.view = itemView;
-//            imageView = view.findViewById(R.id.rowImageView);
-//        }
-//
-//
-//        public void setPicture(Context context, String pictureUrl) {
-//
-//            ImageView imageView = view.findViewById(R.id.rowImageView);
-//
-//            Glide.with(context)
-//                    .load(pictureUrl)
-//                    .apply(new RequestOptions().placeholder(R.drawable.b))
-//                    .into(imageView);
-//
-////            Glide.with(context)
-////                    .load(pictureUrl)
-////                    .into(imageView);
-//
-//
-////            Picasso.with(context).load(pictureUrl).placeholder(R.mipmap.loading_icon).
-////                    memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(imageView);
-//
-//        }
-//    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void dispatchChoosePhotoIntent() {
@@ -758,13 +679,16 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
         startActivity(startMain);
     }
 
+
+
     //****************onCreate()********************//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        state = savedInstanceState;
+        actionBar = getSupportActionBar();
+
 
         mDialog = new ProgressDialog(this);
 
@@ -851,12 +775,9 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 //        mRecyclerView.getLayoutManager().scrollToPositionWithOffset(index, 0);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
 
-        outState.putParcelable(LAYOUT_MANAGER_STATE, mLayoutManagerState);
-    }
+
+
 
 
     private void check() {
@@ -953,6 +874,12 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
                 }
 
+//                if(flag) {
+//                    MenuItem item = menuItem.findItem(R.id.total_pics_home_menu);
+//                    item.setTitle("(" + Integer.toString(picturesList.size()) +")");
+//                }
+
+                actionBar.setSubtitle("(" + Integer.toString(picturesList.size()) +")");
 
                 Collections.reverse(picturesList);
                 adapter = new PicturesRecyclerViewAdapter(picturesList, mOnClickListener, context);

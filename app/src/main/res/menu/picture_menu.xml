@@ -2,15 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
 
-        android:title="Previous"
+
+    <item
+        android:title="@string/prev"
         android:id="@+id/previous_pic"
         app:showAsAction="always"
         />
 
     <item
-        android:title="Next"
+        android:enabled="false"
+        android:title=""
+        android:id="@+id/position"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:title="@string/next"
         android:id="@+id/next_pic"
         app:showAsAction="always"
         />
@@ -25,6 +33,14 @@
         android:title="Delete Picture"
         android:id="@+id/deletePictureMenu"
         app:showAsAction="never"
+        />
+
+
+    <item
+        android:enabled="false"
+        android:title=""
+        android:id="@+id/aaa"
+        app:showAsAction="always"
         />
 
 

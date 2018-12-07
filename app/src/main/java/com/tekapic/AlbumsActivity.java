@@ -18,6 +18,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,6 +44,12 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
     private Map<String, Boolean> albumsMap = new HashMap<>();
     Context context;
     AlbumsRecyclerViewAdapter.ListItemClickListener mOnClickListener;
+    private  Menu menuItem;
+    private android.support.v7.app.ActionBar actionBar;
+
+
+
+
 
 
 
@@ -199,67 +207,8 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
                     albumsMap.put("art", false);
                 }
 
-                //**************Now all albums are are ready to use*************//
-
-//                for(int i = 0; i < Picture.numberOfAlbums; i++) {
-//                    if(albumsMap.get(Picture.albumsNames[i])) {
-//                        Log.i(Picture.albumsNames[i], "Album Exists");
-//                    }
-//                }
 
 
-
-
-//                if(albumsMap.get("me")) {
-//                     id = getResources().getIdentifier("com.tekapic:drawable/" + "me", null, null);
-//                    albumsList.add(new Album("me", id));
-//                }
-//                if(albumsMap.get("family")) {
-//                    id = getResources().getIdentifier("com.tekapic:drawable/" + "family", null, null);
-//                    albumsList.add(new Album("family", id));
-//                }
-//                if(albumsMap.get("friends")) {
-//                    albumsList.add(new Album("friends", findViewById(R.drawable.friends)));
-//                }
-//                if(albumsMap.get("love")) {
-//                    albumsList.add(new Album("love", findViewById(R.drawable.love)));
-//                }
-//                if(albumsMap.get("pets")) {
-//                    albumsList.add(new Album("pets", findViewById(R.drawable.pets)));
-//                }
-//                if(albumsMap.get("nature")) {
-//                    albumsList.add(new Album("nature", findViewById(R.drawable.nature)));
-//                }
-//                if(albumsMap.get("sport")) {
-//                    albumsList.add(new Album("sport", findViewById(R.drawable.sport)));
-//                }
-//                if(albumsMap.get("persons")) {
-//                    albumsList.add(new Album("persons", findViewById(R.drawable.persons)));
-//                }
-//                if(albumsMap.get("animals")) {
-//                    albumsList.add(new Album("animals", findViewById(R.drawable.animals)));
-//                }
-//                if(albumsMap.get("vehicles")) {
-//                    albumsList.add(new Album("vehicles", findViewById(R.drawable.vehicles)));
-//                }
-//                if(albumsMap.get("views")) {
-//                    albumsList.add(new Album("views", findViewById(R.drawable.views)));
-//                }
-//                if(albumsMap.get("food")) {
-//                    albumsList.add(new Album("food", findViewById(R.drawable.food)));
-//                }
-//                if(albumsMap.get("things")) {
-//                    albumsList.add(new Album("things", findViewById(R.drawable.things)));
-//                }
-//                if(albumsMap.get("funny")) {
-//                    albumsList.add(new Album("funny", findViewById(R.drawable.funny)));
-//                }
-//                if(albumsMap.get("places")) {
-//                    albumsList.add(new Album("places", findViewById(R.drawable.places)));
-//                }
-//                if(albumsMap.get("art")) {
-//                    albumsList.add(new Album("art", findViewById(R.drawable.art)));
-//                }
 
                 for(int i = 0; i < Picture.numberOfAlbums; i++) {
                     if(albumsMap.get(Picture.albumsNames[i])) {
@@ -268,42 +217,18 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
                     }
                 }
 
+//                if(flag) {
+//                    MenuItem item = menuItem.findItem(R.id.total_pics_home_menu);
+//                    item.setTitle("(" + Integer.toString(albumsList.size()) +")");
+//                }
+
+                actionBar.setSubtitle("(" + Integer.toString(albumsList.size()) +")");
 
                 adapter = new AlbumsRecyclerViewAdapter(albumsList,mOnClickListener,context);
                 mRecyclerView.setAdapter(adapter);
 
                 GridLayoutManager mGridLayoutManager = new GridLayoutManager(AlbumsActivity.this, 3);
                 mRecyclerView.setLayoutManager(mGridLayoutManager);
-
-//                new Handler(Looper.getMainLooper()).post(new Runnable() {
-//
-//                    @SuppressLint("NewApi")
-//                    @Override
-//                    public void run() {
-//
-//
-//                        //recler view of albums
-//
-//
-//
-//
-//
-//                    }
-//                });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -319,14 +244,7 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
 
-
-
-
-    }
 
     @Override
     public void onBackPressed() {
@@ -334,11 +252,206 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
         startActivity(new Intent(AlbumsActivity.this, HomeActivity.class));
     }
 
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.albums_menu, menu);
+//
+//        menuItem = menu;
+//
+//        ///////////////////////////////
+//
+//
+//        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+//
+//        DatabaseReference usersdRef = rootRef.child(mAuth.getUid());
+//
+//        ValueEventListener eventListener = new ValueEventListener() {
+//            @SuppressLint("ResourceType")
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//
+//                boolean meDoesntExist = true, familyDoesntExist = true, friendsDoesntExist = true;
+//                boolean loveDoesntExist = true, petsDoesntExist = true, natureDoesntExist = true;
+//                boolean sportDoesntExist = true, personsDoesntExist = true, animalsDoesntExist = true;
+//                boolean vehiclesDoesntExist = true, viewsDoesntExist = true, foodDoesntExist = true;
+//                boolean thingsDoesntExist = true, funnyDoesntExist = true, placesDoesntExist = true;
+//                boolean artDoesntExist = true;
+//                ArrayList<Album> albumsList=new ArrayList<Album>() ;
+//
+//
+//                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+//
+//                    String me = ds.child("me").getValue(String.class);
+//                    String family = ds.child("family").getValue(String.class);
+//                    String friends = ds.child("friends").getValue(String.class);
+//                    String love = ds.child("love").getValue(String.class);
+//                    String pets = ds.child("pets").getValue(String.class);
+//                    String nature = ds.child("nature").getValue(String.class);
+//                    String sport = ds.child("sport").getValue(String.class);
+//                    String persons = ds.child("persons").getValue(String.class);
+//                    String animals = ds.child("animals").getValue(String.class);
+//                    String vehicles = ds.child("vehicles").getValue(String.class);
+//                    String views = ds.child("views").getValue(String.class);
+//                    String food = ds.child("food").getValue(String.class);
+//                    String things = ds.child("things").getValue(String.class);
+//                    String funny = ds.child("funny").getValue(String.class);
+//                    String places = ds.child("places").getValue(String.class);
+//                    String art = ds.child("art").getValue(String.class);
+//
+//                    if(me.equals("1") && meDoesntExist) {
+//                        albumsMap.put("me", true);
+//                        meDoesntExist = false;
+//                    }
+//                    if(family.equals("1") && familyDoesntExist) {
+//                        albumsMap.put("family", true);
+//                        familyDoesntExist = false;
+//                    }
+//                    if(friends.equals("1") && friendsDoesntExist) {
+//                        albumsMap.put("friends", true);
+//                        friendsDoesntExist = false;
+//                    }
+//                    if(love.equals("1") && loveDoesntExist) {
+//                        albumsMap.put("love", true);
+//                        loveDoesntExist = false;
+//                    }
+//                    if(pets.equals("1") && petsDoesntExist) {
+//                        albumsMap.put("pets", true);
+//                        petsDoesntExist = false;
+//                    }
+//                    if(nature.equals("1") && natureDoesntExist) {
+//                        albumsMap.put("nature", true);
+//                        natureDoesntExist = false;
+//                    }
+//                    if(sport.equals("1") && sportDoesntExist) {
+//                        albumsMap.put("sport", true);
+//                        sportDoesntExist = false;
+//                    }
+//                    if(persons.equals("1") && personsDoesntExist) {
+//                        albumsMap.put("persons", true);
+//                        personsDoesntExist = false;
+//                    }
+//                    if(animals.equals("1") && animalsDoesntExist) {
+//                        albumsMap.put("animals", true);
+//                        animalsDoesntExist = false;
+//                    }
+//                    if(vehicles.equals("1") && vehiclesDoesntExist) {
+//                        albumsMap.put("vehicles", true);
+//                        vehiclesDoesntExist = false;
+//                    }
+//                    if(views.equals("1") && viewsDoesntExist) {
+//                        albumsMap.put("views", true);
+//                        viewsDoesntExist = false;
+//                    }
+//                    if(food.equals("1") && foodDoesntExist) {
+//                        albumsMap.put("food", true);
+//                        foodDoesntExist = false;
+//                    }
+//                    if(things.equals("1") && thingsDoesntExist) {
+//                        albumsMap.put("things", true);
+//                        thingsDoesntExist = false;
+//                    }
+//                    if(funny.equals("1") && funnyDoesntExist) {
+//                        albumsMap.put("funny", true);
+//                        funnyDoesntExist = false;
+//                    }
+//                    if(places.equals("1") && placesDoesntExist) {
+//                        albumsMap.put("places", true);
+//                        placesDoesntExist = false;
+//                    }
+//                    if(art.equals("1") && artDoesntExist) {
+//                        albumsMap.put("art", true);
+//                        artDoesntExist = false;
+//                    }
+//                }
+//
+//                if(meDoesntExist) {
+//                    albumsMap.put("me", false);
+//                }
+//                if(familyDoesntExist) {
+//                    albumsMap.put("family", false);
+//                }
+//                if(friendsDoesntExist) {
+//                    albumsMap.put("friends", false);
+//                }
+//                if(loveDoesntExist) {
+//                    albumsMap.put("love", false);
+//                }
+//                if(petsDoesntExist) {
+//                    albumsMap.put("pets", false);
+//                }
+//                if(natureDoesntExist) {
+//                    albumsMap.put("nature", false);
+//                }
+//                if(sportDoesntExist) {
+//                    albumsMap.put("sport", false);
+//                }
+//                if(personsDoesntExist) {
+//                    albumsMap.put("persons", false);
+//                }
+//                if(animalsDoesntExist) {
+//                    albumsMap.put("animals", false);
+//                }
+//                if(vehiclesDoesntExist) {
+//                    albumsMap.put("vehicles", false);
+//                }
+//                if(viewsDoesntExist) {
+//                    albumsMap.put("views", false);
+//                }
+//                if(foodDoesntExist) {
+//                    albumsMap.put("food", false);
+//                }
+//                if(thingsDoesntExist) {
+//                    albumsMap.put("things", false);
+//                }
+//                if(funnyDoesntExist) {
+//                    albumsMap.put("funny", false);
+//                }
+//                if(placesDoesntExist) {
+//                    albumsMap.put("places", false);
+//                }
+//                if(artDoesntExist) {
+//                    albumsMap.put("art", false);
+//                }
+//
+//
+//
+//
+//                for(int i = 0; i < Picture.numberOfAlbums; i++) {
+//                    if(albumsMap.get(Picture.albumsNames[i])) {
+//                        albumsList.add(new Album(Picture.albumsNames[i], 0));
+//                    }
+//                }
+//
+//                //here********************************************
+//
+//                MenuItem item = menuItem.findItem(R.id.total_albums);
+//                item.setTitle("(" + Integer.toString(albumsList.size()) +")");
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        };
+//        usersdRef.addListenerForSingleValueEvent(eventListener);
+//
+//
+//        /////////////////////////////
+//
+//
+//        return super.onCreateOptionsMenu(menu);
+//    }
+
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_albums);
+
+        actionBar = getSupportActionBar();
+
 
         context = this;
         mOnClickListener = this;
@@ -382,8 +495,59 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
 //        GridLayoutManager mg = new GridLayoutManager(AlbumsActivity.this, 3);
 //        mRecyclerView.setLayoutManager(mg);
 
+        if(PostActivity.flag) {
+            check();
+        }
+
 
     }
+
+
+    private void check() {
+
+        Log.i("check", "inCheck()");
+
+        final Thread t1 = new Thread(new Runnable() {
+            //            Handler handler = new Handler();
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Thread.sleep(100);
+                        Log.i("while", "in Loop !!!!!!!!!!!!!!!!!!");
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if(PostActivity.flag == false) {
+
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @SuppressLint("NewApi")
+                            @Override
+                            public void run() {
+
+                                adapter.notifyItemRangeRemoved(0, albumsList.size());
+                                adapter.notifyItemRangeInserted(0, albumsList.size() + 1 );
+
+                                albumsList.clear();
+
+                                getUserAlbums();
+                            }
+                        });
+
+                        break;
+                    }
+
+                }
+            }
+        });
+
+        t1.start();
+
+    }
+
+
+
     private void popUpAlertDialogConnectionError() {
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);

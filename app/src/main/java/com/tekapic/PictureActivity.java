@@ -56,14 +56,12 @@ public class PictureActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseStorage storageReference;
     private ProgressDialog mDialog;
-    private CircularProgressDrawable circularProgressDrawable;
     private ProgressBar progressBar;
 
     public static int clickedItemIndex;
     public static int picturesListSize;
     public static ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
-    private LinearLayout linearLayout;
-
+    private Menu menu;
 
 
     private void deledePictureFromFirebase() {
@@ -71,7 +69,6 @@ public class PictureActivity extends AppCompatActivity {
         mDialog.setMessage("Deleting...");
         mDialog.show();
         mDialog.setCancelable(false);
-//        Toast.makeText(getApplicationContext(), "Deleting..", Toast.LENGTH_SHORT).show();
 
 
         mStatusDB.child(picture.getPictureId()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -91,10 +88,6 @@ public class PictureActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Error! picture wasn't deleted.", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
-
 
         StorageReference photoRef = storageReference.getReferenceFromUrl(picture.getPictureUrl());
 
@@ -146,18 +139,11 @@ public class PictureActivity extends AppCompatActivity {
 
 
     private void setPictureUrl(Context context, String pictureUrl) {
-
-
         Glide.with(context)
                 .load(pictureUrl).apply(new RequestOptions().override(1000, 1000))
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//                        progressBar.setVisibility(View.GONE);
-//                        Toast.makeText(getApplicationContext(), "onLoadFailed", Toast.LENGTH_SHORT).show();
-//                        imageView.setImageResource(R.drawable.b);
-
-
                         return false;
                     }
 
@@ -165,29 +151,16 @@ public class PictureActivity extends AppCompatActivity {
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         progressBar.setVisibility(View.GONE);
                         imageView.setImageDrawable(resource);
-//                        imageView.setImageResource(R.drawable.b);
-//                        Toast.makeText(getApplicationContext(), "onResourceReady", Toast.LENGTH_SHORT).show();
 
                         return false;
                     }
                 })
                 .into(imageView);
-
-//        Glide.with(context)
-//                .load(pictureUrl)
-//                .into(imageView);
-
-//        Glide.with(context)
-//                .load(pictureUrl).apply(new RequestOptions().placeholder(circularProgressDrawable))
-//                .into(imageView);
-//
-//        Glide
-//                .with( context )
-//                .load(pictureUrl)
-//                .thumbnail( 0.1f )
-//                .into(imageView);
-
     }
+
+
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -196,16 +169,10 @@ public class PictureActivity extends AppCompatActivity {
             popUpAlertDialogConnectionError();
             return false;
         }
-
         switch (item.getItemId()) {
 
-
-
-
             case R.id.editPictureMenu:
-//                Toast.makeText(this, "Edit", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(PictureActivity.this, EditActivity.class);
-//                intent.putExtra("MyClass", picture);
                 startActivity(intent);
                 return true;
             case R.id.deletePictureMenu:
@@ -235,30 +202,52 @@ public class PictureActivity extends AppCompatActivity {
         }
 
         if((clickedItemIndex + 1) == picturesListSize) {
-            return;
+            clickedItemIndex = -1;
         }
         progressBar.setVisibility(View.VISIBLE);
-        setPictureUrl(getApplicationContext(), picturesList.get(clickedItemIndex+1).getPictureUrl());
+
+        picture = picturesList.get(clickedItemIndex+1);
+
+        setPictureUrl(getApplicationContext(), picture.getPictureUrl());
         ++clickedItemIndex;
+
+        updatePicturePosition();
     }
 
     private void previousPicture() {
 
-        if(clickedItemIndex == 0 && picturesListSize == 0) {
+        if(clickedItemIndex == 0 && picturesListSize == 1) {
             return;
         }
 
         if(clickedItemIndex == 0) {
-            return;
+            clickedItemIndex = picturesListSize;
         }
         progressBar.setVisibility(View.VISIBLE);
-        setPictureUrl(getApplicationContext(), picturesList.get(clickedItemIndex-1).getPictureUrl());
+
+        picture = picturesList.get(clickedItemIndex-1);
+
+        setPictureUrl(getApplicationContext(), picture.getPictureUrl());
+
         --clickedItemIndex;
+
+        updatePicturePosition();
+    }
+
+    private void updatePicturePosition() {
+        MenuItem item = menu.findItem(R.id.position);
+        item.setTitle(Integer.toString(clickedItemIndex+1) + "/" + Integer.toString(picturesListSize));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.picture_menu, menu);
+
+        this.menu = menu;
+
+        updatePicturePosition();
+
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -274,71 +263,11 @@ public class PictureActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progress);
 
-
-//        progressBar.setIndeterminate(true);
-//        progressBar.getIndeterminateDrawable().setColorFilter(R.color.white, android.graphics.PorterDuff.Mode.MULTIPLY);
-
-//        circularProgressDrawable = new CircularProgressDrawable(this);
-//        circularProgressDrawable.setStrokeWidth(5f);
-//        circularProgressDrawable.setCenterRadius(150f);
-//        circularProgressDrawable.setBackgroundColor(R.color.white);
-//        circularProgressDrawable.start();
-
-
-
         mAuth = FirebaseAuth.getInstance();
         mStatusDB = FirebaseDatabase.getInstance().getReference().child(mAuth.getUid());
         storageReference =  FirebaseStorage.getInstance().getReference().getStorage();
 
-//        picture = (Picture) getIntent().getSerializableExtra("MyClass");
         setPictureUrl(this, picture.getPictureUrl());
-
-//        imageView.setOnTouchListener(new OnSwipeTouchListener(PictureActivity.this) {
-//            public void onSwipeRight() {
-//
-//                if(isNetworkConnected() == false) {
-//                    popUpAlertDialogConnectionError();
-//                    return;
-//                }
-//
-//                if(clickedItemIndex == 0 && picturesListSize == 0) {
-//                    return;
-//                }
-//
-//                if(clickedItemIndex == 0) {
-//                    return;
-//                }
-//                progressBar.setVisibility(View.VISIBLE);
-//                setPictureUrl(getApplicationContext(), picturesList.get(clickedItemIndex-1).getPictureUrl());
-//                --clickedItemIndex;
-//
-//            }
-//            public void onSwipeLeft() {
-//
-//                if(isNetworkConnected() == false) {
-//                    popUpAlertDialogConnectionError();
-//                    return;
-//                }
-//
-//                if(clickedItemIndex == 0 && picturesListSize == 1) {
-//                    return;
-//                }
-//
-//                if((clickedItemIndex + 1) == picturesListSize) {
-//                    return;
-//                }
-//                progressBar.setVisibility(View.VISIBLE);
-//                setPictureUrl(getApplicationContext(), picturesList.get(clickedItemIndex+1).getPictureUrl());
-//                ++clickedItemIndex;
-//
-//            }
-//
-//        });
-
-
-
-
-
     }
 
     private void goBack() {
@@ -354,7 +283,6 @@ public class PictureActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
         goBack();
     }
 
@@ -370,10 +298,6 @@ public class PictureActivity extends AppCompatActivity {
                 "TRY AGAIN",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-//                        if(isNetworkConnected() == false) {
-//                            popUpAlertDialogConnectionError();
-//                        }
-
                     }
                 });
 

@@ -22,6 +22,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,15 +48,94 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
     private PicturesRecyclerViewAdapter.ListItemClickListener mOnClickListener;
     private ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
     RecyclerView.LayoutManager layoutManager;
-    static int topView;
     public static int fVisibleItemPosition = 0;
+    private android.support.v7.app.ActionBar actionBar;
+
+//    private  Menu menuItem;
+//    private  boolean  flag;
 
 
+//
 //    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        positionIndex = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.pictures_menu, menu);
+//
+////        menuItem = menu;
+////
+////        Log.i("menuItem", "has a value!!!!!!!!!!!!!!!!!!!!!");
+////
+////
+////        //////////////////////////////
+////
+////        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+////        DatabaseReference usersdRef = rootRef.child(mAuth.getUid());
+////
+////        ValueEventListener eventListener = new ValueEventListener() {
+////
+////
+////            @Override
+////            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+////                boolean hasAnyPicture = false;
+////                ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
+////
+////                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+////
+////                    String albumValue = ds.child(wantedAlbum).getValue(String.class);
+////                    if(albumValue.equals("1")) {
+////
+////
+////                        String pictureUrl = ds.child("pictureUrl").getValue(String.class);
+////
+////                        String date = ds.child("date").getValue(String.class);
+////
+////                        String pictureId = ds.child("pictureId").getValue(String.class);
+////
+////                        String me = ds.child("me").getValue(String.class);
+////                        String family = ds.child("family").getValue(String.class);
+////                        String friends = ds.child("friends").getValue(String.class);
+////                        String love = ds.child("love").getValue(String.class);
+////                        String pets = ds.child("pets").getValue(String.class);
+////                        String nature = ds.child("nature").getValue(String.class);
+////                        String sport = ds.child("sport").getValue(String.class);
+////                        String persons = ds.child("persons").getValue(String.class);
+////                        String animals = ds.child("animals").getValue(String.class);
+////                        String vehicles = ds.child("vehicles").getValue(String.class);
+////                        String views = ds.child("views").getValue(String.class);
+////                        String food = ds.child("food").getValue(String.class);
+////                        String things = ds.child("things").getValue(String.class);
+////                        String funny = ds.child("funny").getValue(String.class);
+////                        String places = ds.child("places").getValue(String.class);
+////                        String art = ds.child("art").getValue(String.class);
+////
+////                        Picture picture = new Picture(pictureId, pictureUrl, date, me, family,friends,love, pets,  nature,  sport,  persons, animals,  vehicles, views, food, things, funny, places,  art);
+////
+////                        picturesList.add(picture);
+////                    }
+////                }
+////                //here
+////                MenuItem item = menuItem.findItem(R.id.total_pics_pictures_menu);
+////                item.setTitle("(" + Integer.toString(picturesList.size()) +")");
+////            }
+////
+////            @Override
+////            public void onCancelled(@NonNull DatabaseError databaseError) {
+////
+////            }
+////        };
+////        usersdRef.addListenerForSingleValueEvent(eventListener);
+////
+////
+////
+////        /////////////////////////////////
+////
+////        flag = true;
+//
+//
+//        return super.onCreateOptionsMenu(menu);
+//
 //    }
+
+
 
 
     private void getPicturesByAlbum() {
@@ -108,12 +189,21 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
                     startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
                     return;
                 }
+
+//                if(flag) {
+//
+//                    if(menuItem == null) {
+//                        Log.i("menuItem", "is nulllllllllllllllllllll");
+//                    }
+//
+//                    MenuItem item = menuItem.findItem(R.id.total_pics_pictures_menu);
+//                    item.setTitle("(" + Integer.toString(picturesList.size()) +")");
+//                }
+                actionBar.setSubtitle("(" + Integer.toString(picturesList.size()) +")");
                 Collections.reverse(picturesList);
                 adapter = new PicturesRecyclerViewAdapter(picturesList,mOnClickListener,context);
                 mRecyclerView.setAdapter(adapter);
 
-//                GridLayoutManager mGridLayoutManager = new GridLayoutManager(PicturesActivity.this, 3);
-//                mRecyclerView.setLayoutManager(mGridLayoutManager);
 
             }
 
@@ -129,7 +219,6 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
         startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
 
     }
@@ -138,19 +227,21 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+//        flag = false;
+
         String album = wantedAlbum.substring(0, 1).toUpperCase() + wantedAlbum.substring(1);
         setTitle(album);
 
         setContentView(R.layout.activity_pictures);
+
+        actionBar = getSupportActionBar();
+
 
         context = this;
         mOnClickListener = this;
 
         mAuth = FirebaseAuth.getInstance();
 
-//        wantedAlbum = getIntent().getStringExtra("wanted_album");
-
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
         mRecyclerView = findViewById(R.id.picturesRecyclerView);
         mRecyclerView.setHasFixedSize(true);
@@ -162,7 +253,6 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
 
 
 
-//        mRecyclerView.setLayoutManager(linearLayoutManager);
 
         getPicturesByAlbum();
 
@@ -206,12 +296,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
                                 getPicturesByAlbum();
                             }
                         });
-//                        handler.post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//
-//                            }
-//                        });
+
                         break;
                     }
 
@@ -235,10 +320,6 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
                 "TRY AGAIN",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-//                        if(isNetworkConnected() == false) {
-//                            popUpAlertDialogConnectionError();
-//                        }
-
                     }
                 });
 
@@ -256,7 +337,6 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
         super.onResume();
 
 
-//        mRecyclerView.scrollToPosition(positionIndex);
 
 
 
@@ -278,8 +358,6 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
         PictureActivity.picturesList = picturesList;
 
 
-//        Toast.makeText(getApplicationContext(), "clickedItemIndex = " + clickedItemIndex, Toast.LENGTH_SHORT).show();
-//        Log.i("pictureUrl", picture.getPictureUrl());
 
         PictureActivity.picture = picture;
         PictureActivity.isPictureFromAlbum = true;

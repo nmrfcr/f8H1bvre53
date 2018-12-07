@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--<item-->
+        <!--android:enabled="false"-->
+        <!--android:title="(0)"-->
+        <!--android:id="@+id/total_pics_pictures_menu"-->
+        <!--app:showAsAction="always"-->
+        <!--/>-->
+
+    <!--<item-->
+        <!--android:enabled="false"-->
+        <!--android:title=""-->
+        <!--android:id="@+id/none4"-->
+        <!--app:showAsAction="always"-->
+        <!--/>-->
+
+    <!--<item-->
+        <!--android:enabled="false"-->
+        <!--android:title=""-->
+        <!--android:id="@+id/none5"-->
+        <!--app:showAsAction="always"-->
+        <!--/>-->
+
+    <!--<item-->
+        <!--android:enabled="false"-->
+        <!--android:title=""-->
+        <!--android:id="@+id/none6"-->
+        <!--app:showAsAction="always"-->
+        <!--/>-->
+
+
+
+
+
+
+
+</menu>
