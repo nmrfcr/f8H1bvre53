@@ -108,7 +108,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
         builder1.setTitle("Error");
         builder1.setMessage("There might be problems with the server or network connection.");
-        builder1.setCancelable(false);
 
         builder1.setPositiveButton(
                 "TRY AGAIN",

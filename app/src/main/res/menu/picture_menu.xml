@@ -30,6 +30,12 @@
         />
 
     <item
+        android:title="Show Date"
+        android:id="@+id/showDateMenu"
+        app:showAsAction="never"
+        />
+
+    <item
         android:title="Delete Picture"
         android:id="@+id/deletePictureMenu"
         app:showAsAction="never"

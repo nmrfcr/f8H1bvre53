@@ -171,12 +171,29 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
         popUpAlertDialog();
     }
 
+    private void albumsIconclicked() {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setTitle("Albums");
+        builder1.setMessage("Please add pictures first.");
+
+        builder1.setPositiveButton(
+                "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        popUpAlertDialog();
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
+    }
+
     private void popUpAlertDialogConnectionError() {
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
         builder1.setTitle("Error");
         builder1.setMessage("There might be problems with the server or network connection.");
-        builder1.setCancelable(false);
 
         builder1.setPositiveButton(
                 "TRY AGAIN",
@@ -432,7 +449,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                     startActivity(new Intent(HomeActivity.this, AlbumsActivity.class));
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Please add pictures first.", Toast.LENGTH_SHORT).show();
+                    albumsIconclicked();
                 }
                 return true;
             case R.id.updateEmailMenu:

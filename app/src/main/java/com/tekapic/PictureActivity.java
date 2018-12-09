@@ -175,6 +175,9 @@ public class PictureActivity extends AppCompatActivity {
                 Intent intent = new Intent(PictureActivity.this, EditActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.showDateMenu:
+                showDate();
+                return true;
             case R.id.deletePictureMenu:
                 popUpAlertDialog();
                 return true;
@@ -292,10 +295,26 @@ public class PictureActivity extends AppCompatActivity {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
         builder1.setTitle("Error");
         builder1.setMessage("There might be problems with the server or network connection.");
-        builder1.setCancelable(false);
 
         builder1.setPositiveButton(
                 "TRY AGAIN",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
+    }
+
+    private void showDate() {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setTitle("Date Taken");
+        builder1.setMessage(picture.getDate());
+
+        builder1.setPositiveButton(
+                "Close",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                     }
