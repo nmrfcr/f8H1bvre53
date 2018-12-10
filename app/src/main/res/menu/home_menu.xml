@@ -12,7 +12,7 @@
 
     <item
         android:icon="@drawable/ic_add_box_black_24dp"
-        android:title="Add New"
+        android:title="Add new picture"
         android:id="@+id/addNewMenu"
         app:showAsAction="always"
         />

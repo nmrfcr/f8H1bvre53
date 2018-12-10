@@ -62,6 +62,9 @@ public class PictureActivity extends AppCompatActivity {
     public static int picturesListSize;
     public static ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
     private Menu menu;
+    private boolean isSystemUIHidden;
+
+
 
 
     private void deledePictureFromFirebase() {
@@ -260,6 +263,8 @@ public class PictureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture);
 
+        isSystemUIHidden = false;
+
         mDialog = new ProgressDialog(this);
 
         imageView = findViewById(R.id.photo_view);
@@ -271,7 +276,63 @@ public class PictureActivity extends AppCompatActivity {
         storageReference =  FirebaseStorage.getInstance().getReference().getStorage();
 
         setPictureUrl(this, picture.getPictureUrl());
+
+        hideSystemUI();
+        showSystemUI();
+
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(getSystemUiVisibility() == 3840) {
+                    isSystemUIHidden = false;
+                }
+
+                if(isSystemUIHidden == false) {
+                    hideSystemUI();
+                    isSystemUIHidden = true;
+                }
+                else {
+                    showSystemUI();
+                    isSystemUIHidden = false;
+                }
+            }
+        });
     }
+
+    private void hideSystemUI() {
+        // Enables regular immersive mode.
+        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
+        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE
+                        // Set the content to appear under the system bars so that the
+                        // content doesn't resize when the system bars hide and show.
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        // Hide the nav bar and status bar
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+    }
+
+    private void showSystemUI() {
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+    }
+
+    private int getSystemUiVisibility() {
+        View decorView = getWindow().getDecorView();
+        return decorView.getSystemUiVisibility();
+    }
+
+
+
 
     private void goBack() {
         finish();
