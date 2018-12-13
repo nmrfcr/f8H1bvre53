@@ -10,11 +10,16 @@ import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,7 +31,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.firebase.database.ValueEventListener;
 import com.tekapic.model.Album;
 import com.tekapic.model.Picture;
@@ -41,7 +52,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by LEV on 23/08/2018.
  */
-public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRecyclerViewAdapter.MyViewHolder> {
+public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRecyclerViewAdapter.MyViewHolder>    {
 
     private int mNumberOfItems;
     private Context context;
@@ -54,6 +65,8 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
     Bitmap darkBitmap = null;
     MotionEvent ev;
     String src;
+    static boolean flag = false;
+
 
     public PicturesRecyclerViewAdapter(ArrayList<Picture> picturesList, ListItemClickListener v1, Context v2) {
 
@@ -61,6 +74,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
         this.mOnClickListener =  v1;
         this.context= v2;
     }
+
 
 
 
@@ -103,11 +117,15 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
+        pos = position;
+
         Glide.with(context)
                 .load(picturesList.get(position).getPictureUrl())
                 .apply(new RequestOptions().placeholder(R.drawable.b))
                 .into(holder.imageView);
 
+
+
     }
 
 
@@ -116,17 +134,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
 
 
 
-    private Bitmap darkenBitMap(Bitmap bm) {
 
-        Canvas canvas = new Canvas(bm);
-        Paint p = new Paint(Color.RED);
-        //ColorFilter filter = new LightingColorFilter(0xFFFFFFFF , 0x00222222); // lighten
-        ColorFilter filter = new LightingColorFilter(0xFF7F7F7F, 0x00000000);    // darken
-        p.setColorFilter(filter);
-        canvas.drawBitmap(bm, new Matrix(), p);
-
-        return bm;
-    }
 
 
 
@@ -149,8 +157,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
 
 
 
-    public  class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
-    {
+    public  class MyViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener{
 
         ImageView imageView;
 
@@ -158,7 +165,9 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
             super(itemView);
 
             imageView= itemView.findViewById(R.id.rowImageView);
-            itemView.setOnClickListener(this);
+//            itemView.setOnClickListener(this);
+
+            itemView.setOnTouchListener(this);
 
 
 
@@ -170,23 +179,138 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
         }
 
 
+//
+//        @Override
+//        public void onClick(View view) {
+//
+//            int clickedPosition = getAdapterPosition();
+//            int x = 0;
+//
+//            for(Picture picture : picturesList) {
+//                if(x++ == clickedPosition) {
+//                    mOnClickListener.onListItemClick(clickedPosition, picture, getItemCount(), picturesList);
+//                    break;
+//                }
+//            }
+//
+//        }
+
 
         @Override
-        public void onClick(View view) {
+        public boolean onTouch(View v, MotionEvent event) {
 
-            int clickedPosition = getAdapterPosition();
-            int x = 0;
 
-            for(Picture picture : picturesList) {
-                if(x++ == clickedPosition) {
-                    mOnClickListener.onListItemClick(clickedPosition, picture, getItemCount(), picturesList);
-                    break;
+
+            if(event.getAction() == MotionEvent.ACTION_CANCEL) {
+                if(bitmap != null) {
+                    imageView.setImageBitmap(bitmap);
                 }
             }
 
+
+
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+
+
+
+                int clickedPosition = getAdapterPosition();
+                int x = 0;
+
+                for(Picture picture : picturesList) {
+                    if(x++ == clickedPosition) {
+                        mOnClickListener.onListItemClick(clickedPosition, picture, getItemCount(), picturesList);
+                        break;
+                    }
+                }
+
+            }
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+//                Toast.makeText(context, "ACTION_DOWN", Toast.LENGTH_SHORT).show();
+
+                int clickedPosition = getAdapterPosition();
+                int x = 0;
+
+                for(Picture picture : picturesList) {
+                    if(x++ == clickedPosition) {
+                        Glide.with(context)
+                                .load(picture.getPictureUrl())
+                                .listener(new RequestListener<Drawable>() {
+                                    @Override
+                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+
+
+
+                                        try {
+                                            bitmap = ((BitmapDrawable)resource).getBitmap();
+                                        }catch (Exception e) {
+                                            Log.i("Error bitmpap", "errog convert resource to bitmap");
+                                            return false;
+
+                                        }
+
+
+                                        darkBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+
+
+                                        darkBitmap = darkenBitMap(darkBitmap);
+
+                                        //here
+
+
+
+                                        imageView.setImageBitmap(darkBitmap);
+                                        flag = true;
+
+
+                                        Log.i("bitmap", "bitmappppppppppppppp");
+
+
+                                        return true;
+                                    }
+                                })
+                                .into(imageView);
+                    }
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+            }
+
+
+            return true;
+        }
+
+        private Bitmap darkenBitMap(Bitmap bm) {
+
+            Canvas canvas = new Canvas(bm);
+            Paint p = new Paint(Color.RED);
+            //ColorFilter filter = new LightingColorFilter(0xFFFFFFFF , 0x00222222); // lighten
+            ColorFilter filter = new LightingColorFilter(0xFF7F7F7F, 0x00000000);    // darken
+            p.setColorFilter(filter);
+            canvas.drawBitmap(bm, new Matrix(), p);
+
+            return bm;
         }
 
 
+
+
     }
+
 
 }
