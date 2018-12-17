@@ -12,6 +12,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -59,8 +60,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
     private ListItemClickListener mOnClickListener;
     private ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
     private ArrayList<Integer> positions=new ArrayList<Integer>() ;
-     MyViewHolder h;
-    int pos;
+    MyViewHolder h;
     Bitmap bitmap = null;
     Bitmap darkBitmap = null;
     MotionEvent ev;
@@ -117,24 +117,13 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
-        pos = position;
-
         Glide.with(context)
                 .load(picturesList.get(position).getPictureUrl())
                 .apply(new RequestOptions().placeholder(R.drawable.b))
                 .into(holder.imageView);
 
 
-
     }
-
-
-
-
-
-
-
-
 
 
 
@@ -201,9 +190,30 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
 
 
 
+
             if(event.getAction() == MotionEvent.ACTION_CANCEL) {
-                if(bitmap != null) {
-                    imageView.setImageBitmap(bitmap);
+//                if(bitmap != null) {
+//                    imageView.setImageBitmap(bitmap);
+//                }
+
+                int clickedPosition = getAdapterPosition();
+                int x = 0;
+
+                for(Picture picture : picturesList) {
+                    if(x++ == clickedPosition) {
+                        //glideeeeeeeee
+
+//                        Glide.with(context)
+//                                .load(picturesList.get(clickedPosition).getPictureUrl())
+//                                .into(imageView);
+
+                        Glide.with(context)
+                                .load(picturesList.get(clickedPosition).getPictureUrl())
+                                .apply(new RequestOptions().placeholder(R.drawable.b))
+                                .into(imageView);
+
+                        break;
+                    }
                 }
             }
 
@@ -211,13 +221,20 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
 
                 if(event.getAction() == MotionEvent.ACTION_UP) {
 
+//                    imageView.setImageBitmap(bitmap);
 
 
-                int clickedPosition = getAdapterPosition();
-                int x = 0;
+                    int clickedPosition = getAdapterPosition();
+                    int x = 0;
 
                 for(Picture picture : picturesList) {
                     if(x++ == clickedPosition) {
+
+                        Glide.with(context)
+                                .load(picturesList.get(clickedPosition).getPictureUrl())
+                                .apply(new RequestOptions().placeholder(R.drawable.b))
+                                .into(imageView);
+
                         mOnClickListener.onListItemClick(clickedPosition, picture, getItemCount(), picturesList);
                         break;
                     }
@@ -237,6 +254,9 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
                                 .listener(new RequestListener<Drawable>() {
                                     @Override
                                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                                        Log.i("onLoadFailed", "failed to get pictureeeeeeeeeeeeeeeeeeee");
+
                                         return false;
                                     }
 
@@ -279,16 +299,6 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
 
 
 
-
-
-
-
-
-
-
-
-
-
             }
 
 
@@ -306,6 +316,8 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
 
             return bm;
         }
+
+
 
 
 
