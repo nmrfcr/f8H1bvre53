@@ -143,6 +143,8 @@ public class RegisterActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
         builder.setMessage(message);
+        builder.setCancelable(!userRegisteredSuccessfully);
+
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
@@ -152,7 +154,6 @@ public class RegisterActivity extends AppCompatActivity {
                     mAuth.signOut();
                     finish();
                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                    userRegisteredSuccessfully = false;
                 }
             }
         });
@@ -218,7 +219,6 @@ public class RegisterActivity extends AppCompatActivity {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
         builder1.setTitle("Error");
         builder1.setMessage("There might be problems with the server or network connection.");
-        builder1.setCancelable(false);
 
         builder1.setPositiveButton(
                 "TRY AGAIN",

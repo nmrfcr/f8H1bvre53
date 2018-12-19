@@ -140,7 +140,7 @@ public class EditActivity extends AppCompatActivity {
         }
         //If the user didn't check any Album.
         if(userDidNotSelectAnyAlbum) {
-            Toast.makeText(this, "Select at least one Album.", Toast.LENGTH_SHORT).show();
+            alertDialogAddPicture();
             return;
         }
 
@@ -309,6 +309,22 @@ public class EditActivity extends AppCompatActivity {
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
         }
+    }
+
+    private void alertDialogAddPicture() {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setMessage("Select ✓ at least 1 album");
+
+        builder1.setPositiveButton(
+                "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
     }
 
 

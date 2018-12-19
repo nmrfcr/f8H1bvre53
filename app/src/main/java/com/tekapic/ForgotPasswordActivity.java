@@ -83,7 +83,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     private void showAlertDialog(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false);
+        builder.setCancelable(!isPasswordSent);
         builder.setTitle(title);
         builder.setMessage(message);
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {

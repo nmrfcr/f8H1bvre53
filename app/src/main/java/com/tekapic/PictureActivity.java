@@ -79,8 +79,7 @@ public class PictureActivity extends AppCompatActivity {
             public void onSuccess(Void aVoid) {
                 mDialog.dismiss();
 //                Toast.makeText(getApplicationContext(), "Picture deleted.", Toast.LENGTH_SHORT).show();
-                finish();
-                startActivity(new Intent(PictureActivity.this, HomeActivity.class));
+    ;               goBack();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

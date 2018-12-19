@@ -186,6 +186,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
                 }
 
                 if(hasAnyPicture == false) {
+                    finish();
                     startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
                     return;
                 }

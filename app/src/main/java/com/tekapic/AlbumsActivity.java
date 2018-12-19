@@ -222,6 +222,11 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
 //                    item.setTitle("(" + Integer.toString(albumsList.size()) +")");
 //                }
 
+                if(albumsList.size() == 0) {
+                    goToHomeActivity();
+                    return;
+                }
+
                 actionBar.setSubtitle("(" + Integer.toString(albumsList.size()) +")");
 
                 adapter = new AlbumsRecyclerViewAdapter(albumsList,mOnClickListener,context);
@@ -244,12 +249,14 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
 
     }
 
-
+    private void goToHomeActivity() {
+        finish();
+        startActivity(new Intent(AlbumsActivity.this, HomeActivity.class));
+    }
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
-        startActivity(new Intent(AlbumsActivity.this, HomeActivity.class));
+        goToHomeActivity();
     }
 
 //    @Override
