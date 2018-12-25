@@ -86,6 +86,7 @@
         </provider>
 
         <activity
+            android:theme="@style/MainActivityTheme"
             android:label="@string/welcome_to_tekapic"
             android:name=".MainActivity"
             android:screenOrientation="portrait">

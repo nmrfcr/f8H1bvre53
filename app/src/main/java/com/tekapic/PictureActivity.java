@@ -5,7 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Build;
@@ -21,6 +24,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,7 +48,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.tekapic.model.Picture;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+
 
 
 public class PictureActivity extends AppCompatActivity {
@@ -63,6 +72,7 @@ public class PictureActivity extends AppCompatActivity {
     public static ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
     private Menu menu;
     private boolean isSystemUIHidden;
+    private Drawable image;
 
 
 
@@ -111,7 +121,8 @@ public class PictureActivity extends AppCompatActivity {
     private void popUpAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(PictureActivity.this);
         builder.setTitle("Delete Picture");
-        builder.setMessage("Are you sure you want to delete this picture?");
+        builder.setMessage("Are you sure you want to delete this picture?" + "\n\n" +
+                "The picture will be deleted from all albums.");
 
         builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -154,6 +165,7 @@ public class PictureActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         imageView.setImageDrawable(resource);
 
+
                         return false;
                     }
                 })
@@ -183,15 +195,6 @@ public class PictureActivity extends AppCompatActivity {
             case R.id.deletePictureMenu:
                 popUpAlertDialog();
                 return true;
-
-            case R.id.previous_pic:
-                previousPicture();
-                return true;
-
-            case R.id.next_pic:
-                nextPicture();
-                return true;
-
             case android.R.id.home:
                 goBack();
                 return true;
@@ -268,6 +271,7 @@ public class PictureActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.photo_view);
 
+
         progressBar = findViewById(R.id.progress);
 
         mAuth = FirebaseAuth.getInstance();
@@ -280,9 +284,39 @@ public class PictureActivity extends AppCompatActivity {
         showSystemUI();
 
 
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+
+//        imageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                if(getSystemUiVisibility() == 3840) {
+//                    isSystemUIHidden = false;
+//                }
+//
+//                if(isSystemUIHidden == false) {
+//                    hideSystemUI();
+//                    isSystemUIHidden = true;
+//                }
+//                else {
+//                    showSystemUI();
+//                    isSystemUIHidden = false;
+//                }
+//            }
+//        });
+
+
+        imageView.setOnTouchListener(new OnSwipeTouchListener(PictureActivity.this) {
+
+            public void onSwipeRight() {
+                previousPicture();
+            }
+            public void onSwipeLeft() {
+                nextPicture();
+            }
+
+            public void onClick() {
+//                Toast.makeText(PictureActivity.this, "click", Toast.LENGTH_SHORT).show();
 
                 if(getSystemUiVisibility() == 3840) {
                     isSystemUIHidden = false;
@@ -296,8 +330,23 @@ public class PictureActivity extends AppCompatActivity {
                     showSystemUI();
                     isSystemUIHidden = false;
                 }
+
             }
+
+//            public void onDoubleClick() {
+//
+////                hideSystemUI();
+////                showSystemUI();
+//                new Zoom(getApplicationContext(), image);
+//
+//            }
+
         });
+
+
+
+
+
     }
 
     private void hideSystemUI() {
@@ -397,4 +446,11 @@ public class PictureActivity extends AppCompatActivity {
             popUpAlertDialogConnectionError();
         }
     }
+
+    public void lay(View view) {
+        Toast.makeText(this, "lay", Toast.LENGTH_SHORT).show();
+    }
+
+
+
 }

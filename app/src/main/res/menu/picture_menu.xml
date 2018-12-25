@@ -4,11 +4,6 @@
 
 
 
-    <item
-        android:title="@string/prev"
-        android:id="@+id/previous_pic"
-        app:showAsAction="always"
-        />
 
     <item
         android:enabled="false"
@@ -17,11 +12,7 @@
         app:showAsAction="always"
         />
 
-    <item
-        android:title="@string/next"
-        android:id="@+id/next_pic"
-        app:showAsAction="always"
-        />
+
 
     <item
         android:title="Update Albums"
@@ -42,12 +33,7 @@
         />
 
 
-    <item
-        android:enabled="false"
-        android:title=""
-        android:id="@+id/aaa"
-        app:showAsAction="always"
-        />
+
 
 
 </menu>

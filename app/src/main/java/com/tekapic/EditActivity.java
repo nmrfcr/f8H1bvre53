@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -197,7 +198,12 @@ public class EditActivity extends AppCompatActivity {
         picture = PictureActivity.picture;
 
         imageView = findViewById(R.id.imageViewEdit);
-        Glide.with(this).load(picture.getPictureUrl()).into(imageView);
+
+
+        Glide.with(this)
+                .load(picture.getPictureUrl())
+                .apply(new RequestOptions().placeholder(R.drawable.b))
+                .into(imageView);
 
 
         getAlbums();
@@ -314,7 +320,7 @@ public class EditActivity extends AppCompatActivity {
     private void alertDialogAddPicture() {
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setMessage("Select ✓ at least 1 album");
+        builder1.setMessage("Select ✓ at least 1 album.");
 
         builder1.setPositiveButton(
                 "OK",

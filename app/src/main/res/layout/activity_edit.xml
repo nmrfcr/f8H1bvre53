@@ -4,374 +4,410 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_margin="15dp"
+    android:background="@android:color/black"
     android:layoutDirection="ltr"
+    android:orientation="vertical"
     tools:context="com.tekapic.EditActivity">
 
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/roundedbutton"
-        android:onClick="update"
-        android:text="Update Albums" />
-
-    <ImageView
-        android:id="@+id/imageViewEdit"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_height="match_parent"
         android:layout_margin="15dp"
-        android:layout_gravity="center"
-        android:scaleType="center"
-        app:srcCompat="@mipmap/ic_launcher_foreground" />
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_marginBottom="15dp"
-        android:id="@+id/textViewEdit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Select Albums:"
-        android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
 
-    <ScrollView
-
-        android:fadeScrollbars="false"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-
+        <Button
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="@drawable/roundedbutton"
+            android:onClick="update"
+            android:text="Update Albums Now" />
 
+        <ImageView
+            android:id="@+id/imageViewEdit"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_margin="15dp"
+            android:scaleType="center" />
 
-            <GridLayout
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:text="Select Albums:"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
 
-                android:columnCount="3"
-                android:rowCount="6"
+        <ScrollView
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadeScrollbars="false">
+
+            <LinearLayout
+
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
 
-                    <CheckBox
-                        android:textColor="#FFFFFF"
-                        android:id="@+id/checkBox_me_edit"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@drawable/me" />
+                <GridLayout
 
-                    <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:columnCount="3"
+                    android:rowCount="6">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <CheckBox
+                            android:id="@+id/checkBox_me_edit"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/me"
+                            android:textColor="#FFFFFF" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:text="Me"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Me"
-                        android:textColor="@android:color/black" />
-                </LinearLayout>
+                        android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                        <CheckBox
+                            android:id="@+id/checkBox_family_edit"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/family" />
 
-                    <CheckBox
-                        android:id="@+id/checkBox_family_edit"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@drawable/family" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:text="Family"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:textColor="@android:color/black"
-                        android:layout_gravity="center"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Family" />
-                </LinearLayout>
+                        android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                        <CheckBox
+                            android:id="@+id/checkBox_friends_edit"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/friends" />
 
-                    <CheckBox
-                        android:id="@+id/checkBox_friends_edit"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@drawable/friends" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:text="Friends"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:textColor="@android:color/black"
-                        android:layout_gravity="center"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Friends" />
-                </LinearLayout>
+                        android:layout_marginTop="15dp"
+                        android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                        <CheckBox
+                            android:id="@+id/checkBox_love_edit"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/love" />
 
-                    <CheckBox
-                        android:id="@+id/checkBox_love_edit"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@drawable/love" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:text="Love"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:textColor="@android:color/black"
-                        android:layout_gravity="center"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Love" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <CheckBox
-                        android:id="@+id/checkBox_pets_edit"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@drawable/pets" />
-
-                    <TextView
-                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
+                        android:orientation="vertical">
+
+                        <CheckBox
+                            android:id="@+id/checkBox_pets_edit"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/pets" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:text="Pets"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Pets" />
-                </LinearLayout>
+                        android:layout_marginTop="15dp"
+                        android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                        <CheckBox
+                            android:id="@+id/checkBox_nature_edit"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/nature" />
 
-                    <CheckBox
-                        android:id="@+id/checkBox_nature_edit"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@drawable/nature" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:text="Nature"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:textColor="@android:color/black"
-                        android:layout_gravity="center"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nature" />
-                </LinearLayout>
+                        android:layout_marginTop="15dp"
+                        android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                        <CheckBox
+                            android:id="@+id/checkBox_sport_edit"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/sport" />
 
-                    <CheckBox
-                        android:id="@+id/checkBox_sport_edit"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@drawable/sport" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:text="Sport"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:textColor="@android:color/black"
-                        android:layout_gravity="center"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Sport" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <CheckBox
-                        android:id="@+id/checkBox_persons_edit"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@drawable/persons" />
-
-                    <TextView
-                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
+                        android:orientation="vertical">
+
+                        <CheckBox
+                            android:id="@+id/checkBox_persons_edit"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/persons" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:text="Persons"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Persons" />
-                </LinearLayout>
+                        android:layout_marginTop="15dp"
+                        android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                        <CheckBox
+                            android:id="@+id/checkBox_animals_edit"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/animals" />
 
-                    <CheckBox
-                        android:id="@+id/checkBox_animals_edit"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@drawable/animals" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:text="Animals"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:textColor="@android:color/black"
-                        android:layout_gravity="center"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Animals" />
-                </LinearLayout>
+                        android:layout_marginTop="15dp"
+                        android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                        <CheckBox
+                            android:id="@+id/checkBox_vehicles_edit"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/vehicles" />
 
-                    <CheckBox
-                        android:id="@+id/checkBox_vehicles_edit"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@drawable/vehicles" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:text="Vehicles"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:textColor="@android:color/black"
-                        android:layout_gravity="center"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Vehicles" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <CheckBox
-                        android:id="@+id/checkBox_views_edit"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@drawable/views" />
-
-                    <TextView
-                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
+                        android:orientation="vertical">
+
+                        <CheckBox
+                            android:id="@+id/checkBox_views_edit"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/views" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:text="Views"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Views" />
-                </LinearLayout>
+                        android:layout_marginTop="15dp"
+                        android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                        <CheckBox
+                            android:id="@+id/checkBox_food_edit"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/food" />
 
-                    <CheckBox
-                        android:id="@+id/checkBox_food_edit"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@drawable/food" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:text="Food"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:textColor="@android:color/black"
-                        android:layout_gravity="center"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Food" />
-                </LinearLayout>
+                        android:layout_marginTop="15dp"
+                        android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                        <CheckBox
+                            android:id="@+id/checkBox_things_edit"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/things" />
 
-                    <CheckBox
-                        android:id="@+id/checkBox_things_edit"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@drawable/things" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:text="Things"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:textColor="@android:color/black"
-                        android:layout_gravity="center"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Things" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <CheckBox
-                        android:id="@+id/checkBox_funny_edit"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@drawable/funny" />
-
-                    <TextView
-                        android:textColor="@android:color/black"
                         android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
+                        android:orientation="vertical">
+
+                        <CheckBox
+                            android:id="@+id/checkBox_funny_edit"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/funny" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:text="Funny"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Funny" />
-                </LinearLayout>
+                        android:layout_marginTop="15dp"
+                        android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                        <CheckBox
+                            android:id="@+id/checkBox_places_edit"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/places" />
 
-                    <CheckBox
-                        android:id="@+id/checkBox_places_edit"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@drawable/places" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:text="Places"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:textColor="@android:color/black"
-                        android:layout_gravity="center"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Places" />
-                </LinearLayout>
+                        android:layout_marginTop="15dp"
+                        android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                        <CheckBox
+                            android:id="@+id/checkBox_art_edit"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/art" />
 
-                    <CheckBox
-                        android:id="@+id/checkBox_art_edit"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@drawable/art" />
-
-                    <TextView
-                        android:textColor="@android:color/black"
-                        android:layout_gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Art" />
-                </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:text="Art"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
 
 
+                </GridLayout>
+            </LinearLayout>
+        </ScrollView>
 
-            </GridLayout>
-        </LinearLayout>
-    </ScrollView>
-
-
+    </LinearLayout>
 
 
 </LinearLayout>
