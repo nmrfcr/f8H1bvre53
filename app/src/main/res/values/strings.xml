@@ -10,6 +10,8 @@
     <string name="update_albums">Update Albums</string>
     <string name="add_new_picture">Add New Picture</string>
     <string name="app_description">Find pictures easily</string>
+    <string name="search_people">Search People</string>
+
 
     <string name="prev">
 
@@ -30,18 +32,6 @@
      ]]>
 
      </string>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 </resources>

@@ -12,10 +12,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -73,9 +76,16 @@ public class PictureActivity extends AppCompatActivity {
     private Menu menu;
     private boolean isSystemUIHidden;
     private Drawable image;
+    private LinearLayout linearLayout;
+    FloatingActionButton floatingActionButtonPrev, floatingActionButtonNext;
 
 
-
+    public void prevPicture(View view) {
+        previousPicture();
+    }
+    public void nextPicture(View view) {
+        nextPicture();
+    }
 
     private void deledePictureFromFirebase() {
 
@@ -157,14 +167,19 @@ public class PictureActivity extends AppCompatActivity {
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
+
+                        Log.i("onLoadFailed", "Failed to load picture");
+                        Toast.makeText(getApplicationContext(), "Failed to load picture.", Toast.LENGTH_SHORT).show();
+
+                        goBack();
+
+                        return true;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         progressBar.setVisibility(View.GONE);
                         imageView.setImageDrawable(resource);
-
 
                         return false;
                     }
@@ -267,6 +282,10 @@ public class PictureActivity extends AppCompatActivity {
 
         isSystemUIHidden = false;
 
+        floatingActionButtonPrev = findViewById(R.id.prev_picture);
+        floatingActionButtonNext = findViewById(R.id.next_picture);
+
+
         mDialog = new ProgressDialog(this);
 
         imageView = findViewById(R.id.photo_view);
@@ -278,17 +297,47 @@ public class PictureActivity extends AppCompatActivity {
         mStatusDB = FirebaseDatabase.getInstance().getReference().child(mAuth.getUid());
         storageReference =  FirebaseStorage.getInstance().getReference().getStorage();
 
-        setPictureUrl(this, picture.getPictureUrl());
-
         hideSystemUI();
         showSystemUI();
 
+        setPictureUrl(this, picture.getPictureUrl());
 
 
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-//        imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
+                if(getSystemUiVisibility() == 3840) {
+                    isSystemUIHidden = false;
+                }
+
+                if(isSystemUIHidden == false) {
+                    floatingActionButtonPrev.setVisibility(View.GONE);
+                    floatingActionButtonNext.setVisibility(View.GONE);
+                    hideSystemUI();
+                    isSystemUIHidden = true;
+                }
+                else {
+                    floatingActionButtonPrev.setVisibility(View.VISIBLE);
+                    floatingActionButtonNext.setVisibility(View.VISIBLE);
+                    showSystemUI();
+                    isSystemUIHidden = false;
+                }
+            }
+        });
+
+
+//        imageView.setOnTouchListener(new OnSwipeTouchListener(PictureActivity.this) {
+//
+//            public void onSwipeRight() {
+//                previousPicture();
+//            }
+//            public void onSwipeLeft() {
+//                nextPicture();
+//            }
+//
+//            public void onClick() {
+////                Toast.makeText(PictureActivity.this, "click", Toast.LENGTH_SHORT).show();
 //
 //                if(getSystemUiVisibility() == 3840) {
 //                    isSystemUIHidden = false;
@@ -302,50 +351,62 @@ public class PictureActivity extends AppCompatActivity {
 //                    showSystemUI();
 //                    isSystemUIHidden = false;
 //                }
+//
+//            }
+//
+////            public void onDoubleClick() {
+////
+//////                hideSystemUI();
+//////                showSystemUI();
+////                new Zoom(getApplicationContext(), image);
+////
+////            }
+//
+//        });
+
+//        imageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//
+//                if(getSystemUiVisibility() == 3840) {
+//                    isSystemUIHidden = false;
+//                }
+//
+//                if(isSystemUIHidden == false) {
+//                    hideSystemUI();
+//                    isSystemUIHidden = true;
+//                }
+//                else {
+//                    showSystemUI();
+//                    isSystemUIHidden = false;
+//                }
+//
 //            }
 //        });
 
+        View decorView = getWindow().getDecorView();
+        decorView.setOnSystemUiVisibilityChangeListener
+                (new View.OnSystemUiVisibilityChangeListener() {
+                    @Override
+                    public void onSystemUiVisibilityChange(int visibility) {
+                        // Note that system bars will only be "visible" if none of the
+                        // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
+                        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                            // TODO: The system bars are visible. Make any desired
+                            // adjustments to your UI, such as showing the action bar or
+                            // other navigational controls.
+                            floatingActionButtonPrev.setVisibility(View.VISIBLE);
+                            floatingActionButtonNext.setVisibility(View.VISIBLE);
 
-        imageView.setOnTouchListener(new OnSwipeTouchListener(PictureActivity.this) {
+                        } else {
+                            // TODO: The system bars are NOT visible. Make any desired
+                            // adjustments to your UI, such as hiding the action bar or
+                            // other navigational controls.
 
-            public void onSwipeRight() {
-                previousPicture();
-            }
-            public void onSwipeLeft() {
-                nextPicture();
-            }
-
-            public void onClick() {
-//                Toast.makeText(PictureActivity.this, "click", Toast.LENGTH_SHORT).show();
-
-                if(getSystemUiVisibility() == 3840) {
-                    isSystemUIHidden = false;
-                }
-
-                if(isSystemUIHidden == false) {
-                    hideSystemUI();
-                    isSystemUIHidden = true;
-                }
-                else {
-                    showSystemUI();
-                    isSystemUIHidden = false;
-                }
-
-            }
-
-//            public void onDoubleClick() {
-//
-////                hideSystemUI();
-////                showSystemUI();
-//                new Zoom(getApplicationContext(), image);
-//
-//            }
-
-        });
-
-
-
-
+                        }
+                    }
+                });
 
     }
 
@@ -447,9 +508,11 @@ public class PictureActivity extends AppCompatActivity {
         }
     }
 
-    public void lay(View view) {
-        Toast.makeText(this, "lay", Toast.LENGTH_SHORT).show();
-    }
+
+
+
+
+
 
 
 

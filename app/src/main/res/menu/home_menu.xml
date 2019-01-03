@@ -8,6 +8,12 @@
         <!--android:id="@+id/total_pics_home_menu"-->
         <!--app:showAsAction="always"-->
         <!--/>-->
+    <item
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="Search"
+        android:id="@+id/searchMenu"
+        app:showAsAction="always"
+        />
 
 
     <item

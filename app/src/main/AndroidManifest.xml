@@ -20,9 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:label="@string/profile"
             android:name=".HomeActivity"
             android:grantUriPermissions="true"
+            android:label="@string/profile"
             android:screenOrientation="portrait" />
         <activity
             android:name=".RegisterActivity"
@@ -36,16 +36,17 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".PostActivity"
-            android:label="@string/add_new_picture"
             android:grantUriPermissions="true"
+            android:label="@string/add_new_picture"
             android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:label="@string/albums"
             android:name=".AlbumsActivity"
+            android:label="@string/albums"
             android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:theme="@style/PictureTheme"
             android:name=".PictureActivity"
             android:label="@string/picture"
             android:parentActivityName=".HomeActivity"
@@ -70,10 +71,10 @@
             android:parentActivityName=".AlbumsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:label="@string/forgot_password"
             android:name=".ForgotPasswordActivity"
+            android:label="@string/forgot_password"
             android:parentActivityName=".LoginActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -86,10 +87,20 @@
         </provider>
 
         <activity
-            android:theme="@style/MainActivityTheme"
-            android:label="@string/welcome_to_tekapic"
             android:name=".MainActivity"
-            android:screenOrientation="portrait">
+            android:label="@string/welcome_to_tekapic"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainActivityTheme"></activity>
+
+        <activity
+            android:label="@string/search_people"
+            android:parentActivityName=".HomeActivity"
+            android:screenOrientation="portrait"
+            android:name=".SearchActivity">
+
+
+
+
         </activity>
     </application>
 

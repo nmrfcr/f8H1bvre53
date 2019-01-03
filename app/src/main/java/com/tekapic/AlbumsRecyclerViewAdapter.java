@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -114,7 +115,7 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
         Glide.with(context)
                 .load(albumsList.get(position).getPicture())
                 .apply(new RequestOptions().placeholder(R.drawable.grad))
-                .into(holder.versionImage);
+                .into(holder.albumImage);
 
 
 //
@@ -131,13 +132,13 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
 
     public  class MyViewHolder extends RecyclerView.ViewHolder implements  View.OnTouchListener {
 
-        ImageView versionImage;
+        ImageView albumImage;
         TextView albumName;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            versionImage= itemView.findViewById(R.id.rowAlbum);
+            albumImage= itemView.findViewById(R.id.rowAlbum);
             albumName = itemView.findViewById(R.id.textViewAlbum);
             itemView.setOnTouchListener(this);
 
@@ -146,7 +147,7 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
         void bind (int listIndex){
             //ItemNumberTv.setText(String.valueOf(listIndex));
             //itemNumberTextTv.setText("ViewHolder index :"+String.valueOf(listIndex));
-            versionImage.setImageResource(albumsList.get(listIndex).getPicture());
+            albumImage.setImageResource(albumsList.get(listIndex).getPicture());
             albumName.setText(albumsList.get(listIndex).getName());
         }
 
@@ -170,6 +171,7 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
+            AudioManager audioManager;
 
             if(event.getAction() == MotionEvent.ACTION_CANCEL) {
 //                if(bitmap != null) {
@@ -190,7 +192,7 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
                         Glide.with(context)
                                 .load(albumsList.get(clickedPosition).getPicture())
                                 .apply(new RequestOptions().placeholder(R.drawable.grad))
-                                .into(versionImage);
+                                .into(albumImage);
 
                         break;
                     }
@@ -201,8 +203,11 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
 
             if(event.getAction() == MotionEvent.ACTION_UP) {
 
-//                    imageView.setImageBitmap(bitmap);
 
+                audioManager = (AudioManager) context.getSystemService(
+                        Context.AUDIO_SERVICE);
+
+                audioManager.playSoundEffect(AudioManager.FX_KEY_CLICK);
 
                 int clickedPosition = getAdapterPosition();
                 int x = 0;
@@ -213,7 +218,7 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
                         Glide.with(context)
                                 .load(albumsList.get(clickedPosition).getPicture())
                                 .apply(new RequestOptions().placeholder(R.drawable.grad))
-                                .into(versionImage);
+                                .into(albumImage);
                         mOnClickListener.onListItemClick(clickedPosition, album.getName());
 
                         break;
@@ -263,7 +268,7 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
 
                                         //here
 
-                                        versionImage.setImageBitmap(lightBitmap);
+                                        albumImage.setImageBitmap(lightBitmap);
 
 
                                         Log.i("bitmap", "bitmappppppppppppppp");
@@ -272,7 +277,7 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
                                         return true;
                                     }
                                 })
-                                .into(versionImage);
+                                .into(albumImage);
                     }
                 }
 
