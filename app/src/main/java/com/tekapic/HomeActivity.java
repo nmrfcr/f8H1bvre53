@@ -454,7 +454,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                 updateEmail();
                 return true;
             case R.id.searchMenu:
-//                startActivity(new Intent(HomeActivity.this, SearchActivity.class));
+                startActivity(new Intent(HomeActivity.this, SearchActivity.class));
                 return true;
 //            case R.id.SortMenu:
 //                sort();

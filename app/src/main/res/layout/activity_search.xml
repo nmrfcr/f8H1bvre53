@@ -8,10 +8,15 @@
     android:orientation="vertical"
     tools:context="com.tekapic.SearchActivity">
 
-    <android.support.v7.widget.SearchView
-        android:id="@+id/searchView"
+
+    <SearchView
+        android:id="@+id/search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/SearchViewStyle"
-         />
+        android:queryHint="Search people" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/result_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

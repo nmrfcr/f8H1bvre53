@@ -45,6 +45,19 @@
         <item name="android:layoutDirection" tools:ignore="NewApi">ltr</item>
     </style>
 
+    <style name="SearchTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:layoutDirection" tools:ignore="NewApi">ltr</item>
+        <item name="searchViewStyle">@style/AppTheme.SearchView</item>
+    </style>
+
+
+    <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="closeIcon">@android:color/transparent</item>
+    </style>
+
 
 
 
