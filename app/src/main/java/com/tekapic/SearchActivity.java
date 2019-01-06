@@ -1,7 +1,11 @@
 package com.tekapic;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,9 +22,13 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.tekapic.model.User;
 
 public class SearchActivity extends AppCompatActivity {
@@ -28,6 +36,32 @@ public class SearchActivity extends AppCompatActivity {
     private SearchView searchView;
     private RecyclerView mRecyclerView;
     private DatabaseReference mDatabaseReference;
+    private TextView indicatorText;
+    private String profileEmail;
+
+
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+    private void popUpAlertDialogConnectionError() {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setTitle("Error");
+        builder1.setMessage("There might be problems with the server or network connection.");
+
+        builder1.setPositiveButton(
+                "TRY AGAIN",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
+    }
 
 
 
@@ -36,6 +70,11 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        profileEmail = mAuth.getCurrentUser().getEmail();
+
+        indicatorText = findViewById(R.id.results_indicator_text);
 
         mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users");
 
@@ -58,8 +97,16 @@ public class SearchActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+
+                if(isNetworkConnected() == false) {
+                    popUpAlertDialogConnectionError();
+                    return false;
+                }
                 
-                firebaseUserSearch(query);
+                firebaseUserSearch(query.toLowerCase());
+
+                indicatorText.setVisibility(View.VISIBLE);
+                indicatorText.setText("Searching...");
                 
                 return false;
             }
@@ -78,6 +125,25 @@ public class SearchActivity extends AppCompatActivity {
     private void firebaseUserSearch(String searchText) {
 
         Query query = mDatabaseReference.orderByChild("email").startAt(searchText).endAt(searchText + "\uf8ff");
+
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.exists()) {
+                    indicatorText.setText("No Results Found");
+                }
+                else {
+                    indicatorText.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         final FirebaseRecyclerOptions<User> options = new FirebaseRecyclerOptions.Builder<User>()
                 .setQuery(query, User.class)
                 .build();
@@ -85,11 +151,26 @@ public class SearchActivity extends AppCompatActivity {
         FirebaseRecyclerAdapter<User, UserViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<User, UserViewHolder>
                 (options) {
             @Override
-            protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull User model) {
+            protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull final User model) {
 
                 Log.i("user", model.getEmail());
 
                 holder.setDetails(model.getEmail());
+
+                holder.textView.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(SearchActivity.this, model.getEmail(), Toast.LENGTH_SHORT).show();
+                        if(profileEmail.equals(model.getEmail())) {
+                            finish();
+                            startActivity(new Intent(SearchActivity.this, HomeActivity.class));
+                            return;
+                        }
+                        HomePeopleActivity.user = model;
+                        startActivity(new Intent(SearchActivity.this, HomePeopleActivity.class));
+                    }
+                });
 
             }
 
@@ -102,6 +183,7 @@ public class SearchActivity extends AppCompatActivity {
 
                 return new UserViewHolder(view);
             }
+
         };
 
         mRecyclerView.setAdapter(firebaseRecyclerAdapter);
@@ -117,10 +199,20 @@ public class SearchActivity extends AppCompatActivity {
         imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(isNetworkConnected() == false) {
+            popUpAlertDialogConnectionError();
+        }
+    }
+
     public static class UserViewHolder extends RecyclerView.ViewHolder {
 
         public View mView;
         public TextView textView;
+
 
 
         public UserViewHolder(View itemView) {
@@ -137,5 +229,7 @@ public class SearchActivity extends AppCompatActivity {
 
         }
     }
+
+
 
 }

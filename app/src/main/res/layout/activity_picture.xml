@@ -33,15 +33,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/grey_transparent"
+        app:backgroundTint="@color/grey_transparent"
         android:clickable="true"
         android:onClick="prevPicture"
-        android:src="@drawable/ic_navigate_before_black_24dp" />
+        app:srcCompat="@drawable/ic_navigate_before_black_24dp" />
 
     <android.support.design.widget.FloatingActionButton
         app:borderWidth="0dp"
-        android:backgroundTint="@color/grey_transparent"
-        android:src="@drawable/ic_navigate_next_black_24dp"
+        app:backgroundTint="@color/grey_transparent"
+        app:srcCompat="@drawable/ic_navigate_next_black_24dp"
         android:id="@+id/next_picture"
         android:clickable="true"
         android:layout_width="wrap_content"
