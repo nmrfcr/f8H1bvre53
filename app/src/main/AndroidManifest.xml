@@ -95,12 +95,27 @@
             android:name=".SearchActivity"
             android:label="@string/search_people"
             android:parentActivityName=".HomeActivity"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".HomePeopleActivity"
-            android:parentActivityName=".SearchActivity">
-        </activity>
+            android:parentActivityName=".SearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PicturePeopleActivity"
+            android:label="@string/picture"
+            android:parentActivityName=".HomePeopleActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/PictureTheme" />
+        <activity
+            android:name=".AlbumsPeopleActivity"
+            android:label="@string/albums"
+            android:parentActivityName=".HomePeopleActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:screenOrientation="portrait"
+            android:parentActivityName=".AlbumsPeopleActivity"
+            android:name=".PicturesPeopleActivity"></activity>
     </application>
 
 </manifest>

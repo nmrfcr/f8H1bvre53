@@ -186,7 +186,7 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
         switch (item.getItemId()) {
             case R.id.albumsHomePeople:
                 if(isUserhasPics) {
-                    startActivity(new Intent(HomePeopleActivity.this, AlbumsActivity.class));
+                    startActivity(new Intent(HomePeopleActivity.this, AlbumsPeopleActivity.class));
                 }
                 else {
                     albumsIconclicked();
@@ -222,7 +222,7 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_people);
 
-        setTitle(user.getEmail());
+        setTitle(user.getEmail().substring(0, user.getEmail().indexOf("@")));
 
         actionBar = getSupportActionBar();
 
@@ -322,23 +322,18 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
             return;
         }
 
-        PictureActivity.picturesListSize = picturesListSize;
-        PictureActivity.clickedItemIndex = clickedItemIndex;
-        PictureActivity.picturesList = picturesList;
+        PicturePeopleActivity.picturesListSize = picturesListSize;
+        PicturePeopleActivity.clickedItemIndex = clickedItemIndex;
+        PicturePeopleActivity.picturesList = picturesList;
 
 
-//        Toast.makeText(getApplicationContext(), "Clicked Item Index = " + clickedItemIndex, Toast.LENGTH_SHORT).show();
-//        Log.i("pictureUrl", picture.getPictureUrl());
-
-        PictureActivity.picture = picture;
-        PictureActivity.isPictureFromAlbum = false;
-        Intent intent = new Intent(HomePeopleActivity.this, PictureActivity.class);
+        PicturePeopleActivity.picture = picture;
+        PicturePeopleActivity.isPictureFromAlbum = false;
+        Intent intent = new Intent(HomePeopleActivity.this, PicturePeopleActivity.class);
         startActivity(intent);
 
         finish();
-
     }
-
 
     private void checkIfUserHasAnyPictures() {
         mStatusDB.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -369,4 +364,19 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
         firstVisibleItemPosition = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
 
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent intent = new Intent(HomePeopleActivity.this, SearchActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToProfile(View view) {
+        finish();
+        Intent intent = new Intent(HomePeopleActivity.this, HomeActivity.class);
+        startActivity(intent);
+    }
+
+
 }

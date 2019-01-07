@@ -7,29 +7,17 @@
     android:layout_height="match_parent"
     android:background="@android:color/black"
     android:layoutDirection="ltr"
-    tools:context="com.tekapic.HomePeopleActivity">
-
-
-    <TextView
-        android:visibility="gone"
-        android:textSize="16sp"
-        android:layout_marginTop="50dp"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:id="@+id/textHomePeopleNoPics"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="This user doesn't have any pictures yet" />
+    tools:context="com.tekapic.PicturesPeopleActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/homePeopleRecyclerView"
+        android:id="@+id/picturesRecyclerViewPeople"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical" >
     </android.support.v7.widget.RecyclerView>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/profileBtnHomePeople"
+        android:id="@+id/profileBtnAlbumsPeople"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"

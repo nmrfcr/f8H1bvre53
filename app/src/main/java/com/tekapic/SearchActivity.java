@@ -38,6 +38,7 @@ public class SearchActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseReference;
     private TextView indicatorText;
     private String profileEmail;
+    private static String searchText = "";
 
 
 
@@ -93,6 +94,11 @@ public class SearchActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager)   getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
+        if(!searchText.isEmpty()) {
+            searchView.setQuery(searchText, false);
+            firebaseUserSearch(searchText.toLowerCase());
+        }
+
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -102,7 +108,7 @@ public class SearchActivity extends AppCompatActivity {
                     popUpAlertDialogConnectionError();
                     return false;
                 }
-                
+                searchText = query.toLowerCase();
                 firebaseUserSearch(query.toLowerCase());
 
                 indicatorText.setVisibility(View.VISIBLE);
@@ -161,13 +167,13 @@ public class SearchActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(SearchActivity.this, model.getEmail(), Toast.LENGTH_SHORT).show();
                         if(profileEmail.equals(model.getEmail())) {
                             finish();
                             startActivity(new Intent(SearchActivity.this, HomeActivity.class));
                             return;
                         }
                         HomePeopleActivity.user = model;
+                        HomePeopleActivity.firstVisibleItemPosition = 0;
                         startActivity(new Intent(SearchActivity.this, HomePeopleActivity.class));
                     }
                 });
@@ -228,6 +234,16 @@ public class SearchActivity extends AppCompatActivity {
             textView.setText(userEmail);
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        finish();
+        Intent intent = new Intent(SearchActivity.this, HomeActivity.class);
+        startActivity(intent);
+
+
     }
 
 
