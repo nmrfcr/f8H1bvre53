@@ -2,12 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!--<item-->
-        <!--android:enabled="false"-->
-        <!--android:title="(0)"-->
-        <!--android:id="@+id/total_pics_home_menu"-->
-        <!--app:showAsAction="always"-->
-        <!--/>-->
+
+
+
+
+    <item
+        android:icon="@drawable/ic_explore_black_24dp"
+        android:title="Explore"
+        android:id="@+id/exploreMenu"
+        app:showAsAction="always"
+        />
+
+
     <item
         android:icon="@drawable/ic_search_black_24dp"
         android:title="Search"
@@ -23,17 +29,17 @@
         app:showAsAction="always"
         />
 
-    <!--<item-->
-        <!--android:title="Sort"-->
-        <!--android:id="@+id/SortMenu"-->
-        <!--app:showAsAction="always"-->
-        <!--/>-->
 
     <item
         android:icon="@drawable/ic_photo_album_black_24dp"
         android:title="Albums"
         android:id="@+id/albums"
-        app:showAsAction="always"
+        app:showAsAction="always"/>
+
+    <item
+        android:title="Favorites"
+        android:id="@+id/favoritesMenu"
+        app:showAsAction="never"
         />
 
     <item

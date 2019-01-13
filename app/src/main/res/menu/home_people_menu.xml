@@ -3,9 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:icon="@drawable/ic_star_border_black_24dp"
+        android:title="Add to favorites"
+        android:id="@+id/favorites"
+        app:showAsAction="always" />
+
+
+
+    <item
         android:icon="@drawable/ic_photo_album_black_24dp"
         android:title="Albums"
         android:id="@+id/albumsHomePeople"
         app:showAsAction="always" />
+
+
 
 </menu>

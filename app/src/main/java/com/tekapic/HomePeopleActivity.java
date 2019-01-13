@@ -91,12 +91,15 @@ import java.util.List;
 
 public class HomePeopleActivity extends AppCompatActivity implements PicturesRecyclerViewAdapter.ListItemClickListener {
 
+    public static boolean flag;
     public static User user;
     private TextView noPicturesText;
     private boolean isUserhasPics = false;
+    private MenuItem item;
+    private boolean isInFavorites;
 
 
-
+    private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
     private DatabaseReference mStatusDB;
     //    private DatabaseReference mUserDB;
@@ -184,6 +187,21 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
         }
 
         switch (item.getItemId()) {
+
+            case R.id.favorites:
+                if(!isInFavorites) {
+                    saveToFavorites();
+                    Toast.makeText(context, user.getEmail().substring(0, user.getEmail().indexOf("@")) + " added to your favorites", Toast.LENGTH_LONG).show();
+                    item.setTitle("Remove from favorites");
+                    item.setIcon(R.drawable.ic_star_black_24dp);
+                }
+                else {
+                    deleteFromFavorites();
+                    Toast.makeText(context, user.getEmail().substring(0, user.getEmail().indexOf("@")) + " removed from your favorites", Toast.LENGTH_LONG).show();
+                    item.setTitle("Add to favorites");
+                    item.setIcon(R.drawable.ic_star_border_black_24dp);
+                }
+                return true;
             case R.id.albumsHomePeople:
                 if(isUserhasPics) {
                     startActivity(new Intent(HomePeopleActivity.this, AlbumsPeopleActivity.class));
@@ -191,6 +209,9 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
                 else {
                     albumsIconclicked();
                 }
+                return true;
+            case android.R.id.home:
+                goBack();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -211,8 +232,8 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_people_menu, menu);
 
-        return super.onCreateOptionsMenu(menu);
 
+        return super.onCreateOptionsMenu(menu);
     }
 
 
@@ -250,6 +271,12 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
 
         ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPosition(firstVisibleItemPosition);
         firstVisibleItemPosition = 0;
+
+        isInFavorites = false;
+        mAuth = FirebaseAuth.getInstance();
+        databaseReference =   FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).child("Favorites")
+                .child(user.getUserId());
+
     }
 
 
@@ -367,9 +394,19 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
 
     @Override
     public void onBackPressed() {
+        goBack();
+    }
+
+    private void goBack() {
         finish();
-        Intent intent = new Intent(HomePeopleActivity.this, SearchActivity.class);
-        startActivity(intent);
+        if(flag) {
+            Intent intent = new Intent(HomePeopleActivity.this, SearchActivity.class);
+            startActivity(intent);
+        }
+        else {
+            Intent intent = new Intent(HomePeopleActivity.this, FavoritesActivity.class);
+            startActivity(intent);
+        }
     }
 
     public void goToProfile(View view) {
@@ -377,6 +414,55 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
         Intent intent = new Intent(HomePeopleActivity.this, HomeActivity.class);
         startActivity(intent);
     }
+
+    private void saveToFavorites() {
+        databaseReference.child("userId").setValue(user.getUserId());
+        databaseReference.child("email").setValue(user.getEmail());
+
+        isInFavorites = true;
+    }
+
+    private void deleteFromFavorites() {
+        databaseReference.removeValue();
+        isInFavorites = false;
+    }
+
+    private void checkIfInFavorites(MenuItem i) {
+
+            item = i;
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()) {
+                        item.setIcon(R.drawable.ic_star_black_24dp);
+                        isInFavorites = true;
+                    }
+                    else {
+                        item.setIcon(R.drawable.ic_star_border_black_24dp);
+                        isInFavorites = false;
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        MenuItem item = menu.findItem(R.id.favorites);
+
+        checkIfInFavorites(item);
+
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+
 
 
 }

@@ -111,11 +111,18 @@
             android:label="@string/albums"
             android:parentActivityName=".HomePeopleActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".PicturesPeopleActivity"
+            android:parentActivityName=".AlbumsPeopleActivity"
+            android:screenOrientation="portrait" />
 
         <activity
+            android:label="@string/favorites"
+            android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".AlbumsPeopleActivity"
-            android:name=".PicturesPeopleActivity"></activity>
+            android:name=".FavoritesActivity">
+        </activity>
+
     </application>
 
 </manifest>

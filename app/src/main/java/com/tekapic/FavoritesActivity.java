@@ -31,7 +31,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.tekapic.model.User;
 
-public class SearchActivity extends AppCompatActivity {
+public class FavoritesActivity extends AppCompatActivity {
 
     private SearchView searchView;
     private RecyclerView mRecyclerView;
@@ -39,6 +39,7 @@ public class SearchActivity extends AppCompatActivity {
     private TextView indicatorText;
     private String profileEmail;
     private static String searchText = "";
+    private FirebaseAuth mAuth;
 
 
 
@@ -70,79 +71,38 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_favorites);
 
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        profileEmail = mAuth.getCurrentUser().getEmail();
+        indicatorText = findViewById(R.id.favorites_indicator_text);
 
-        indicatorText = findViewById(R.id.results_indicator_text);
+        mAuth = FirebaseAuth.getInstance();
+        mDatabaseReference =  FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).child("Favorites");
 
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users");
-
-        mRecyclerView = findViewById(R.id.result_list);
+        mRecyclerView = findViewById(R.id.favorites_list);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        searchView = findViewById(R.id.search);
-
-        searchView.setIconifiedByDefault(false);
-
-        searchView.setIconified(false);
-
-        searchView.setFocusable(true);
-
-        InputMethodManager imm = (InputMethodManager)   getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-
-        if(!searchText.isEmpty()) {
-            searchView.setQuery(searchText, false);
-            firebaseUserSearch(searchText.toLowerCase());
-        }
+        firebaseGetFavorites();
 
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                if(isNetworkConnected() == false) {
-                    popUpAlertDialogConnectionError();
-                    return false;
-                }
-                searchText = query.toLowerCase();
-                firebaseUserSearch(query.toLowerCase());
-
-                indicatorText.setVisibility(View.VISIBLE);
-                indicatorText.setText("Searching...");
-                mRecyclerView.setVisibility(View.GONE);
-                
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-
-//                firebaseUserSearch(s);
-
-
-                return false;
-            }
-        });
     }
 
-    private void firebaseUserSearch(String searchText) {
+    private void firebaseGetFavorites() {
 
-        Query query = mDatabaseReference.orderByChild("email").startAt(searchText).endAt(searchText + "\uf8ff");
-
+        Query query = mDatabaseReference;
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists()) {
-                    indicatorText.setText("No Results Found");
+                    indicatorText.setVisibility(View.VISIBLE);
+                    mRecyclerView.setVisibility(View.GONE);
+
                 }
                 else {
-                    mRecyclerView.setVisibility(View.VISIBLE);
                     indicatorText.setVisibility(View.GONE);
+                    mRecyclerView.setVisibility(View.VISIBLE);
+
                 }
             }
 
@@ -161,7 +121,6 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull final User model) {
 
-                Log.i("user", model.getEmail());
 
                 holder.setDetails(model.getEmail());
 
@@ -169,15 +128,10 @@ public class SearchActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(View v) {
-                        if(profileEmail.equals(model.getEmail())) {
-                            finish();
-                            startActivity(new Intent(SearchActivity.this, HomeActivity.class));
-                            return;
-                        }
-                        HomePeopleActivity.flag = true;
+                        HomePeopleActivity.flag = false;
                         HomePeopleActivity.user = model;
                         HomePeopleActivity.firstVisibleItemPosition = 0;
-                        startActivity(new Intent(SearchActivity.this, HomePeopleActivity.class));
+                        startActivity(new Intent(FavoritesActivity.this, HomePeopleActivity.class));
                     }
                 });
 
@@ -199,14 +153,7 @@ public class SearchActivity extends AppCompatActivity {
         firebaseRecyclerAdapter.startListening();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
 
-        InputMethodManager imm = (InputMethodManager)getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-    }
 
     @Override
     protected void onResume() {
@@ -241,14 +188,9 @@ public class SearchActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
         finish();
-        Intent intent = new Intent(SearchActivity.this, HomeActivity.class);
+        Intent intent = new Intent(FavoritesActivity.this, HomeActivity.class);
         startActivity(intent);
-
-
     }
-
-
 
 }

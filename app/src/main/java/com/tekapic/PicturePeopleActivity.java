@@ -177,8 +177,9 @@ public class PicturePeopleActivity extends AppCompatActivity {
     }
 
     private void updatePicturePosition() {
-        MenuItem item = menu.findItem(R.id.positionPicurePeople);
-        item.setTitle(Integer.toString(clickedItemIndex+1) + "/" + Integer.toString(picturesListSize));
+
+        setTitle(Integer.toString(clickedItemIndex+1) + "/" + Integer.toString(picturesListSize));
+
     }
 
     @Override

@@ -258,9 +258,10 @@ public class PictureActivity extends AppCompatActivity {
     }
 
     private void updatePicturePosition() {
-        MenuItem item = menu.findItem(R.id.position);
-        item.setTitle(Integer.toString(clickedItemIndex+1) + "/" + Integer.toString(picturesListSize));
+
+        setTitle(Integer.toString(clickedItemIndex+1) + "/" + Integer.toString(picturesListSize));
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
