@@ -56,6 +56,9 @@ public class AlbumsPeopleActivity extends AppCompatActivity implements AlbumsRec
         DatabaseReference usersdRef = rootRef.child(HomePeopleActivity.user.getUserId());
 
         ValueEventListener eventListener = new ValueEventListener() {
+
+            boolean wasCalled = false;
+
             @SuppressLint("ResourceType")
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -67,6 +70,10 @@ public class AlbumsPeopleActivity extends AppCompatActivity implements AlbumsRec
                 boolean vehiclesDoesntExist = true, viewsDoesntExist = true, foodDoesntExist = true;
                 boolean thingsDoesntExist = true, funnyDoesntExist = true, placesDoesntExist = true;
                 boolean artDoesntExist = true;
+
+                if(wasCalled) {
+                    albumsList.clear();
+                }
 
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -218,6 +225,10 @@ public class AlbumsPeopleActivity extends AppCompatActivity implements AlbumsRec
 //                    item.setTitle("(" + Integer.toString(albumsList.size()) +")");
 //                }
 
+                if(wasCalled) {
+                    adapter.notifyDataSetChanged();
+                }
+
                 if(albumsList.size() == 0) {
                     goToHomeActivity();
                     return;
@@ -231,7 +242,7 @@ public class AlbumsPeopleActivity extends AppCompatActivity implements AlbumsRec
                 GridLayoutManager mGridLayoutManager = new GridLayoutManager(AlbumsPeopleActivity.this, 3);
                 mRecyclerView.setLayoutManager(mGridLayoutManager);
 
-
+                wasCalled = true;
 
             }
 
@@ -240,7 +251,7 @@ public class AlbumsPeopleActivity extends AppCompatActivity implements AlbumsRec
 
             }
         };
-        usersdRef.addListenerForSingleValueEvent(eventListener);
+        usersdRef.addValueEventListener(eventListener);
 
 
     }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:background="@android:color/white"
     android:layoutDirection="ltr"
     android:orientation="vertical"
     tools:context="com.tekapic.HomeActivity">
@@ -16,17 +16,21 @@
         android:onClick="buttonClick"
         android:id="@+id/imageViewHomeIcon"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
-        app:srcCompat="@drawable/tekapic_icon" />
+        android:layout_marginTop="30dp"
+        android:layout_height="200dp"
+        app:srcCompat="@drawable/tekapic_logo" />
 
 
     <Button
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:id="@+id/addNewPicButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/roundedbutton"
         android:onClick="buttonClick"
-        android:text="Add your first picture"
+        android:text="Add first picture"
         android:visibility="gone" />
 
 

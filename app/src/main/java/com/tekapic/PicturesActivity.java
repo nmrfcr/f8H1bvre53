@@ -145,10 +145,18 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
 
         ValueEventListener eventListener = new ValueEventListener() {
 
+            boolean wasCalled = false;
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 boolean hasAnyPicture = false;
+
+                if(wasCalled) {
+                    picturesList.clear();
+
+                }
+
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
                     String albumValue = ds.child(wantedAlbum).getValue(String.class);
@@ -185,6 +193,10 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
                     }
                 }
 
+                if(wasCalled) {
+                    adapter.notifyDataSetChanged();
+                }
+
                 if(hasAnyPicture == false) {
                     finish();
                     startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
@@ -205,6 +217,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
                 adapter = new PicturesRecyclerViewAdapter(picturesList,mOnClickListener,context);
                 mRecyclerView.setAdapter(adapter);
 
+                wasCalled = true;
 
             }
 
@@ -213,7 +226,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
 
             }
         };
-        usersdRef.addListenerForSingleValueEvent(eventListener);
+        usersdRef.addValueEventListener(eventListener);
 
 
     }
@@ -257,57 +270,57 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
 
         getPicturesByAlbum();
 
-        if(PostActivity.flag) {
-            check();
-        }
+//        if(PostActivity.flag) {
+//            check();
+//        }
 
         ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPosition(fVisibleItemPosition);
         fVisibleItemPosition = 0;
 
     }
 
-    private void check() {
-
-        Log.i("check", "inCheck()");
-
-        final Thread t1 = new Thread(new Runnable() {
-//            Handler handler = new Handler();
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(100);
-                        Log.i("while", "in Loop !!!!!!!!!!!!!!!!!!");
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if(PostActivity.flag == false) {
-
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @SuppressLint("NewApi")
-                            @Override
-                            public void run() {
-
-                                adapter.notifyItemRangeRemoved(0, picturesList.size());
-                                adapter.notifyItemRangeInserted(0, picturesList.size() + 1 );
-
-                                picturesList.clear();
-
-                                getPicturesByAlbum();
-                            }
-                        });
-
-                        break;
-                    }
-
-                }
-            }
-        });
-
-        t1.start();
-
-    }
+//    private void check() {
+//
+//        Log.i("check", "inCheck()");
+//
+//        final Thread t1 = new Thread(new Runnable() {
+////            Handler handler = new Handler();
+//            @Override
+//            public void run() {
+//                while (true) {
+//                    try {
+//                        Thread.sleep(100);
+//                        Log.i("while", "in Loop !!!!!!!!!!!!!!!!!!");
+//
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    if(PostActivity.flag == false) {
+//
+//                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                            @SuppressLint("NewApi")
+//                            @Override
+//                            public void run() {
+//
+//                                adapter.notifyItemRangeRemoved(0, picturesList.size());
+//                                adapter.notifyItemRangeInserted(0, picturesList.size() + 1 );
+//
+//                                picturesList.clear();
+//
+//                                getPicturesByAlbum();
+//                            }
+//                        });
+//
+//                        break;
+//                    }
+//
+//                }
+//            }
+//        });
+//
+//        t1.start();
+//
+//    }
 
 
     private void popUpAlertDialogConnectionError() {

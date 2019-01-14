@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:background="@android:color/white"
     android:layoutDirection="ltr"
     tools:context="com.tekapic.HomePeopleActivity">
 
@@ -15,7 +15,7 @@
         android:textSize="16sp"
         android:layout_marginTop="50dp"
         android:textAlignment="center"
-        android:textColor="@color/white"
+        android:textColor="@android:color/black"
         android:id="@+id/textHomePeopleNoPics"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -61,10 +61,18 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
 
         ValueEventListener eventListener = new ValueEventListener() {
 
+            boolean wasCalled = false;
+
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 boolean hasAnyPicture = false;
+
+                if(wasCalled) {
+                    picturesList.clear();
+
+                }
+
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
                     String albumValue = ds.child(wantedAlbum).getValue(String.class);
@@ -101,6 +109,10 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
                     }
                 }
 
+                if(wasCalled) {
+                    adapter.notifyDataSetChanged();
+                }
+
                 if(hasAnyPicture == false) {
                     finish();
                     startActivity(new Intent(PicturesPeopleActivity.this, AlbumsPeopleActivity.class));
@@ -121,6 +133,7 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
                 adapter = new PicturesRecyclerViewAdapter(picturesList,mOnClickListener,context);
                 mRecyclerView.setAdapter(adapter);
 
+                wasCalled = true;
 
             }
 
@@ -129,7 +142,7 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
 
             }
         };
-        usersdRef.addListenerForSingleValueEvent(eventListener);
+        usersdRef.addValueEventListener(eventListener);
 
 
     }
@@ -143,12 +156,11 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_pictures_people);
 
         String album = wantedAlbum.substring(0, 1).toUpperCase() + wantedAlbum.substring(1);
         setTitle(album);
 
-        setContentView(R.layout.activity_pictures_people);
 
         actionBar = getSupportActionBar();
 

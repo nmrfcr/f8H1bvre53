@@ -40,6 +40,8 @@ public class FavoritesActivity extends AppCompatActivity {
     private String profileEmail;
     private static String searchText = "";
     private FirebaseAuth mAuth;
+    private android.support.v7.app.ActionBar actionBar;
+
 
 
 
@@ -73,6 +75,8 @@ public class FavoritesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
 
+        actionBar = getSupportActionBar();
+
         indicatorText = findViewById(R.id.favorites_indicator_text);
 
         mAuth = FirebaseAuth.getInstance();
@@ -102,7 +106,7 @@ public class FavoritesActivity extends AppCompatActivity {
                 else {
                     indicatorText.setVisibility(View.GONE);
                     mRecyclerView.setVisibility(View.VISIBLE);
-
+                    actionBar.setSubtitle("(" + Long.toString(dataSnapshot.getChildrenCount()) +")");
                 }
             }
 

@@ -291,8 +291,17 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
 
         ValueEventListener eventListener = new ValueEventListener() {
 
+            boolean wasCalled = false;
+
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(wasCalled) {
+                    picturesList.clear();
+
+                }
+
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
                     String pictureUrl = ds.child("pictureUrl").getValue(String.class);
@@ -324,11 +333,18 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
 
                 }
 
+                if(wasCalled) {
+                    adapter.notifyDataSetChanged();
+                }
+
                 actionBar.setSubtitle("(" + Integer.toString(picturesList.size()) +")");
 
                 Collections.reverse(picturesList);
                 adapter = new PicturesRecyclerViewAdapter(picturesList, mOnClickListener, context);
                 mRecyclerView.setAdapter(adapter);
+
+                wasCalled = true;
+
 
             }
 
@@ -337,7 +353,7 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
 
             }
         };
-        usersdRef.addListenerForSingleValueEvent(eventListener);
+        usersdRef.addValueEventListener(eventListener);
 
     }
 
@@ -363,17 +379,19 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
     }
 
     private void checkIfUserHasAnyPictures() {
-        mStatusDB.addListenerForSingleValueEvent(new ValueEventListener() {
+        mStatusDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
 
                 if (!snapshot.exists()) {
                     noPicturesText.setVisibility(View.VISIBLE);
                     isUserhasPics = false;
+                    mRecyclerView.setVisibility(View.GONE);
                 }
                 else {
                     noPicturesText.setVisibility(View.GONE);
                     isUserhasPics = true;
+                    mRecyclerView.setVisibility(View.VISIBLE);
                 }
             }
 

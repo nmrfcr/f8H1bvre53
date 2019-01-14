@@ -771,9 +771,9 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
             getPictures();
 
-            if(PostActivity.flag) {
-                check();
-            }
+//            if(PostActivity.flag) {
+//                check();
+//            }
 
             ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPosition(firstVisibleItemPosition);
             firstVisibleItemPosition = 0;
@@ -804,52 +804,52 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
 
 
-    private void check() {
-
-        Log.i("check", "inCheck()");
-
-        final Thread t1 = new Thread(new Runnable() {
-            //            Handler handler = new Handler();
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(100);
-                        Log.i("while", "in Loop !!!!!!!!!!!!!!!!!!");
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if(PostActivity.flag == false) {
-
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @SuppressLint("NewApi")
-                            @Override
-                            public void run() {
-
-                                adapter.notifyItemRangeRemoved(0, picturesList.size());
-                                adapter.notifyItemRangeInserted(0, picturesList.size() + 1 );
-
-                                picturesList.clear();
-                                getPictures();
-                            }
-                        });
-//                        handler.post(new Runnable() {
+//    private void check() {
+//
+//        Log.i("check", "inCheck()");
+//
+//        final Thread t1 = new Thread(new Runnable() {
+//            //            Handler handler = new Handler();
+//            @Override
+//            public void run() {
+//                while (true) {
+//                    try {
+//                        Thread.sleep(100);
+//                        Log.i("while", "in Loop !!!!!!!!!!!!!!!!!!");
+//
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    if(PostActivity.flag == false) {
+//
+//                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                            @SuppressLint("NewApi")
 //                            @Override
 //                            public void run() {
 //
+//                                adapter.notifyItemRangeRemoved(0, picturesList.size());
+//                                adapter.notifyItemRangeInserted(0, picturesList.size() + 1 );
+//
+//                                picturesList.clear();
+//                                getPictures();
 //                            }
 //                        });
-                        break;
-                    }
-
-                }
-            }
-        });
-
-        t1.start();
-
-    }
+////                        handler.post(new Runnable() {
+////                            @Override
+////                            public void run() {
+////
+////                            }
+////                        });
+//                        break;
+//                    }
+//
+//                }
+//            }
+//        });
+//
+//        t1.start();
+//
+//    }
 
 
     private void getPictures() {
@@ -860,54 +860,67 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference usersdRef = rootRef.child(mAuth.getUid());
 
+        actionBar.setSubtitle("(" + Integer.toString(picturesList.size()) +")");
+
         ValueEventListener eventListener = new ValueEventListener() {
 
+            boolean wasCalled = false;
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(wasCalled) {
+                    picturesList.clear();
+
+                }
+
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-                        String pictureUrl = ds.child("pictureUrl").getValue(String.class);
+                    String pictureUrl = ds.child("pictureUrl").getValue(String.class);
 
-                        String date = ds.child("date").getValue(String.class);
+                    String date = ds.child("date").getValue(String.class);
 
-                        String pictureId = ds.child("pictureId").getValue(String.class);
+                    String pictureId = ds.child("pictureId").getValue(String.class);
 
-                        String me = ds.child("me").getValue(String.class);
-                        String family = ds.child("family").getValue(String.class);
-                        String friends = ds.child("friends").getValue(String.class);
-                        String love = ds.child("love").getValue(String.class);
-                        String pets = ds.child("pets").getValue(String.class);
-                        String nature = ds.child("nature").getValue(String.class);
-                        String sport = ds.child("sport").getValue(String.class);
-                        String persons = ds.child("persons").getValue(String.class);
-                        String animals = ds.child("animals").getValue(String.class);
-                        String vehicles = ds.child("vehicles").getValue(String.class);
-                        String views = ds.child("views").getValue(String.class);
-                        String food = ds.child("food").getValue(String.class);
-                        String things = ds.child("things").getValue(String.class);
-                        String funny = ds.child("funny").getValue(String.class);
-                        String places = ds.child("places").getValue(String.class);
-                        String art = ds.child("art").getValue(String.class);
+                    String me = ds.child("me").getValue(String.class);
+                    String family = ds.child("family").getValue(String.class);
+                    String friends = ds.child("friends").getValue(String.class);
+                    String love = ds.child("love").getValue(String.class);
+                    String pets = ds.child("pets").getValue(String.class);
+                    String nature = ds.child("nature").getValue(String.class);
+                    String sport = ds.child("sport").getValue(String.class);
+                    String persons = ds.child("persons").getValue(String.class);
+                    String animals = ds.child("animals").getValue(String.class);
+                    String vehicles = ds.child("vehicles").getValue(String.class);
+                    String views = ds.child("views").getValue(String.class);
+                    String food = ds.child("food").getValue(String.class);
+                    String things = ds.child("things").getValue(String.class);
+                    String funny = ds.child("funny").getValue(String.class);
+                    String places = ds.child("places").getValue(String.class);
+                    String art = ds.child("art").getValue(String.class);
 
-                        Picture picture = new Picture(pictureId, pictureUrl, date, me, family,friends,love, pets,  nature,  sport,  persons, animals,  vehicles, views, food, things, funny, places,  art);
-
+                    Picture picture = new Picture(pictureId, pictureUrl, date, me, family, friends, love, pets, nature, sport, persons, animals, vehicles, views, food, things, funny, places, art);
 
 
                     picturesList.add(picture);
 
                 }
 
+                if(wasCalled) {
+                    adapter.notifyDataSetChanged();
+                }
+
+
 //                if(flag) {
 //                    MenuItem item = menuItem.findItem(R.id.total_pics_home_menu);
 //                    item.setTitle("(" + Integer.toString(picturesList.size()) +")");
 //                }
-
-                actionBar.setSubtitle("(" + Integer.toString(picturesList.size()) +")");
-
+                /////////////////////////////////////////////////***
+                actionBar.setSubtitle("(" + Integer.toString(picturesList.size()) + ")");
                 Collections.reverse(picturesList);
                 adapter = new PicturesRecyclerViewAdapter(picturesList, mOnClickListener, context);
                 mRecyclerView.setAdapter(adapter);
+                ////////////////////////////////////////////////***
 
 //                mRecyclerView.scrollToPosition(0);
 
@@ -915,6 +928,8 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 //                GridLayoutManager mGridLayoutManager = new GridLayoutManager(PicturesActivity.this, 3);
 //                mRecyclerView.setLayoutManager(mGridLayoutManager);
 
+
+                wasCalled = true;
             }
 
             @Override
@@ -922,7 +937,8 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
             }
         };
-        usersdRef.addListenerForSingleValueEvent(eventListener);
+        usersdRef.addValueEventListener(eventListener);
+
 
 
     }
@@ -954,7 +970,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
 
     private void checkIfUserHasAnyPictures() {
-        mStatusDB.addListenerForSingleValueEvent(new ValueEventListener() {
+        mStatusDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
 
@@ -962,11 +978,15 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                     button.setVisibility(View.VISIBLE);
                     imageViewIcon.setVisibility(View.VISIBLE);
                     isUserhasPics = false;
+                    mRecyclerView.setVisibility(View.GONE);
+
                 }
                 else {
                     button.setVisibility(View.GONE);
                     imageViewIcon.setVisibility(View.GONE);
                     isUserhasPics = true;
+                    mRecyclerView.setVisibility(View.VISIBLE);
+
                 }
             }
 

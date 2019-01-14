@@ -60,10 +60,12 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
         DatabaseReference usersdRef = rootRef.child(mAuth.getUid());
 
         ValueEventListener eventListener = new ValueEventListener() {
+
+            boolean wasCalled = false;
+
             @SuppressLint("ResourceType")
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
 
                 boolean meDoesntExist = true, familyDoesntExist = true, friendsDoesntExist = true;
                 boolean loveDoesntExist = true, petsDoesntExist = true, natureDoesntExist = true;
@@ -71,6 +73,10 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
                 boolean vehiclesDoesntExist = true, viewsDoesntExist = true, foodDoesntExist = true;
                 boolean thingsDoesntExist = true, funnyDoesntExist = true, placesDoesntExist = true;
                 boolean artDoesntExist = true;
+
+                if(wasCalled) {
+                    albumsList.clear();
+                }
 
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -221,6 +227,9 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
 //                    MenuItem item = menuItem.findItem(R.id.total_pics_home_menu);
 //                    item.setTitle("(" + Integer.toString(albumsList.size()) +")");
 //                }
+                if(wasCalled) {
+                    adapter.notifyDataSetChanged();
+                }
 
                 if(albumsList.size() == 0) {
                     goToHomeActivity();
@@ -236,6 +245,7 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
                 mRecyclerView.setLayoutManager(mGridLayoutManager);
 
 
+                wasCalled = true;
 
             }
 
@@ -244,7 +254,7 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
 
             }
         };
-        usersdRef.addListenerForSingleValueEvent(eventListener);
+        usersdRef.addValueEventListener(eventListener);
 
 
     }
@@ -502,56 +512,56 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
 //        GridLayoutManager mg = new GridLayoutManager(AlbumsActivity.this, 3);
 //        mRecyclerView.setLayoutManager(mg);
 
-        if(PostActivity.flag) {
-            check();
-        }
+//        if(PostActivity.flag) {
+//            check();
+//        }
 
 
     }
 
 
-    private void check() {
-
-        Log.i("check", "inCheck()");
-
-        final Thread t1 = new Thread(new Runnable() {
-            //            Handler handler = new Handler();
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(100);
-                        Log.i("while", "in Loop !!!!!!!!!!!!!!!!!!");
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if(PostActivity.flag == false) {
-
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @SuppressLint("NewApi")
-                            @Override
-                            public void run() {
-
-                                adapter.notifyItemRangeRemoved(0, albumsList.size());
-                                adapter.notifyItemRangeInserted(0, albumsList.size() + 1 );
-
-                                albumsList.clear();
-
-                                getUserAlbums();
-                            }
-                        });
-
-                        break;
-                    }
-
-                }
-            }
-        });
-
-        t1.start();
-
-    }
+//    private void check() {
+//
+//        Log.i("check", "inCheck()");
+//
+//        final Thread t1 = new Thread(new Runnable() {
+//            //            Handler handler = new Handler();
+//            @Override
+//            public void run() {
+//                while (true) {
+//                    try {
+//                        Thread.sleep(100);
+//                        Log.i("while", "in Loop !!!!!!!!!!!!!!!!!!");
+//
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    if(PostActivity.flag == false) {
+//
+//                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                            @SuppressLint("NewApi")
+//                            @Override
+//                            public void run() {
+//
+//                                adapter.notifyItemRangeRemoved(0, albumsList.size());
+//                                adapter.notifyItemRangeInserted(0, albumsList.size() + 1 );
+//
+//                                albumsList.clear();
+//
+//                                getUserAlbums();
+//                            }
+//                        });
+//
+//                        break;
+//                    }
+//
+//                }
+//            }
+//        });
+//
+//        t1.start();
+//
+//    }
 
 
 
