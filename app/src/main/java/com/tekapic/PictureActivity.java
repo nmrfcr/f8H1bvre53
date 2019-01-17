@@ -19,6 +19,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -61,6 +62,7 @@ import java.util.ArrayList;
 
 public class PictureActivity extends AppCompatActivity {
 
+    private HackyViewPager mViewPager;
     private ImageView imageView;
     public static Picture picture;
     public static boolean isPictureFromAlbum;
@@ -281,18 +283,40 @@ public class PictureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture);
 
-        isSystemUIHidden = false;
+        mViewPager = findViewById(R.id.view_pager);
 
-        floatingActionButtonPrev = findViewById(R.id.prev_picture);
-        floatingActionButtonNext = findViewById(R.id.next_picture);
+        mViewPager.setAdapter(new TouchImageAdapter(this,picturesList));
+        mViewPager.setCurrentItem(clickedItemIndex);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                setTitle(Integer.toString(position+1) + "/" + Integer.toString(picturesListSize));
+
+                picture = picturesList.get(position);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+
+
+//        isSystemUIHidden = false;
 
 
         mDialog = new ProgressDialog(this);
 
-        imageView = findViewById(R.id.photo_view);
-
-
-        progressBar = findViewById(R.id.progress);
+//        progressBar = findViewById(R.id.progress);
 
         mAuth = FirebaseAuth.getInstance();
         mStatusDB = FirebaseDatabase.getInstance().getReference().child(mAuth.getUid());
@@ -301,31 +325,26 @@ public class PictureActivity extends AppCompatActivity {
         hideSystemUI();
         showSystemUI();
 
-        setPictureUrl(this, picture.getPictureUrl());
 
 
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(getSystemUiVisibility() == 3840) {
-                    isSystemUIHidden = false;
-                }
-
-                if(isSystemUIHidden == false) {
-                    floatingActionButtonPrev.setVisibility(View.GONE);
-                    floatingActionButtonNext.setVisibility(View.GONE);
-                    hideSystemUI();
-                    isSystemUIHidden = true;
-                }
-                else {
-                    floatingActionButtonPrev.setVisibility(View.VISIBLE);
-                    floatingActionButtonNext.setVisibility(View.VISIBLE);
-                    showSystemUI();
-                    isSystemUIHidden = false;
-                }
-            }
-        });
+//        mViewPager.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                if(getSystemUiVisibility() == 3840) {
+//                    isSystemUIHidden = false;
+//                }
+//
+//                if(isSystemUIHidden == false) {
+//                    hideSystemUI();
+//                    isSystemUIHidden = true;
+//                }
+//                else {
+//                    showSystemUI();
+//                    isSystemUIHidden = false;
+//                }
+//            }
+//        });
 
 
 //        imageView.setOnTouchListener(new OnSwipeTouchListener(PictureActivity.this) {
@@ -386,28 +405,28 @@ public class PictureActivity extends AppCompatActivity {
 //            }
 //        });
 
-        View decorView = getWindow().getDecorView();
-        decorView.setOnSystemUiVisibilityChangeListener
-                (new View.OnSystemUiVisibilityChangeListener() {
-                    @Override
-                    public void onSystemUiVisibilityChange(int visibility) {
-                        // Note that system bars will only be "visible" if none of the
-                        // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
-                        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                            // TODO: The system bars are visible. Make any desired
-                            // adjustments to your UI, such as showing the action bar or
-                            // other navigational controls.
-                            floatingActionButtonPrev.setVisibility(View.VISIBLE);
-                            floatingActionButtonNext.setVisibility(View.VISIBLE);
-
-                        } else {
-                            // TODO: The system bars are NOT visible. Make any desired
-                            // adjustments to your UI, such as hiding the action bar or
-                            // other navigational controls.
-
-                        }
-                    }
-                });
+//        View decorView = getWindow().getDecorView();
+//        decorView.setOnSystemUiVisibilityChangeListener
+//                (new View.OnSystemUiVisibilityChangeListener() {
+//                    @Override
+//                    public void onSystemUiVisibilityChange(int visibility) {
+//                        // Note that system bars will only be "visible" if none of the
+//                        // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
+//                        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+//                            // TODO: The system bars are visible. Make any desired
+//                            // adjustments to your UI, such as showing the action bar or
+//                            // other navigational controls.
+//                            floatingActionButtonPrev.setVisibility(View.VISIBLE);
+//                            floatingActionButtonNext.setVisibility(View.VISIBLE);
+//
+//                        } else {
+//                            // TODO: The system bars are NOT visible. Make any desired
+//                            // adjustments to your UI, such as hiding the action bar or
+//                            // other navigational controls.
+//
+//                        }
+//                    }
+//                });
 
     }
 
@@ -508,6 +527,8 @@ public class PictureActivity extends AppCompatActivity {
             popUpAlertDialogConnectionError();
         }
     }
+
+
 
 
 

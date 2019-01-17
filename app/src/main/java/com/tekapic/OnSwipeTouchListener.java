@@ -23,6 +23,8 @@ public class OnSwipeTouchListener implements OnTouchListener {
 
     private final GestureDetector gestureDetector;
 
+
+
     public OnSwipeTouchListener(Context context) {
 
 
@@ -49,7 +51,11 @@ public class OnSwipeTouchListener implements OnTouchListener {
         return gestureDetector.onTouchEvent(event);
     }
 
+
+
     private final class GestureListener extends SimpleOnGestureListener {
+
+
 
         private static final int SWIPE_DISTANCE_THRESHOLD = 100;
         private static final int SWIPE_VELOCITY_THRESHOLD = 100;
