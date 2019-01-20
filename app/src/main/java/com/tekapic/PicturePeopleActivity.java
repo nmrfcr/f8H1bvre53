@@ -19,6 +19,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -70,45 +71,12 @@ public class PicturePeopleActivity extends AppCompatActivity {
     public static int clickedItemIndex;
     public static int picturesListSize;
     public static ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
-    private Menu menu;
     private boolean isSystemUIHidden;
-    private Drawable image;
-    private LinearLayout linearLayout;
-    FloatingActionButton floatingActionButtonPrev, floatingActionButtonNext;
+    private HackyViewPager mViewPager;
 
 
-    public void prevPicture(View view) {
-        previousPicture();
-    }
-    public void nextPicture(View view) {
-        nextPicture();
-    }
 
-    private void setPictureUrl(Context context, String pictureUrl) {
-        Glide.with(context)
-                .load(pictureUrl).apply(new RequestOptions().override(1000, 1000))
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 
-                        Log.i("onLoadFailed", "Failed to load picture");
-                        Toast.makeText(getApplicationContext(), "Failed to load picture.", Toast.LENGTH_SHORT).show();
-
-                        goBack();
-
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        progressBar.setVisibility(View.GONE);
-                        imageView.setImageDrawable(resource);
-
-                        return false;
-                    }
-                })
-                .into(imageView);
-    }
 
 
 
@@ -137,44 +105,6 @@ public class PicturePeopleActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void nextPicture() {
-
-        if(clickedItemIndex == 0 && picturesListSize == 1) {
-            return;
-        }
-
-        if((clickedItemIndex + 1) == picturesListSize) {
-            clickedItemIndex = -1;
-        }
-        progressBar.setVisibility(View.VISIBLE);
-
-        picture = picturesList.get(clickedItemIndex+1);
-
-        setPictureUrl(getApplicationContext(), picture.getPictureUrl());
-        ++clickedItemIndex;
-
-        updatePicturePosition();
-    }
-
-    private void previousPicture() {
-
-        if(clickedItemIndex == 0 && picturesListSize == 1) {
-            return;
-        }
-
-        if(clickedItemIndex == 0) {
-            clickedItemIndex = picturesListSize;
-        }
-        progressBar.setVisibility(View.VISIBLE);
-
-        picture = picturesList.get(clickedItemIndex-1);
-
-        setPictureUrl(getApplicationContext(), picture.getPictureUrl());
-
-        --clickedItemIndex;
-
-        updatePicturePosition();
-    }
 
     private void updatePicturePosition() {
 
@@ -185,8 +115,6 @@ public class PicturePeopleActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.picture_people_menu, menu);
-
-        this.menu = menu;
 
         updatePicturePosition();
 
@@ -199,68 +127,39 @@ public class PicturePeopleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_people);
 
-        isSystemUIHidden = false;
+        mViewPager = findViewById(R.id.view_pager_people);
 
-        floatingActionButtonPrev = findViewById(R.id.prev_picturePeople);
-        floatingActionButtonNext = findViewById(R.id.next_picturePeople);
+        mViewPager.setAdapter(new TouchImageAdapter(this,picturesList));
+        mViewPager.setCurrentItem(clickedItemIndex);
 
-        mDialog = new ProgressDialog(this);
-
-        imageView = findViewById(R.id.photo_viewPicturePeople);
-
-        progressBar = findViewById(R.id.progressPicturePeople);
-
-        hideSystemUI();
-        showSystemUI();
-
-        setPictureUrl(this, picture.getPictureUrl());
-
-        imageView.setOnClickListener(new View.OnClickListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onClick(View v) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                if(getSystemUiVisibility() == 3840) {
-                    isSystemUIHidden = false;
-                }
+            }
 
-                if(isSystemUIHidden == false) {
-                    floatingActionButtonPrev.setVisibility(View.GONE);
-                    floatingActionButtonNext.setVisibility(View.GONE);
-                    hideSystemUI();
-                    isSystemUIHidden = true;
-                }
-                else {
-                    floatingActionButtonPrev.setVisibility(View.VISIBLE);
-                    floatingActionButtonNext.setVisibility(View.VISIBLE);
-                    showSystemUI();
-                    isSystemUIHidden = false;
-                }
+            @Override
+            public void onPageSelected(int position) {
+
+                setTitle(Integer.toString(position+1) + "/" + Integer.toString(picturesListSize));
+
+                picture = picturesList.get(position);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
 
 
-        View decorView = getWindow().getDecorView();
-        decorView.setOnSystemUiVisibilityChangeListener
-                (new View.OnSystemUiVisibilityChangeListener() {
-                    @Override
-                    public void onSystemUiVisibilityChange(int visibility) {
-                        // Note that system bars will only be "visible" if none of the
-                        // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
-                        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                            // TODO: The system bars are visible. Make any desired
-                            // adjustments to your UI, such as showing the action bar or
-                            // other navigational controls.
-                            floatingActionButtonPrev.setVisibility(View.VISIBLE);
-                            floatingActionButtonNext.setVisibility(View.VISIBLE);
+        mDialog = new ProgressDialog(this);
 
-                        } else {
-                            // TODO: The system bars are NOT visible. Make any desired
-                            // adjustments to your UI, such as hiding the action bar or
-                            // other navigational controls.
 
-                        }
-                    }
-                });
+        hideSystemUI();
+        showSystemUI();
+
 
     }
 
@@ -288,14 +187,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
-
-    private int getSystemUiVisibility() {
-        View decorView = getWindow().getDecorView();
-        return decorView.getSystemUiVisibility();
-    }
-
-
-
+    
 
     private void goBack() {
         finish();

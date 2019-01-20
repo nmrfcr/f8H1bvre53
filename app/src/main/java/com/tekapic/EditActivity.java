@@ -89,8 +89,9 @@ public class EditActivity extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         mDialog.dismiss();
                         finish();
-                        startActivity(new Intent(EditActivity.this, PictureActivity.class));
+                        startActivity(new Intent(EditActivity.this, PicturesActivity.class));
                         Toast.makeText(EditActivity.this, "Albums updated.", Toast.LENGTH_SHORT).show();
+
                     }
                 });
     }

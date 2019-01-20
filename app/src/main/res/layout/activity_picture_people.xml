@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/picture_linear_layout1"
@@ -8,44 +7,13 @@
     android:layout_height="match_parent"
     android:background="@android:color/black"
     android:layoutDirection="ltr"
+    android:orientation="horizontal"
     tools:context="com.tekapic.PicturePeopleActivity">
 
-    <ProgressBar
-        android:id="@+id/progressPicturePeople"
+    <com.tekapic.HackyViewPager
+        android:id="@+id/view_pager_people"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:theme="@style/ProgressBarTheme" />
+        android:layout_height="match_parent"
+        />
 
-    <com.github.chrisbanes.photoview.PhotoView
-        android:id="@+id/photo_viewPicturePeople"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-
-    <android.support.design.widget.FloatingActionButton
-        app:borderWidth="0dp"
-        android:id="@+id/prev_picturePeople"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|left"
-        android:layout_margin="16dp"
-        app:backgroundTint="@color/grey_transparent"
-        android:clickable="true"
-        android:onClick="prevPicture"
-        app:srcCompat="@drawable/ic_navigate_before_black_24dp" />
-
-    <android.support.design.widget.FloatingActionButton
-        app:borderWidth="0dp"
-        app:backgroundTint="@color/grey_transparent"
-        app:srcCompat="@drawable/ic_navigate_next_black_24dp"
-        android:id="@+id/next_picturePeople"
-        android:clickable="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:onClick="nextPicture"
-        android:layout_gravity="bottom|right"/>
-
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

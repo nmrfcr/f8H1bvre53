@@ -5,44 +5,22 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Parcelable;
+
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,42 +30,25 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.tekapic.model.Picture;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 
 
 public class PictureActivity extends AppCompatActivity {
 
     private HackyViewPager mViewPager;
-    private ImageView imageView;
     public static Picture picture;
     public static boolean isPictureFromAlbum;
     private DatabaseReference mStatusDB;
     private FirebaseAuth mAuth;
     private FirebaseStorage storageReference;
     private ProgressDialog mDialog;
-    private ProgressBar progressBar;
 
     public static int clickedItemIndex;
     public static int picturesListSize;
     public static ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
-    private Menu menu;
-    private boolean isSystemUIHidden;
-    private Drawable image;
-    private LinearLayout linearLayout;
-    FloatingActionButton floatingActionButtonPrev, floatingActionButtonNext;
 
 
-    public void prevPicture(View view) {
-        previousPicture();
-    }
-    public void nextPicture(View view) {
-        nextPicture();
-    }
 
     private void deledePictureFromFirebase() {
 
@@ -162,37 +123,6 @@ public class PictureActivity extends AppCompatActivity {
         dialog.show();
     }
 
-
-    private void setPictureUrl(Context context, String pictureUrl) {
-        Glide.with(context)
-                .load(pictureUrl).apply(new RequestOptions().override(1000, 1000))
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-
-                        Log.i("onLoadFailed", "Failed to load picture");
-                        Toast.makeText(getApplicationContext(), "Failed to load picture.", Toast.LENGTH_SHORT).show();
-
-                        goBack();
-
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        progressBar.setVisibility(View.GONE);
-                        imageView.setImageDrawable(resource);
-
-                        return false;
-                    }
-                })
-                .into(imageView);
-    }
-
-
-
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -220,44 +150,6 @@ public class PictureActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void nextPicture() {
-
-        if(clickedItemIndex == 0 && picturesListSize == 1) {
-            return;
-        }
-
-        if((clickedItemIndex + 1) == picturesListSize) {
-            clickedItemIndex = -1;
-        }
-        progressBar.setVisibility(View.VISIBLE);
-
-        picture = picturesList.get(clickedItemIndex+1);
-
-        setPictureUrl(getApplicationContext(), picture.getPictureUrl());
-        ++clickedItemIndex;
-
-        updatePicturePosition();
-    }
-
-    private void previousPicture() {
-
-        if(clickedItemIndex == 0 && picturesListSize == 1) {
-            return;
-        }
-
-        if(clickedItemIndex == 0) {
-            clickedItemIndex = picturesListSize;
-        }
-        progressBar.setVisibility(View.VISIBLE);
-
-        picture = picturesList.get(clickedItemIndex-1);
-
-        setPictureUrl(getApplicationContext(), picture.getPictureUrl());
-
-        --clickedItemIndex;
-
-        updatePicturePosition();
-    }
 
     private void updatePicturePosition() {
 
@@ -269,10 +161,7 @@ public class PictureActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.picture_menu, menu);
 
-        this.menu = menu;
-
         updatePicturePosition();
-
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -310,13 +199,8 @@ public class PictureActivity extends AppCompatActivity {
         });
 
 
-
-//        isSystemUIHidden = false;
-
-
         mDialog = new ProgressDialog(this);
 
-//        progressBar = findViewById(R.id.progress);
 
         mAuth = FirebaseAuth.getInstance();
         mStatusDB = FirebaseDatabase.getInstance().getReference().child(mAuth.getUid());
@@ -325,108 +209,6 @@ public class PictureActivity extends AppCompatActivity {
         hideSystemUI();
         showSystemUI();
 
-
-
-//        mViewPager.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                if(getSystemUiVisibility() == 3840) {
-//                    isSystemUIHidden = false;
-//                }
-//
-//                if(isSystemUIHidden == false) {
-//                    hideSystemUI();
-//                    isSystemUIHidden = true;
-//                }
-//                else {
-//                    showSystemUI();
-//                    isSystemUIHidden = false;
-//                }
-//            }
-//        });
-
-
-//        imageView.setOnTouchListener(new OnSwipeTouchListener(PictureActivity.this) {
-//
-//            public void onSwipeRight() {
-//                previousPicture();
-//            }
-//            public void onSwipeLeft() {
-//                nextPicture();
-//            }
-//
-//            public void onClick() {
-////                Toast.makeText(PictureActivity.this, "click", Toast.LENGTH_SHORT).show();
-//
-//                if(getSystemUiVisibility() == 3840) {
-//                    isSystemUIHidden = false;
-//                }
-//
-//                if(isSystemUIHidden == false) {
-//                    hideSystemUI();
-//                    isSystemUIHidden = true;
-//                }
-//                else {
-//                    showSystemUI();
-//                    isSystemUIHidden = false;
-//                }
-//
-//            }
-//
-////            public void onDoubleClick() {
-////
-//////                hideSystemUI();
-//////                showSystemUI();
-////                new Zoom(getApplicationContext(), image);
-////
-////            }
-//
-//        });
-
-//        imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//
-//                if(getSystemUiVisibility() == 3840) {
-//                    isSystemUIHidden = false;
-//                }
-//
-//                if(isSystemUIHidden == false) {
-//                    hideSystemUI();
-//                    isSystemUIHidden = true;
-//                }
-//                else {
-//                    showSystemUI();
-//                    isSystemUIHidden = false;
-//                }
-//
-//            }
-//        });
-
-//        View decorView = getWindow().getDecorView();
-//        decorView.setOnSystemUiVisibilityChangeListener
-//                (new View.OnSystemUiVisibilityChangeListener() {
-//                    @Override
-//                    public void onSystemUiVisibilityChange(int visibility) {
-//                        // Note that system bars will only be "visible" if none of the
-//                        // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
-//                        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-//                            // TODO: The system bars are visible. Make any desired
-//                            // adjustments to your UI, such as showing the action bar or
-//                            // other navigational controls.
-//                            floatingActionButtonPrev.setVisibility(View.VISIBLE);
-//                            floatingActionButtonNext.setVisibility(View.VISIBLE);
-//
-//                        } else {
-//                            // TODO: The system bars are NOT visible. Make any desired
-//                            // adjustments to your UI, such as hiding the action bar or
-//                            // other navigational controls.
-//
-//                        }
-//                    }
-//                });
 
     }
 
@@ -453,11 +235,6 @@ public class PictureActivity extends AppCompatActivity {
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-    }
-
-    private int getSystemUiVisibility() {
-        View decorView = getWindow().getDecorView();
-        return decorView.getSystemUiVisibility();
     }
 
 
@@ -527,15 +304,5 @@ public class PictureActivity extends AppCompatActivity {
             popUpAlertDialogConnectionError();
         }
     }
-
-
-
-
-
-
-
-
-
-
 
 }

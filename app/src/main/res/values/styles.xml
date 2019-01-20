@@ -59,6 +59,15 @@
         <item name="closeIcon">@android:color/transparent</item>
     </style>
 
+    <style name="GrandmaTheme" parent="Theme.AppCompat.Light.DarkActionBar" >
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@android:color/black</item>
+        <item name="colorPrimaryDark">@android:color/black</item>
+        <item name="colorAccent">@android:color/black</item>
+        <item name="titleTextColor">@android:color/white</item>
+        <item name="android:layoutDirection" tools:ignore="NewApi">ltr</item>
+    </style>
+
 
 
 

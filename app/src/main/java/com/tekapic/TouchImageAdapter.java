@@ -11,19 +11,27 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.CircularProgressDrawable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.tekapic.model.Picture;
 
@@ -34,9 +42,8 @@ public class TouchImageAdapter extends PagerAdapter {
     private Context context;
     private ArrayList<Picture> picturesList = new ArrayList<>();
     private boolean isSystemUIHidden;
-    private int currentPage;
 
-
+    private PhotoView img;
 
     public TouchImageAdapter(Context context,ArrayList<Picture> picturesList){
         this.picturesList = picturesList;
@@ -53,15 +60,76 @@ public class TouchImageAdapter extends PagerAdapter {
 
     @Override
     public View instantiateItem(ViewGroup container, int position) {
+//
+//        LayoutInflater inflater = (LayoutInflater) context
+//                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//
+//        final LinearLayout imageLayout = (LinearLayout) inflater.inflate(R.layout.activity_picture, null);
+//
+//        final ProgressBar progressBar = (ProgressBar) imageLayout.findViewById(R.id.progress);
 
-        PhotoView img = new PhotoView(container.getContext());
+
+
+         img = new PhotoView(container.getContext());
+
+
         ViewGroup.LayoutParams lp= new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         img.setLayoutParams(lp);
-//        img.setImageDrawable(getImageFromSdCard(filename,position));
+
+
+
+//        CircularProgressDrawable circularProgressDrawable = new
+//                CircularProgressDrawable(context);
+//        circularProgressDrawable.setStrokeWidth(5f);
+//        circularProgressDrawable.setCenterRadius(300f);
+//        circularProgressDrawable.setBackgroundColor(R.color.white);
+//
+//        circularProgressDrawable.setProgressRotation(10);
+//
+//        circularProgressDrawable.start();
+//
+//
+//
+//        Glide.with(context)
+//                .load(picturesList.get(position).getPictureUrl())
+//                .apply(new RequestOptions().placeholder(circularProgressDrawable))
+//                .into(img);
+
+
 
         Glide.with(context)
-                .load(picturesList.get(position).getPictureUrl())
+                .load(picturesList.get(position).getPictureUrl()).apply(new RequestOptions().override(1000, 1000).placeholder(R.drawable.tekapic_icon_loading))
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                        Log.i("onLoadFailed", "Failed to load picture");
+                        Toast.makeText(context, "Failed to load picture.", Toast.LENGTH_SHORT).show();
+
+//                        goBack();
+
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        img.setImageDrawable(resource);
+
+                        return false;
+                    }
+                })
                 .into(img);
+
+
+
+
+
+
+
+
+
+//////////////
+
 
         container.addView(img, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
@@ -136,6 +204,9 @@ public class TouchImageAdapter extends PagerAdapter {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
+
+
+
 
 
 

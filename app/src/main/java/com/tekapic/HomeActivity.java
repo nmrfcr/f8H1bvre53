@@ -764,7 +764,6 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
             mRecyclerView.setLayoutManager(linearLayoutManager);
             mRecyclerView.addItemDecoration(new SpacesItemDecoration(3));
 
-//        mRecyclerView.addOnScrollListener(new CustomScrollListener()); //newwwwwwww
 
             mOnClickListener = this;
             context = this;
