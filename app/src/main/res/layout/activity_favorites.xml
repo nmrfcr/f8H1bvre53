@@ -8,10 +8,6 @@
     android:orientation="vertical"
     tools:context="com.tekapic.FavoritesActivity">
 
-
-
-
-
     <TextView
         android:visibility="gone"
         android:textSize="16sp"

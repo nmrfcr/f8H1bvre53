@@ -27,7 +27,7 @@ public class HackyViewPager extends ViewPager {
             return super.onInterceptTouchEvent(ev);
         } catch (IllegalArgumentException e) {
 
-            Log.i("onInterceptTouchEvent", "Illegal Argument Exception!!!");
+            Log.i("onInterceptTouchEvent", "Illegal Argument Exception!");
 //            e.printStackTrace();
             return false;
         }

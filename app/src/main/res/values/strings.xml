@@ -12,28 +12,4 @@
     <string name="app_description">Find pictures easily</string>
     <string name="search_people">Search</string>
     <string name="favorites">Favorites</string>
-
-
-
-    <string name="prev">
-
-    <![CDATA[
-
-    <<Prev
-
-     ]]>
-
-     </string>
-
-    <string name="next">
-
-    <![CDATA[
-
-    Next>>
-
-     ]]>
-
-     </string>
-
-
 </resources>

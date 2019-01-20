@@ -1,140 +1,69 @@
 package com.tekapic;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.ActionBar;
+
 import android.app.ProgressDialog;
-import android.content.ClipData;
-import android.content.ContentValues;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
-import android.os.StrictMode;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.design.internal.ParcelableSparseArray;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
-import android.util.Base64;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.tekapic.model.Picture;
 import com.tekapic.model.User;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.nio.channels.FileChannel;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+
 
 
 public class HomePeopleActivity extends AppCompatActivity implements PicturesRecyclerViewAdapter.ListItemClickListener {
 
-    public static boolean flag;
-    public static User user;
+
     private TextView noPicturesText;
     private boolean isUserhasPics = false;
     private MenuItem item;
     private boolean isInFavorites;
-
-
     private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
     private DatabaseReference mStatusDB;
-    //    private DatabaseReference mUserDB;
     private RecyclerView mRecyclerView;
-    private Uri mPhotoUri;
-    private Button button;
-    private ImageView imageViewIcon;
-
-    boolean[] checkedCategories = new boolean[Picture.numberOfAlbums+1];
-    private EditText emailEditText, passwordEditText;
-    private ProgressDialog mDialog;
-    private String mCurrentPhotoPath;
     private LinearLayoutManager linearLayoutManager;
-//    RecyclerView.LayoutManager layoutManager;
-
-    //    static int lastFirstVisiblePosition = 0;
-//    private int size;
     private PicturesRecyclerViewAdapter adapter;
     private ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
     private PicturesRecyclerViewAdapter.ListItemClickListener mOnClickListener;
     private Context context;
+    private android.support.v7.app.ActionBar actionBar;
+
+    public static boolean flag;
+    public static User user;
     public static int firstVisibleItemPosition = 0;
 
-    //    private Parcelable mLayoutManagerState;
-//    private static final String LAYOUT_MANAGER_STATE = "LAYOUT_MANAGER_STATE";
-//    private  Menu menuItem;
-//    private   boolean flag = false;
-    private android.support.v7.app.ActionBar actionBar;
 
 
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;
     }
-
 
 
     private void albumsIconclicked() {
@@ -163,19 +92,12 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
                 "TRY AGAIN",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-//                        if(isNetworkConnected() == false) {
-//                            popUpAlertDialogConnectionError();
-//                        }
-
                     }
                 });
 
         AlertDialog alertDialog = builder1.create();
         alertDialog.show();
     }
-
-
-
 
 
 
@@ -345,7 +267,6 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
 
                 wasCalled = true;
 
-
             }
 
             @Override
@@ -475,7 +396,6 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
         MenuItem item = menu.findItem(R.id.favorites);
 
         checkIfInFavorites(item);
-
 
         return super.onPrepareOptionsMenu(menu);
     }

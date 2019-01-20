@@ -1,29 +1,18 @@
 package com.tekapic;
 
 import android.annotation.SuppressLint;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,14 +27,12 @@ import java.util.Map;
 
 public class AlbumsPeopleActivity extends AppCompatActivity implements AlbumsRecyclerViewAdapter.ListItemClickListener {
 
-    private FirebaseAuth mAuth;
     private RecyclerView mRecyclerView;
     private ArrayList<Album> albumsList=new ArrayList<Album>() ;
     private AlbumsRecyclerViewAdapter adapter;
     private Map<String, Boolean> albumsMap = new HashMap<>();
-    Context context;
-    AlbumsRecyclerViewAdapter.ListItemClickListener mOnClickListener;
-    private  Menu menuItem;
+    private Context context;
+    private AlbumsRecyclerViewAdapter.ListItemClickListener mOnClickListener;
     private android.support.v7.app.ActionBar actionBar;
 
 
@@ -63,7 +50,6 @@ public class AlbumsPeopleActivity extends AppCompatActivity implements AlbumsRec
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-
                 boolean meDoesntExist = true, familyDoesntExist = true, friendsDoesntExist = true;
                 boolean loveDoesntExist = true, petsDoesntExist = true, natureDoesntExist = true;
                 boolean sportDoesntExist = true, personsDoesntExist = true, animalsDoesntExist = true;
@@ -74,7 +60,6 @@ public class AlbumsPeopleActivity extends AppCompatActivity implements AlbumsRec
                 if(wasCalled) {
                     albumsList.clear();
                 }
-
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
@@ -211,8 +196,6 @@ public class AlbumsPeopleActivity extends AppCompatActivity implements AlbumsRec
                 }
 
 
-
-
                 for(int i = 0; i < Picture.numberOfAlbums; i++) {
                     if(albumsMap.get(Picture.albumsNames[i])) {
                         int id = getResources().getIdentifier("com.tekapic:drawable/" + Picture.albumsNames[i], null, null);
@@ -220,10 +203,6 @@ public class AlbumsPeopleActivity extends AppCompatActivity implements AlbumsRec
                     }
                 }
 
-//                if(flag) {
-//                    MenuItem item = menuItem.findItem(R.id.total_pics_home_menu);
-//                    item.setTitle("(" + Integer.toString(albumsList.size()) +")");
-//                }
 
                 if(wasCalled) {
                     adapter.notifyDataSetChanged();
@@ -252,7 +231,6 @@ public class AlbumsPeopleActivity extends AppCompatActivity implements AlbumsRec
             }
         };
         usersdRef.addValueEventListener(eventListener);
-
 
     }
 
@@ -290,9 +268,6 @@ public class AlbumsPeopleActivity extends AppCompatActivity implements AlbumsRec
 
 
 
-
-
-
     private void popUpAlertDialogConnectionError() {
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
@@ -303,9 +278,6 @@ public class AlbumsPeopleActivity extends AppCompatActivity implements AlbumsRec
                 "TRY AGAIN",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-//                        if(isNetworkConnected() == false) {
-//                            popUpAlertDialogConnectionError();
-//                        }
 
                     }
                 });
@@ -337,9 +309,7 @@ public class AlbumsPeopleActivity extends AppCompatActivity implements AlbumsRec
         }
 
         PicturesPeopleActivity.wantedAlbum = album;
-//        Toast.makeText(getApplicationContext(), "clickedItemIndex = " + clickedItemIndex + "  album: " + album, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(AlbumsPeopleActivity.this, PicturesPeopleActivity.class);
-//        intent.putExtra("wanted_album", album);
         startActivity(intent);
     }
 

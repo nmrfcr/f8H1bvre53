@@ -1,4 +1,5 @@
 package com.tekapic;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,12 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -25,7 +22,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +29,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private EditText mEmailEditText;
     private EditText mPasswordEditText;
-
     private FirebaseAuth mAuth;
     private ProgressDialog mDialog;
     private boolean userRegisteredSuccessfully;
@@ -60,7 +55,6 @@ public class RegisterActivity extends AppCompatActivity {
         boolean hasLetter = false;
         boolean hasDigit = false;
 
-//        if (password.length() >= 6) {
             for (int i = 0; i < password.length(); i++) {
                 char x = password.charAt(i);
                 if (Character.isLetter(x)) {
@@ -90,7 +84,6 @@ public class RegisterActivity extends AppCompatActivity {
 //        } else {
 //            System.out.println("HAVE AT LEAST 8 CHARACTERS");
 //        }
-
 
     }
 
@@ -128,14 +121,12 @@ public class RegisterActivity extends AppCompatActivity {
             showAlertDialog("Error", "Please choose a stronger password. try a mix of letters and digits.");
             return;
         }
-//        else {
             //sign up with firebase
             mDialog.setMessage("Please wait...");
             mDialog.show();
             mDialog.setCancelable(false);
 
             registerUserToFirebase(email, password);
-//        }
 
     }
 
@@ -224,10 +215,6 @@ public class RegisterActivity extends AppCompatActivity {
                 "TRY AGAIN",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-//                        if(isNetworkConnected() == false) {
-//                            popUpAlertDialogConnectionError();
-//                        }
-
                     }
                 });
 

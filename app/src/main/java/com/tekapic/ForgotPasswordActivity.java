@@ -12,11 +12,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -99,7 +97,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     public void onBackPressed() {
-//        super.onBackPressed();
         startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class));
     }
 
@@ -113,10 +110,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 "TRY AGAIN",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-//                        if(isNetworkConnected() == false) {
-//                            popUpAlertDialogConnectionError();
-//                        }
-
                     }
                 });
 

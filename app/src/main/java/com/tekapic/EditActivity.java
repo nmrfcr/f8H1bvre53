@@ -5,39 +5,24 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.tekapic.model.Picture;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,12 +33,9 @@ public class EditActivity extends AppCompatActivity {
     private CheckBox persons, animals, vehicles, views, food, things, funny;
     private CheckBox places, art;
     private CheckBox[] checkBoxesArray = new CheckBox[Picture.numberOfAlbums];
-
     private ProgressDialog mDialog;
-
     private FirebaseUser currentUser;
     private DatabaseReference mUsersDB;
-
     private Picture picture;
 
 
@@ -206,7 +188,6 @@ public class EditActivity extends AppCompatActivity {
                 .apply(new RequestOptions().placeholder(R.drawable.b))
                 .into(imageView);
 
-
         getAlbums();
 
     }
@@ -262,24 +243,6 @@ public class EditActivity extends AppCompatActivity {
             art.setChecked(true);
         }
 
-//        Log.i("me", picture.getMe());
-//        Log.i("family", picture.getFamily());
-//        Log.i("friends", picture.getFriends());
-//        Log.i("love", picture.getLove());
-//        Log.i("pets", picture.getPets());
-//        Log.i("nature", picture.getNature());
-//        Log.i("sport", picture.getSport());
-//        Log.i("persons", picture.getPersons());
-//        Log.i("animals", picture.getAnimals());
-//        Log.i("vehicles", picture.getVehicles());
-//        Log.i("views", picture.getViews());
-//        Log.i("food", picture.getFood());
-//        Log.i("things", picture.getThings());
-//        Log.i("funny", picture.getFunny());
-//        Log.i("places", picture.getPlaces());
-//        Log.i("art", picture.getArt());
-
-
     }
 
 
@@ -293,9 +256,6 @@ public class EditActivity extends AppCompatActivity {
                 "TRY AGAIN",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-//                        if(isNetworkConnected() == false) {
-//                            popUpAlertDialogConnectionError();
-//                        }
 
                     }
                 });

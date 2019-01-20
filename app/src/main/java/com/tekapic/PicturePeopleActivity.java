@@ -1,83 +1,31 @@
 package com.tekapic;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.tekapic.model.Picture;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-
 
 
 public class PicturePeopleActivity extends AppCompatActivity {
 
-    private ImageView imageView;
+    private HackyViewPager mViewPager;
+
     public static Picture picture;
     public static boolean isPictureFromAlbum;
-    private ProgressDialog mDialog;
-    private ProgressBar progressBar;
-
     public static int clickedItemIndex;
     public static int picturesListSize;
     public static ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
-    private boolean isSystemUIHidden;
-    private HackyViewPager mViewPager;
-
-
-
-
-
 
 
     @Override
@@ -107,9 +55,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
 
     private void updatePicturePosition() {
-
         setTitle(Integer.toString(clickedItemIndex+1) + "/" + Integer.toString(picturesListSize));
-
     }
 
     @Override
@@ -153,13 +99,8 @@ public class PicturePeopleActivity extends AppCompatActivity {
             }
         });
 
-
-        mDialog = new ProgressDialog(this);
-
-
         hideSystemUI();
         showSystemUI();
-
 
     }
 
@@ -187,7 +128,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
-    
+
 
     private void goBack() {
         finish();
@@ -252,13 +193,4 @@ public class PicturePeopleActivity extends AppCompatActivity {
             popUpAlertDialogConnectionError();
         }
     }
-
-
-
-
-
-
-
-
-
 }

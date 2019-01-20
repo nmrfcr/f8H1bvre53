@@ -4,8 +4,6 @@
 
 
 
-
-
     <item
         android:icon="@drawable/ic_explore_black_24dp"
         android:title="Explore"

@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Build;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
@@ -18,9 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,21 +26,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.tekapic.model.Picture;
-
-
 import java.util.ArrayList;
 
 
 public class PictureActivity extends AppCompatActivity {
 
     private HackyViewPager mViewPager;
-    public static Picture picture;
-    public static boolean isPictureFromAlbum;
     private DatabaseReference mStatusDB;
     private FirebaseAuth mAuth;
     private FirebaseStorage storageReference;
     private ProgressDialog mDialog;
 
+    public static Picture picture;
+    public static boolean isPictureFromAlbum;
     public static int clickedItemIndex;
     public static int picturesListSize;
     public static ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
@@ -61,7 +56,6 @@ public class PictureActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
                 mDialog.dismiss();
-//                Toast.makeText(getApplicationContext(), "Picture deleted.", Toast.LENGTH_SHORT).show();
     ;               goBack();
             }
         }).addOnFailureListener(new OnFailureListener() {

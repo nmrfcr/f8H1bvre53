@@ -1,33 +1,19 @@
 package com.tekapic;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.app.ProgressDialog;
-import android.content.ClipData;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
-import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.design.internal.ParcelableSparseArray;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -36,29 +22,16 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -69,22 +42,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.tekapic.model.Picture;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 
 public class HomeActivity extends AppCompatActivity implements PicturesRecyclerViewAdapter.ListItemClickListener {
@@ -93,37 +61,24 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     private static final int REQUEST_PHOTO_PICK = 2;
     private static final String dstDir = Environment.getExternalStorageDirectory() +
             File.separator + "Pictures" + File.separator + "Tekapic";
-
     private FirebaseAuth mAuth;
     private DatabaseReference mStatusDB;
-//    private DatabaseReference mUserDB;
     private RecyclerView mRecyclerView;
     private Uri mPhotoUri;
     private Button button;
     private ImageView imageViewIcon;
-    public static boolean isUserhasPics = false;
-
-    boolean[] checkedCategories = new boolean[Picture.numberOfAlbums+1];
     private EditText emailEditText, passwordEditText;
     private ProgressDialog mDialog;
     private String mCurrentPhotoPath;
     private LinearLayoutManager linearLayoutManager;
-//    RecyclerView.LayoutManager layoutManager;
-
-    //    static int lastFirstVisiblePosition = 0;
-//    private int size;
     private PicturesRecyclerViewAdapter adapter;
     private ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
     private PicturesRecyclerViewAdapter.ListItemClickListener mOnClickListener;
     private Context context;
-    public static int firstVisibleItemPosition = 0;
-
-//    private Parcelable mLayoutManagerState;
-//    private static final String LAYOUT_MANAGER_STATE = "LAYOUT_MANAGER_STATE";
-//    private  Menu menuItem;
-//    private   boolean flag = false;
     private android.support.v7.app.ActionBar actionBar;
 
+    public static int firstVisibleItemPosition = 0;
+    public static boolean isUserhasPics = false;
 
 
 
@@ -197,10 +152,6 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                 "TRY AGAIN",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-//                        if(isNetworkConnected() == false) {
-//                            popUpAlertDialogConnectionError();
-//                        }
-
                     }
                 });
 
@@ -217,11 +168,9 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //Take a picture
-//                Toast.makeText(HomeActivity.this, "Take a picture", Toast.LENGTH_SHORT).show();
                 dispatchTakePhotoIntent();
             }
         });
-
 
         builder.setNegativeButton("   Choose a picture", new DialogInterface.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -270,8 +219,6 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 //        neutralButtonLL.rightMargin = 100;
         neutralButton.setLayoutParams(neutralButtonLL);
 
-
-
     }
 
 
@@ -311,7 +258,6 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                     return;
                 }
 
-//                Toast.makeText(HomeActivity.this, emailEditText.getText().toString() + " " + passwordEditText.getText().toString(), Toast.LENGTH_SHORT).show();
                 final String email, password;
 
                 email = emailEditText.getText().toString();
@@ -478,30 +424,10 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
             popUpAlertDialogConnectionError();
         }
 
-
-//        if (state != null) {
-//            mLayoutManagerState = state.getParcelable(LAYOUT_MANAGER_STATE);
-//            mRecyclerView.getLayoutManager().onRestoreInstanceState(mLayoutManagerState);
-//        }
-
-//        mRecyclerView.scrollToPosition(lastFirstVisiblePosition);
-
-//        ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(lastFirstVisiblePosition,0);
-//        (mRecyclerView.getLayoutManager()).scrollToPosition(lastFirstVisiblePosition);
-
         if(mAuth.getCurrentUser() == null) {
             goToMainActivity();
         }
         checkIfUserHasAnyPictures();
-
-
-//
-//        if(isUserhasPics) {
-////            Toast.makeText(getApplicationContext(), "onResume: " + firstVisibleItemPosition, Toast.LENGTH_SHORT).show();
-//            picturesList.clear();
-//            getPictures();
-//            mRecyclerView.scrollToPosition(firstVisibleItemPosition);
-//        }
 
     }
 
@@ -509,28 +435,6 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_menu, menu);
 
-//        menuItem = menu;
-//
-//        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-//        final DatabaseReference usersdRef = rootRef.child(mAuth.getUid());
-//
-//
-//        mStatusDB.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                // get total available quest
-//                size = (int) dataSnapshot.getChildrenCount();
-//                MenuItem item = menuItem.findItem(R.id.total_pics_home_menu);
-//                item.setTitle("(" + Integer.toString(size) +")");
-//
-//            }
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//
-//        flag = true;
         return super.onCreateOptionsMenu(menu);
 
     }
@@ -547,25 +451,6 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
             Intent choosePhotoIntent = new Intent(Intent.ACTION_PICK);
             choosePhotoIntent.setType("image/*");
             startActivityForResult(choosePhotoIntent, REQUEST_PHOTO_PICK);
-
-
-//            Intent intent = new Intent();
-//            intent.setType("image/*");
-//            intent.setAction(Intent.ACTION_GET_CONTENT);
-//            startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_PHOTO_PICK);
-
-
-
-//            Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-//            getIntent.setType("image/*");
-//
-//            Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//            pickIntent.setType("image/*");
-//
-//            Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-//            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
-
-//            startActivityForResult(chooserIntent, REQUEST_PHOTO_PICK);
         }
     }
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -716,140 +601,35 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
 
         mAuth = FirebaseAuth.getInstance();
-//        if (mAuth.getCurrentUser() == null) {
-//            goToLoginActivity();
-//            return;
-//        }
+        if (mAuth.getCurrentUser() == null) {
+            goToMainActivity();
+            return;
+        }
 
         button = findViewById(R.id.addNewPicButton);
         imageViewIcon = findViewById(R.id.imageViewHomeIcon);
 
         mStatusDB = FirebaseDatabase.getInstance().getReference().child(mAuth.getUid());
 
-
-//        mUserDB = FirebaseDatabase.getInstance().getReference().child("Users");
-
-
-//        linearLayoutManager = new LinearLayoutManager(this);
-//
-//
-//        mRecyclerView = findViewById(R.id.homeRecyclerView);
-//        mRecyclerView.setHasFixedSize(true);
-//
-//        GridLayoutManager mGridLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
-//
-//
-//        mRecyclerView.setLayoutManager(linearLayoutManager);
-//
-//
-//
-//        mRecyclerView.addItemDecoration(new SpacesItemDecoration(3));
-//
-//        mRecyclerView.setLayoutManager(mGridLayoutManager);
-
-//        //take the latest data to RecyclerView
-//        mGridLayoutManager.setReverseLayout(true);
-//        mGridLayoutManager.setStackFromEnd(true);
         checkIfUserHasAnyPictures();
-
-
 
         mRecyclerView = findViewById(R.id.homeRecyclerView);
 
+        mRecyclerView.setHasFixedSize(true);
 
-            mRecyclerView.setHasFixedSize(true);
+        linearLayoutManager = new GridLayoutManager(getApplicationContext(),3);
 
-            linearLayoutManager = new GridLayoutManager(getApplicationContext(),3);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.addItemDecoration(new SpacesItemDecoration(3));
 
-            mRecyclerView.setLayoutManager(linearLayoutManager);
-            mRecyclerView.addItemDecoration(new SpacesItemDecoration(3));
+        mOnClickListener = this;
+        context = this;
 
+        getPictures();
 
-            mOnClickListener = this;
-            context = this;
-
-            getPictures();
-
-//            if(PostActivity.flag) {
-//                check();
-//            }
-
-            ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPosition(firstVisibleItemPosition);
-            firstVisibleItemPosition = 0;
-
-
-
-
-
-
-
-
-
-
-
-//        RecyclerView.ViewHolder viewHolder  = mRecyclerView.findViewHolderForLayoutPosition(firstVisibleItemPosition);
-
-//        linearLayoutManager.scrollToPositionWithOffset(firstVisibleItemPosition, Offset);
-
-
-
-//        mRecyclerView.scrollToPosition(6);
-//        mRecyclerView.scrollBy(50, 0);
-//        mRecyclerView.getLayoutManager().scrollToPositionWithOffset(index, 0);
+        ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPosition(firstVisibleItemPosition);
+        firstVisibleItemPosition = 0;
     }
-
-
-
-
-
-
-//    private void check() {
-//
-//        Log.i("check", "inCheck()");
-//
-//        final Thread t1 = new Thread(new Runnable() {
-//            //            Handler handler = new Handler();
-//            @Override
-//            public void run() {
-//                while (true) {
-//                    try {
-//                        Thread.sleep(100);
-//                        Log.i("while", "in Loop !!!!!!!!!!!!!!!!!!");
-//
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                    if(PostActivity.flag == false) {
-//
-//                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-//                            @SuppressLint("NewApi")
-//                            @Override
-//                            public void run() {
-//
-//                                adapter.notifyItemRangeRemoved(0, picturesList.size());
-//                                adapter.notifyItemRangeInserted(0, picturesList.size() + 1 );
-//
-//                                picturesList.clear();
-//                                getPictures();
-//                            }
-//                        });
-////                        handler.post(new Runnable() {
-////                            @Override
-////                            public void run() {
-////
-////                            }
-////                        });
-//                        break;
-//                    }
-//
-//                }
-//            }
-//        });
-//
-//        t1.start();
-//
-//    }
-
 
     private void getPictures() {
 
@@ -910,23 +690,10 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                 }
 
 
-//                if(flag) {
-//                    MenuItem item = menuItem.findItem(R.id.total_pics_home_menu);
-//                    item.setTitle("(" + Integer.toString(picturesList.size()) +")");
-//                }
-                /////////////////////////////////////////////////***
                 actionBar.setSubtitle("(" + Integer.toString(picturesList.size()) + ")");
                 Collections.reverse(picturesList);
                 adapter = new PicturesRecyclerViewAdapter(picturesList, mOnClickListener, context);
                 mRecyclerView.setAdapter(adapter);
-                ////////////////////////////////////////////////***
-
-//                mRecyclerView.scrollToPosition(0);
-
-
-//                GridLayoutManager mGridLayoutManager = new GridLayoutManager(PicturesActivity.this, 3);
-//                mRecyclerView.setLayoutManager(mGridLayoutManager);
-
 
                 wasCalled = true;
             }
@@ -937,8 +704,6 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
             }
         };
         usersdRef.addValueEventListener(eventListener);
-
-
 
     }
 
@@ -954,9 +719,6 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
         PictureActivity.clickedItemIndex = clickedItemIndex;
         PictureActivity.picturesList = picturesList;
 
-
-//        Toast.makeText(getApplicationContext(), "Clicked Item Index = " + clickedItemIndex, Toast.LENGTH_SHORT).show();
-//        Log.i("pictureUrl", picture.getPictureUrl());
 
         PictureActivity.picture = picture;
         PictureActivity.isPictureFromAlbum = false;
@@ -1050,186 +812,11 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     }
     /****************The end of the proccess of pictures making**************/
 
-    //*************Sorting ***************************////
-
-    public void initialSorting() {
-        for(int i = 0; i < Picture.numberOfAlbums+1; i++) {
-            checkedCategories[i] = true;
-        }
-    }
-
-    public void sort() {
-        final ArrayList<String> categories = new ArrayList<String>();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select categories:");
-
-// add a checkbox list
-        builder.setMultiChoiceItems(Picture.albumsNames, checkedCategories, new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                // user checked or unchecked a box
-                switch (which) {
-                    case 0:
-                        if(isChecked) {
-                            categories.add("me");
-                        }
-                        else {
-                            categories.remove("me");
-                        }
-                    case 1:
-                        if(isChecked) {
-                            categories.add("family");
-                        }
-                        else {
-                            categories.remove("family");
-                        }
-                    case 2:
-                        if(isChecked) {
-                            categories.add("friends");
-                        }
-                        else {
-                            categories.remove("friends");
-                        }
-                    case 3:
-                        if(isChecked) {
-                            categories.add("love");
-                        }
-                        else {
-                            categories.remove("love");
-                        }
-                    case 4:
-                        if(isChecked) {
-                            categories.add("pets");
-                        }
-                        else {
-                            categories.remove("pets");
-                        }
-                    case 5:
-                        if(isChecked) {
-                            categories.add("nature");
-                        }
-                        else {
-                            categories.remove("nature");
-                        }
-                    case 6:
-                        if(isChecked) {
-                            categories.add("sport");
-                        }
-                        else {
-                            categories.remove("sport");
-                        }
-                    case 7:
-                        if(isChecked) {
-                            categories.add("persons");
-                        }
-                        else {
-                            categories.remove("persons");
-                        }
-                    case 8:
-                        if(isChecked) {
-                            categories.add("animals");
-                        }
-                        else {
-                            categories.remove("animals");
-                        }
-                    case 9:
-                        if(isChecked) {
-                            categories.add("vehicles");
-                        }
-                        else {
-                            categories.remove("vehicles");
-                        }
-
-                    case 10:
-                        if(isChecked) {
-                            categories.add("views");
-                        }
-                        else {
-                            categories.remove("views");
-                        }
-                    case 11:
-                        if(isChecked) {
-                            categories.add("food");
-                        }
-                        else {
-                            categories.remove("food");
-                        }
-
-                    case 12:
-                        if(isChecked) {
-                            categories.add("things");
-                        }
-                        else {
-                            categories.remove("things");
-                        }
-                    case 13:
-                        if(isChecked) {
-                            categories.add("funny");
-                        }
-                        else {
-                            categories.remove("funny");
-                        }
-                    case 14:
-                        if(isChecked) {
-                            categories.add("places");
-                        }
-                        else {
-                            categories.remove("places");
-                        }
-                    case 15:
-                        if(isChecked) {
-                            categories.add("art");
-                        }
-                        else {
-                            categories.remove("art");
-                        }
-
-                }
-
-            }
-        });
-
-// add OK and Cancel buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // user clicked OK
-
-                for(String category: categories) {
-                    Log.i("category ", category);
-                }
-            }
-        });
-//        builder.setNegativeButton("Cancel", null);
-
-// create and show the alert dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-
-    }
-    //////////////////***************//////////////////
-
-
     @Override
     protected void onPause() {
         super.onPause();
 
-            firstVisibleItemPosition = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        firstVisibleItemPosition = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
 
-
-//        mLayoutManagerState = mRecyclerView.getLayoutManager().onSaveInstanceState();
-
-//        firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
-
-//        Toast.makeText(getApplicationContext(), "onPause: " + firstVisibleItemPosition, Toast.LENGTH_SHORT).show();
     }
-
-    /****************************************************************************************/
-
-
-
-
-
-
 }

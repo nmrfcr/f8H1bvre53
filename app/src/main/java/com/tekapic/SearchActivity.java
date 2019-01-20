@@ -15,11 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,7 +36,6 @@ public class SearchActivity extends AppCompatActivity {
     private TextView indicatorText;
     private String profileEmail;
     private static String searchText = "";
-
 
 
     private boolean isNetworkConnected() {
@@ -63,8 +59,6 @@ public class SearchActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder1.create();
         alertDialog.show();
     }
-
-
 
 
     @Override
@@ -120,9 +114,6 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
-
-//                firebaseUserSearch(s);
-
 
                 return false;
             }
