@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 public class PicturePeopleActivity extends AppCompatActivity {
 
     private HackyViewPager mViewPager;
+    private android.support.v7.app.ActionBar actionBar;
+
 
     public static Picture picture;
     public static boolean isPictureFromAlbum;
@@ -72,6 +75,9 @@ public class PicturePeopleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_people);
+
+        actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(0x80000000));
 
         mViewPager = findViewById(R.id.view_pager_people);
 

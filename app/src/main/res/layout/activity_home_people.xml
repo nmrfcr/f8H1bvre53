@@ -36,7 +36,7 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:onClick="goToProfile"
-        app:backgroundTint="@color/grey_transparent"
+        app:backgroundTint="@color/darker_transparent"
         app:borderWidth="0dp"
         app:srcCompat="@drawable/ic_person_black_24dp" />
 

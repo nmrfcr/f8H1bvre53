@@ -52,13 +52,13 @@ public class TouchImageAdapter extends PagerAdapter {
 
 
         Glide.with(context)
-                .load(picturesList.get(position).getPictureUrl()).apply(new RequestOptions().override(1000, 1000).placeholder(R.drawable.tekapic_icon_loading))
+                .load(picturesList.get(position).getPictureUrl()).apply(new RequestOptions().override(1000, 1000).placeholder(R.drawable.loading_picture))
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 
                         Log.i("onLoadFailed", "Failed to load picture");
-                        Toast.makeText(context, "Failed to load picture.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Failed to load picture.", Toast.LENGTH_LONG).show();
 
 //                        goBack();
 
@@ -84,7 +84,9 @@ public class TouchImageAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
 
-                if(getSystemUiVisibility() == 3840) {
+                Log.i("System Ui Visibility", Integer.toString(getSystemUiVisibility() ));
+
+                if(getSystemUiVisibility() == 3328) {
                     isSystemUIHidden = false;
                 }
 
@@ -127,7 +129,6 @@ public class TouchImageAdapter extends PagerAdapter {
 
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
@@ -142,10 +143,8 @@ public class TouchImageAdapter extends PagerAdapter {
                         // Set the content to appear under the system bars so that the
                         // content doesn't resize when the system bars hide and show.
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         // Hide the nav bar and status bar
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 

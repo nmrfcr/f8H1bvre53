@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -36,6 +37,8 @@ public class PictureActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseStorage storageReference;
     private ProgressDialog mDialog;
+    private android.support.v7.app.ActionBar actionBar;
+
 
     public static Picture picture;
     public static boolean isPictureFromAlbum;
@@ -166,10 +169,17 @@ public class PictureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture);
 
+        actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(0x80000000));
+
+
         mViewPager = findViewById(R.id.view_pager);
 
         mViewPager.setAdapter(new TouchImageAdapter(this,picturesList));
         mViewPager.setCurrentItem(clickedItemIndex);
+
+        PostActivity.mViewPager = mViewPager;
+
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

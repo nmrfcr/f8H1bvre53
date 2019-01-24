@@ -71,7 +71,14 @@ public class EditActivity extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         mDialog.dismiss();
                         finish();
-                        startActivity(new Intent(EditActivity.this, PicturesActivity.class));
+
+                        if(PictureActivity.isPictureFromAlbum) {
+                            startActivity(new Intent(EditActivity.this, PicturesActivity.class));
+                        }
+                        else {
+                            startActivity(new Intent(EditActivity.this, HomeActivity.class));
+                        }
+
                         Toast.makeText(EditActivity.this, "Albums updated.", Toast.LENGTH_SHORT).show();
 
                     }
@@ -154,7 +161,8 @@ public class EditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
-        mDialog = new ProgressDialog(this);
+        mDialog = new ProgressDialog(this, R.style.AppCompatAlertDialogStyle);
+
 
         me = findViewById(R.id.checkBox_me_edit);
         family = findViewById(R.id.checkBox_family_edit);
