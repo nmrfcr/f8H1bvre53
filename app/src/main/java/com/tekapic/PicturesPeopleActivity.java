@@ -190,20 +190,19 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
             popUpAlertDialogConnectionError();
             return;
         }
-
-        PicturePeopleActivity.picturesListSize = picturesListSize;
+        PicturePeopleActivity.picturesList.clear();
         PicturePeopleActivity.clickedItemIndex = clickedItemIndex;
-        PicturePeopleActivity.picturesList = picturesList;
+
+        for(Picture p : picturesList) {
+            PicturePeopleActivity.picturesList.add(p);
+        }
 
 
-
-        PicturePeopleActivity.picture = picture;
         PicturePeopleActivity.isPictureFromAlbum = true;
         Intent intent = new Intent(PicturesPeopleActivity.this, PicturePeopleActivity.class);
         startActivity(intent);
 
         finish();
-
     }
 
     @Override

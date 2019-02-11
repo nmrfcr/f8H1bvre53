@@ -43,7 +43,6 @@ public class PictureActivity extends AppCompatActivity {
     public static Picture picture;
     public static boolean isPictureFromAlbum;
     public static int clickedItemIndex;
-    public static int picturesListSize;
     public static ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
 
 
@@ -59,7 +58,7 @@ public class PictureActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
                 mDialog.dismiss();
-    ;               goBack();
+                goBack();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -148,9 +147,9 @@ public class PictureActivity extends AppCompatActivity {
     }
 
 
-    private void updatePicturePosition() {
+    private void updatePicturePosition(int index) {
 
-        setTitle(Integer.toString(clickedItemIndex+1) + "/" + Integer.toString(picturesListSize));
+        setTitle(Integer.toString(index+1) + "/" + Integer.toString(picturesList.size()));
     }
 
 
@@ -158,7 +157,7 @@ public class PictureActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.picture_menu, menu);
 
-        updatePicturePosition();
+        updatePicturePosition(clickedItemIndex);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -172,14 +171,13 @@ public class PictureActivity extends AppCompatActivity {
         actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(0x80000000));
 
+        Log.i("PictureActivity", "onCreate was called");
 
         mViewPager = findViewById(R.id.view_pager);
 
+
         mViewPager.setAdapter(new TouchImageAdapter(this,picturesList));
         mViewPager.setCurrentItem(clickedItemIndex);
-
-        PostActivity.mViewPager = mViewPager;
-
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -190,9 +188,12 @@ public class PictureActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
 
-                setTitle(Integer.toString(position+1) + "/" + Integer.toString(picturesListSize));
+
+                updatePicturePosition(position);
 
                 picture = picturesList.get(position);
+
+                clickedItemIndex = position;
 
             }
 
@@ -212,6 +213,9 @@ public class PictureActivity extends AppCompatActivity {
 
         hideSystemUI();
         showSystemUI();
+
+        picture = picturesList.get(clickedItemIndex);
+
 
 
     }
@@ -281,7 +285,7 @@ public class PictureActivity extends AppCompatActivity {
     private void showDate() {
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setTitle("Date Taken");
+        builder1.setTitle("Date Added");
         builder1.setMessage(picture.getDate());
 
         builder1.setPositiveButton(

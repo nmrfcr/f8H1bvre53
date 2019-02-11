@@ -27,7 +27,6 @@ public class PicturePeopleActivity extends AppCompatActivity {
     public static Picture picture;
     public static boolean isPictureFromAlbum;
     public static int clickedItemIndex;
-    public static int picturesListSize;
     public static ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
 
 
@@ -57,15 +56,16 @@ public class PicturePeopleActivity extends AppCompatActivity {
     }
 
 
-    private void updatePicturePosition() {
-        setTitle(Integer.toString(clickedItemIndex+1) + "/" + Integer.toString(picturesListSize));
+    private void updatePicturePosition(int index) {
+
+        setTitle(Integer.toString(index+1) + "/" + Integer.toString(picturesList.size()));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.picture_people_menu, menu);
 
-        updatePicturePosition();
+        updatePicturePosition(clickedItemIndex);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -93,9 +93,11 @@ public class PicturePeopleActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
 
-                setTitle(Integer.toString(position+1) + "/" + Integer.toString(picturesListSize));
+                updatePicturePosition(position);
 
                 picture = picturesList.get(position);
+
+                clickedItemIndex = position;
 
             }
 
@@ -172,7 +174,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
     private void showDate() {
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setTitle("Date Taken");
+        builder1.setTitle("Date Added");
         builder1.setMessage(picture.getDate());
 
         builder1.setPositiveButton(

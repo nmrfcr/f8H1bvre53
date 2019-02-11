@@ -687,6 +687,8 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
                 if(wasCalled) {
                     adapter.notifyDataSetChanged();
+                    Log.i("HomeActivity", "notifyDataSetChanged was Called");
+
                 }
 
 
@@ -714,19 +716,18 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
             popUpAlertDialogConnectionError();
             return;
         }
-
-        PictureActivity.picturesListSize = picturesListSize;
+        PictureActivity.picturesList.clear();
         PictureActivity.clickedItemIndex = clickedItemIndex;
-        PictureActivity.picturesList = picturesList;
 
+        for(Picture p : picturesList) {
+            PictureActivity.picturesList.add(p);
+        }
 
-        PictureActivity.picture = picture;
         PictureActivity.isPictureFromAlbum = false;
         Intent intent = new Intent(HomeActivity.this, PictureActivity.class);
         startActivity(intent);
 
         finish();
-
     }
 
 

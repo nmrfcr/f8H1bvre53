@@ -199,20 +199,19 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
             popUpAlertDialogConnectionError();
             return;
         }
-
-        PictureActivity.picturesListSize = picturesListSize;
+        PictureActivity.picturesList.clear();
         PictureActivity.clickedItemIndex = clickedItemIndex;
-        PictureActivity.picturesList = picturesList;
+
+        for(Picture p : picturesList) {
+            PictureActivity.picturesList.add(p);
+        }
 
 
-
-        PictureActivity.picture = picture;
         PictureActivity.isPictureFromAlbum = true;
         Intent intent = new Intent(PicturesActivity.this, PictureActivity.class);
         startActivity(intent);
 
         finish();
-
     }
 
     @Override

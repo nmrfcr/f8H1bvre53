@@ -286,17 +286,19 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
             return;
         }
 
-        PicturePeopleActivity.picturesListSize = picturesListSize;
+        PicturePeopleActivity.picturesList.clear();
         PicturePeopleActivity.clickedItemIndex = clickedItemIndex;
-        PicturePeopleActivity.picturesList = picturesList;
 
+        for(Picture p : picturesList) {
+            PicturePeopleActivity.picturesList.add(p);
+        }
 
-        PicturePeopleActivity.picture = picture;
         PicturePeopleActivity.isPictureFromAlbum = false;
         Intent intent = new Intent(HomePeopleActivity.this, PicturePeopleActivity.class);
         startActivity(intent);
 
         finish();
+
     }
 
     private void checkIfUserHasAnyPictures() {

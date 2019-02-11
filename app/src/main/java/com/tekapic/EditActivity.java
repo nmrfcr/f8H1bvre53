@@ -39,6 +39,8 @@ public class EditActivity extends AppCompatActivity {
     private Picture picture;
 
 
+
+
     private void updateAlbums() {
 
         mDialog.setMessage("Please wait...");

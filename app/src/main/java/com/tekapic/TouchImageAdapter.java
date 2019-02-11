@@ -7,6 +7,7 @@ package com.tekapic;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
@@ -37,6 +38,9 @@ public class TouchImageAdapter extends PagerAdapter {
         isSystemUIHidden = false;
     }
 
+    public int getItem(int i) {
+        return 1;
+    }
 
     @Override
     public int getCount() {
@@ -45,6 +49,8 @@ public class TouchImageAdapter extends PagerAdapter {
 
     @Override
     public View instantiateItem(ViewGroup container, int position) {
+
+        Log.i("instantiateItem", "position: " + Integer.toString(position));
 
         img = new PhotoView(container.getContext());
         ViewGroup.LayoutParams lp= new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
