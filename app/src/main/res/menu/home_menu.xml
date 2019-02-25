@@ -4,6 +4,7 @@
 
 
 
+
     <item
         android:icon="@drawable/ic_explore_black_24dp"
         android:title="Explore"
@@ -34,9 +35,17 @@
         android:id="@+id/albums"
         app:showAsAction="always"/>
 
+
+
     <item
         android:title="Favorites"
         android:id="@+id/favoritesMenu"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:title="Account Privacy"
+        android:id="@+id/accountPrivacyMenu"
         app:showAsAction="never"
         />
 
@@ -51,6 +60,15 @@
         android:id="@+id/logoutMenu"
         app:showAsAction="never"
         />
+
+
+
+    <!--<Switch-->
+        <!--app:showAsAction="never"-->
+        <!--android:id="@+id/switch1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="aaa" />-->
 
 
 

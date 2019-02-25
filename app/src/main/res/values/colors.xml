@@ -9,4 +9,8 @@
     <color name="grey_transparent">#80000000</color>
     <color name="darker_transparent">#b3000000</color>
 
+
+    <color name="colorTintt">#6F000000</color>
+    <color name="noColor">#00000000</color>
+
 </resources>

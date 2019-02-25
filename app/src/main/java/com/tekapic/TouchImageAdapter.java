@@ -38,9 +38,7 @@ public class TouchImageAdapter extends PagerAdapter {
         isSystemUIHidden = false;
     }
 
-    public int getItem(int i) {
-        return 1;
-    }
+
 
     @Override
     public int getCount() {

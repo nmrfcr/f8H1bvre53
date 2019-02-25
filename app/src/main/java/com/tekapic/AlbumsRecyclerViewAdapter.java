@@ -2,18 +2,11 @@ package com.tekapic;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
-import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,11 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.tekapic.model.Album;
 
 import java.util.ArrayList;
@@ -38,8 +27,6 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
     private Context context;
     private ArrayList<Album> albumsList=new ArrayList<Album>() ;
     private ListItemClickListener mOnClickListener;
-    private Bitmap bitmap = null;
-    private Bitmap lightBitmap = null;
 
 
     public AlbumsRecyclerViewAdapter(ArrayList<Album> albumsList, ListItemClickListener v1, Context v2) {
@@ -97,34 +84,23 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
-            AudioManager audioManager;
 
             if(event.getAction() == MotionEvent.ACTION_CANCEL) {
 
+                albumImage.setColorFilter(ContextCompat.getColor(context, R.color.noColor));
 
-                int clickedPosition = getAdapterPosition();
-                int x = 0;
-
-                for(Album album : albumsList) {
-                    if(x++ == clickedPosition) {
-
-                        Glide.with(context)
-                                .load(albumsList.get(clickedPosition).getPicture())
-                                .apply(new RequestOptions().placeholder(R.drawable.grad))
-                                .into(albumImage);
-
-                        break;
-                    }
-                }
             }
 
 
             if(event.getAction() == MotionEvent.ACTION_UP) {
 
-                audioManager = (AudioManager) context.getSystemService(
+                AudioManager audioManager = (AudioManager) context.getSystemService(
                         Context.AUDIO_SERVICE);
 
                 audioManager.playSoundEffect(AudioManager.FX_KEY_CLICK);
+
+                albumImage.setColorFilter(ContextCompat.getColor(context, R.color.noColor));
+
 
                 int clickedPosition = getAdapterPosition();
                 int x = 0;
@@ -132,10 +108,7 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
                 for(Album album : albumsList) {
                     if(x++ == clickedPosition) {
 
-                        Glide.with(context)
-                                .load(albumsList.get(clickedPosition).getPicture())
-                                .apply(new RequestOptions().placeholder(R.drawable.grad))
-                                .into(albumImage);
+
                         mOnClickListener.onListItemClick(clickedPosition, album.getName());
 
                         break;
@@ -147,63 +120,15 @@ public class AlbumsRecyclerViewAdapter extends RecyclerView.Adapter<AlbumsRecycl
 
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
 
-                int clickedPosition = getAdapterPosition();
-                int x = 0;
+                ColorFilter filter = new LightingColorFilter(0xFFFFFFFF , 0x00222222); // lighten
+                albumImage.setColorFilter(filter);
 
-                for(Album album : albumsList) {
-                    if(x++ == clickedPosition) {
-                        Glide.with(context)
-                                .load(album.getPicture())
-                                .listener(new RequestListener<Drawable>() {
-                                    @Override
-                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 
-                                        Log.i("onLoadFailed", "failed to get picture");
-
-                                        return false;
-                                    }
-
-                                    @Override
-                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-
-                                        try {
-                                            bitmap = ((BitmapDrawable)resource).getBitmap();
-                                        }catch (Exception e) {
-                                            Log.i("Error bitmpap", "errog convert resource to bitmap");
-                                            return false;
-
-                                        }
-
-                                        lightBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-
-                                        lightBitmap = darkenBitMap(lightBitmap);
-
-                                        albumImage.setImageBitmap(lightBitmap);
-
-                                        Log.i("bitmap", "image bitmap setted");
-
-                                        return true;
-                                    }
-                                })
-                                .into(albumImage);
-                    }
-                }
 
             }
 
             return true;
         }
 
-
-        private Bitmap darkenBitMap(Bitmap bm) {
-
-            Canvas canvas = new Canvas(bm);
-            Paint p = new Paint(Color.RED);
-            ColorFilter filter = new LightingColorFilter(0xFFFFFFFF , 0x00222222); // lighten
-            p.setColorFilter(filter);
-            canvas.drawBitmap(bm, new Matrix(), p);
-
-            return bm;
-        }
     }
 }

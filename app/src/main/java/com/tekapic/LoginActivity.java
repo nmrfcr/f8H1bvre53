@@ -3,7 +3,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -91,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-    private void loginViaFirebase(String email, String password) {
+    private void loginViaFirebase(final String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -106,6 +108,12 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else {
                     //Login success
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("email", email);
+                    editor.apply();
+
+
                     //take the user to HomeActivity
                     finish();
                     startActivity(new Intent(LoginActivity.this, HomeActivity.class));
@@ -178,6 +186,13 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mDialog = new ProgressDialog(this);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String email = preferences.getString("email", "");
+        if(!email.equalsIgnoreCase(""))
+        {
+            mEmailEditText.setText(email);
+        }
 
     }
 }
