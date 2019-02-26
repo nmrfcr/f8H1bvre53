@@ -12,4 +12,10 @@
     <string name="app_description">Find pictures easily</string>
     <string name="search_people">Search</string>
     <string name="favorites">Favorites</string>
+    <string name="account_privacy">Account Privacy</string>
+    <string name="privacy_private_description">When your account is private,
+     only people you have added to your favorites can see your pictures.</string>
+    <string name="privacy_public_description">Anyone will be able to see your pictures.</string>
+
+
 </resources>

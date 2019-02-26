@@ -408,6 +408,11 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
             case R.id.favoritesMenu:
                 startActivity(new Intent(HomeActivity.this, FavoritesActivity.class));
                 return true;
+            case R.id.accountPrivacyMenu:
+                startActivity(new Intent(HomeActivity.this, AccountPrivacyActivity.class));
+                return true;
+
+
 
 
         }

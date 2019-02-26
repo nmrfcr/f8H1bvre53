@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    android:layoutDirection="ltr"
+    android:orientation="vertical"
+    tools:context="com.tekapic.AccountPrivacyActivity">
+
+
+    <Switch
+        android:layout_margin="10dp"
+        android:id="@+id/privateAccountSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17dp"
+        android:text="Private Account" />
+
+    <TextView
+        android:layout_margin="10dp"
+        android:id="@+id/privacyDescText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/privacy_private_description" />
+
+
+</LinearLayout>
