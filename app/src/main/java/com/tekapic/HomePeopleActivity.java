@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,6 +54,8 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
     private PicturesRecyclerViewAdapter.ListItemClickListener mOnClickListener;
     private Context context;
     private android.support.v7.app.ActionBar actionBar;
+    private boolean isPrivate = true;
+
 
     public static boolean flag;
     public static User user;
@@ -113,13 +116,13 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
             case R.id.favorites:
                 if(!isInFavorites) {
                     saveToFavorites();
-                    Toast.makeText(context, user.getEmail().substring(0, user.getEmail().indexOf("@")) + " added to your favorites", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), user.getEmail().substring(0, user.getEmail().indexOf("@")) + " added to your favorites", Toast.LENGTH_LONG).show();
                     item.setTitle("Remove from favorites");
                     item.setIcon(R.drawable.ic_star_black_24dp);
                 }
                 else {
                     deleteFromFavorites();
-                    Toast.makeText(context, user.getEmail().substring(0, user.getEmail().indexOf("@")) + " removed from your favorites", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), user.getEmail().substring(0, user.getEmail().indexOf("@")) + " removed from your favorites", Toast.LENGTH_LONG).show();
                     item.setTitle("Add to favorites");
                     item.setIcon(R.drawable.ic_star_border_black_24dp);
                 }
@@ -147,7 +150,7 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
         if(!isNetworkConnected()) {
             popUpAlertDialogConnectionError();
         }
-        checkIfUserHasAnyPictures();
+
     }
 
     @Override
@@ -167,12 +170,89 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
 
         setTitle(user.getEmail().substring(0, user.getEmail().indexOf("@")));
 
-        actionBar = getSupportActionBar();
-
         noPicturesText = findViewById(R.id.textHomePeopleNoPics);
 
         mStatusDB = FirebaseDatabase.getInstance().getReference().child(user.getUserId());
 
+        isInFavorites = false;
+        mAuth = FirebaseAuth.getInstance();
+        databaseReference =   FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).child("Favorites")
+                .child(user.getUserId());
+
+        //here******************
+
+        final DatabaseReference databaseReference2 =   FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUserId());
+        final DatabaseReference databaseReference3 = databaseReference2;
+
+        databaseReference2.child("accountPrivacy").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if(snapshot.getValue().equals("public")) {
+                    f();
+                }
+                else {
+
+                    databaseReference3.child("Favorites").addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                                String id = ds.child("userId").getValue(String.class);
+
+                                Log.i("id", ds.child("userId").getValue(String.class));
+
+                                if(id.equals(mAuth.getUid())) {
+
+                                    Log.i("xxx", "yyyyyyyyyyyyyyyyyyyyy");
+
+
+                                    isPrivate = false;
+                                    f();
+                                    break;
+                                }
+                            }
+                            if(isPrivate) {
+
+                                noPicturesText.setVisibility(View.VISIBLE);
+                                noPicturesText.setText("This Account is Private");
+
+                            }
+
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+
+
+
+//*************************************************************
+
+
+
+
+
+    }
+
+    public void f() {
+
+        actionBar = getSupportActionBar();
 
         checkIfUserHasAnyPictures();
 
@@ -194,12 +274,8 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
         ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPosition(firstVisibleItemPosition);
         firstVisibleItemPosition = 0;
 
-        isInFavorites = false;
-        mAuth = FirebaseAuth.getInstance();
-        databaseReference =   FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).child("Favorites")
-                .child(user.getUserId());
-
     }
+
 
 
 
@@ -328,8 +404,12 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
     @Override
     protected void onPause() {
         super.onPause();
+            try {
+                firstVisibleItemPosition = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
 
-        firstVisibleItemPosition = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+            }catch (Exception e) {
+
+            }
 
     }
 

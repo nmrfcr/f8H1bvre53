@@ -9,10 +9,20 @@ import android.os.Bundle;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 public class AccountPrivacyActivity extends AppCompatActivity {
 
     private Switch aSwitch;
     private boolean isSwitchCheckSetted;
+    private DatabaseReference databaseReference;
+    private FirebaseAuth mAuth;
+
 
     public void popUpPrivacyAlertDialog(final String privacy, int message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(AccountPrivacyActivity.this);
@@ -25,7 +35,12 @@ public class AccountPrivacyActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                if(privacy.equals("Private")) {
+                    databaseReference.child("accountPrivacy").setValue("private");
+                }
+                else {
+                    databaseReference.child("accountPrivacy").setValue("public");
+                }
             }
         });
 
@@ -55,6 +70,11 @@ public class AccountPrivacyActivity extends AppCompatActivity {
         isSwitchCheckSetted = false;
 
         aSwitch = findViewById(R.id.privateAccountSwitch);
+
+        mAuth = FirebaseAuth.getInstance();
+        databaseReference =   FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid());
+
+
 
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -86,6 +106,22 @@ public class AccountPrivacyActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+
+        databaseReference.child("accountPrivacy").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if(snapshot.getValue().equals("private")) {
+                    isSwitchCheckSetted = true;
+                    aSwitch.setChecked(true);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
 
     }
 
