@@ -1,4 +1,5 @@
 <resources>
+    <string name="slogan">Capture and organize life moments</string>
     <string name="app_name">Tekapic</string>
     <string name="welcome_to_tekapic"></string>
     <string name="login">Log In</string>
@@ -9,7 +10,6 @@
     <string name="picture">Picture</string>
     <string name="update_albums">Update Albums</string>
     <string name="add_new_picture">Add New Picture</string>
-    <string name="app_description">Find pictures easily</string>
     <string name="search_people">Search</string>
     <string name="favorites">Favorites</string>
     <string name="account_privacy">Account Privacy</string>
