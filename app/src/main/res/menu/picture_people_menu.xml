@@ -5,6 +5,12 @@
 
 
     <item
+        android:title="Go To Album"
+        android:id="@+id/goToAlbumPeopleMenu"
+        app:showAsAction="never"
+        />
+
+    <item
         android:title="Show Date"
         android:id="@+id/showDatePicturePeopleMenu"
         app:showAsAction="never"

@@ -119,11 +119,11 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
 
     }
 
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
-
-    }
+//    @Override
+//    public void onBackPressed() {
+//        startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
+//
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

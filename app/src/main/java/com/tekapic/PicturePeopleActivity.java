@@ -22,12 +22,137 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
     private HackyViewPager mViewPager;
     private android.support.v7.app.ActionBar actionBar;
+    private String album;
+
 
 
     public static Picture picture;
     public static boolean isPictureFromAlbum;
     public static int clickedItemIndex;
     public static ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
+
+    private void   goToAlbum()  {
+
+        album = "";
+        int size = 0;
+        ArrayList<String> albumsList = new ArrayList<String>();
+
+        if(picture.getMe().equals("1")) {
+            ++size;
+            albumsList.add(Picture.albumsNamesUpperCase[0]);
+        }
+        if(picture.getFamily().equals("1")) {
+            ++size;
+            albumsList.add(Picture.albumsNamesUpperCase[1]);
+        }
+        if(picture.getFriends().equals("1")) {
+            ++size;
+            albumsList.add(Picture.albumsNamesUpperCase[2]);
+        }
+        if(picture.getLove().equals("1")) {
+            ++size;
+            albumsList.add(Picture.albumsNamesUpperCase[3]);
+        }
+        if(picture.getPets().equals("1")) {
+            ++size;
+            albumsList.add(Picture.albumsNamesUpperCase[4]);
+        }
+        if(picture.getNature().equals("1")) {
+            ++size;
+            albumsList.add(Picture.albumsNamesUpperCase[5]);
+        }
+        if(picture.getSport().equals("1")) {
+            ++size;
+            albumsList.add(Picture.albumsNamesUpperCase[6]);
+        }
+        if(picture.getPersons().equals("1")) {
+            ++size;
+            albumsList.add(Picture.albumsNamesUpperCase[7]);
+        }
+        if(picture.getAnimals().equals("1")) {
+            ++size;
+            albumsList.add(Picture.albumsNamesUpperCase[8]);
+        }
+        if(picture.getVehicles().equals("1")) {
+            ++size;
+            albumsList.add(Picture.albumsNamesUpperCase[9]);
+        }
+        if(picture.getViews().equals("1")) {
+            ++size;
+            albumsList.add(Picture.albumsNamesUpperCase[10]);
+        }
+        if(picture.getFood().equals("1")) {
+            ++size;
+            albumsList.add(Picture.albumsNamesUpperCase[11]);
+        }
+        if(picture.getThings().equals("1")) {
+            ++size;
+            albumsList.add(Picture.albumsNamesUpperCase[12]);
+        }
+        if(picture.getFunny().equals("1")) {
+            ++size;
+            albumsList.add(Picture.albumsNamesUpperCase[13]);
+        }
+        if(picture.getPlaces().equals("1")) {
+            ++size;
+            albumsList.add(Picture.albumsNamesUpperCase[14]);
+        }
+        if(picture.getArt().equals("1")) {
+            ++size;
+            albumsList.add(Picture.albumsNamesUpperCase[15]);
+        }
+
+        final String[] albums = new String[size];
+
+        for(int i = 0; i < size; i++) {
+            albums[i] = albumsList.get(i);
+        }
+
+        album = albums[0];
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+
+        builder1.setTitle("Select an album:");
+
+        builder1.setSingleChoiceItems(albums, 0, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int item) {
+//                PicturesActivity.wantedAlbum = albums[item];
+                album = albums[item];
+
+            }
+        });
+
+        builder1.setPositiveButton(
+                "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        if(isNetworkConnected() == false) {
+                            popUpAlertDialogConnectionError();
+                            return;
+                        }
+//                        Toast.makeText(PictureActivity.this, album, Toast.LENGTH_SHORT).show();
+//                        finish();
+                        album = album.substring(0, 1).toLowerCase() + album.substring(1);
+                        PicturesPeopleActivity.wantedAlbum = album;
+                        Intent intent = new Intent(PicturePeopleActivity.this, PicturesPeopleActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+        builder1.setNegativeButton(
+                "CANCEL",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
+
+    }
 
 
     @Override
@@ -38,6 +163,10 @@ public class PicturePeopleActivity extends AppCompatActivity {
             return false;
         }
         switch (item.getItemId()) {
+
+            case R.id.goToAlbumPeopleMenu:
+                goToAlbum();
+                return true;
 
             case R.id.showDatePicturePeopleMenu:
                 showDate();
@@ -109,6 +238,9 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
         hideSystemUI();
         showSystemUI();
+
+        picture = picturesList.get(clickedItemIndex);
+
 
     }
 
