@@ -122,7 +122,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private void firebaseUserSearch(String searchText) {
 
-        Query query = mDatabaseReference.orderByChild("email").startAt(searchText).endAt(searchText + "\uf8ff");
+        Query query = mDatabaseReference.orderByChild("username").startAt(searchText).endAt(searchText + "\uf8ff");
 
 
         query.addValueEventListener(new ValueEventListener() {
@@ -152,9 +152,8 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull final User model) {
 
-                Log.i("user", model.getEmail());
 
-                holder.setDetails(model.getEmail());
+                holder.setDetails(model.getUsername());
 
                 holder.textView.setOnClickListener(new View.OnClickListener() {
 

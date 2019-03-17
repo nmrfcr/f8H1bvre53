@@ -27,6 +27,16 @@
         android:inputType="textEmailAddress" />
 
     <EditText
+        android:id="@+id/usernameEditTextRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Username"
+        android:maxLength="15"
+        android:digits="0123456789abcdefghijklmnopqrstuvwxyz"
+        android:inputType="text" />
+
+    <EditText
         android:id="@+id/passwordEditTextRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -72,7 +72,14 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
     private void albumsIconclicked() {
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setMessage("This user doesn't have any albums yet.");
+
+        if(isPrivate) {
+            builder1.setMessage(user.getUsername() + " didn't add you to his/her favorites, therefore you don't have a permission to access this profile");
+        }
+        else {
+            builder1.setMessage(user.getUsername() + " doesn't have any albums yet.");
+        }
+
 
         builder1.setPositiveButton(
                 "OK",
@@ -105,7 +112,7 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
             return false;
@@ -115,14 +122,42 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
 
             case R.id.favorites:
                 if(!isInFavorites) {
-                    saveToFavorites();
-                    Toast.makeText(getApplicationContext(), user.getEmail().substring(0, user.getEmail().indexOf("@")) + " added to your favorites", Toast.LENGTH_LONG).show();
-                    item.setTitle("Remove from favorites");
-                    item.setIcon(R.drawable.ic_star_black_24dp);
+
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(HomePeopleActivity.this);
+                        builder.setTitle("Add " + user.getUsername() + " to favorites?");
+
+                        builder.setMessage("If your account is private, only users who in your favorites will be able to see your pictures.");
+
+                        builder.setCancelable(false);
+
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                saveToFavorites();
+                                Toast.makeText(getApplicationContext(), user.getUsername() + " added to your favorites", Toast.LENGTH_LONG).show();
+                                item.setTitle("Remove from favorites");
+                                item.setIcon(R.drawable.ic_star_black_24dp);
+                            }
+                        });
+
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+
+
+                        final AlertDialog dialog = builder.create();
+                        dialog.show();
+
+
+
                 }
                 else {
                     deleteFromFavorites();
-                    Toast.makeText(getApplicationContext(), user.getEmail().substring(0, user.getEmail().indexOf("@")) + " removed from your favorites", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), user.getUsername() + " removed from your favorites", Toast.LENGTH_LONG).show();
                     item.setTitle("Add to favorites");
                     item.setIcon(R.drawable.ic_star_border_black_24dp);
                 }
@@ -168,7 +203,10 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_people);
 
-        setTitle(user.getEmail().substring(0, user.getEmail().indexOf("@")));
+        actionBar = getSupportActionBar();
+
+
+        setTitle(user.getUsername());
 
         noPicturesText = findViewById(R.id.textHomePeopleNoPics);
 
@@ -188,6 +226,7 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if(snapshot.getValue().equals("public")) {
+                    isPrivate = false;
                     f();
                 }
                 else {
@@ -219,10 +258,19 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
                                 noPicturesText.setVisibility(View.VISIBLE);
                                 noPicturesText.setText("This Account is Private");
 
+
+                                mStatusDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        actionBar.setSubtitle("(" + Long.toString(dataSnapshot.getChildrenCount()) +")");
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
-
-
-
                         }
 
                         @Override
@@ -245,14 +293,10 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
 //*************************************************************
 
 
-
-
-
     }
 
     public void f() {
 
-        actionBar = getSupportActionBar();
 
         checkIfUserHasAnyPictures();
 
@@ -438,6 +482,7 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
 
     private void saveToFavorites() {
         databaseReference.child("userId").setValue(user.getUserId());
+        databaseReference.child("username").setValue(user.getUsername());
         databaseReference.child("email").setValue(user.getEmail());
 
         isInFavorites = true;

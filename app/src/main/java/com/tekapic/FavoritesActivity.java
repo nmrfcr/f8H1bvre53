@@ -113,7 +113,7 @@ public class FavoritesActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull final User model) {
 
 
-                holder.setDetails(model.getEmail());
+                holder.setDetails(model.getUsername());
 
                 holder.textView.setOnClickListener(new View.OnClickListener() {
 

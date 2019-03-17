@@ -44,16 +44,18 @@
         />
 
     <item
+        android:title="Edit Profile"
+        android:id="@+id/editProfileMenu"
+        app:showAsAction="never"
+        />
+
+    <item
         android:title="Account Privacy"
         android:id="@+id/accountPrivacyMenu"
         app:showAsAction="never"
         />
 
-    <item
-        android:title="Update Email"
-        android:id="@+id/updateEmailMenu"
-        app:showAsAction="never"
-        />
+
 
     <item
         android:title="Log Out"
