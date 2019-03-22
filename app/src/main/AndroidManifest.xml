@@ -9,8 +9,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-
-
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -131,13 +129,16 @@
             android:name=".FavoritesActivity"
             android:label="@string/favorites"
             android:parentActivityName=".HomeActivity"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AccountPrivacyActivity"
+            android:label="@string/account_privacy"
+            android:parentActivityName=".HomeActivity"></activity>
 
         <activity
             android:parentActivityName=".HomeActivity"
-            android:label="@string/account_privacy"
-            android:name=".AccountPrivacyActivity">
+            android:label="@string/edit_profile"
+            android:name=".EditProfileActivity">
         </activity>
     </application>
 

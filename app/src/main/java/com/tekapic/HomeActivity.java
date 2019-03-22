@@ -248,136 +248,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
         builder.create().show();
     }
 
-    private void updateEmail() {
 
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Update Email");
-        dialog.setCancelable(false);
-
-
-        dialog.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                if(isNetworkConnected() == false) {
-                    popUpAlertDialogConnectionError();
-                    return;
-                }
-
-                final String email, password;
-
-                email = emailEditText.getText().toString();
-                password = passwordEditText.getText().toString();
-
-                if(email.isEmpty()) {
-                    showAlertDialog("Error", "Email cannot be empty.");
-                    return;
-                }
-                if(password.isEmpty()) {
-                    showAlertDialog("Error", "Password cannot be empty.");
-                    return;
-                }
-                if(email.equals(mAuth.getCurrentUser().getEmail())) {
-                    showAlertDialog("Error", "Enter new email.");
-                    return;
-                }
-
-                mDialog.setMessage("Please wait...");
-                mDialog.show();
-                mDialog.setCancelable(false);
-
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                // Get auth credentials from the user for re-authentication
-                AuthCredential credential = EmailAuthProvider
-                        .getCredential(mAuth.getCurrentUser().getEmail(), password); // Current Login Credentials \\
-                // Prompt the user to re-provide their sign-in credentials
-                user.reauthenticate(credential)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                mDialog.dismiss();
-
-                                if(task.isSuccessful()) {
-                                    Log.d("User re-authenticated.", "User re-authenticated.");
-                                    //Now change your email address \\
-                                    //----------------Code for Changing Email Address----------\\
-                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                                    mDialog.setMessage("Please wait...");
-                                    mDialog.show();
-                                    mDialog.setCancelable(false);
-
-                                    user.updateEmail(email)
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-
-                                                    mDialog.dismiss();
-
-                                                    if (task.isSuccessful()) {
-                                                        Log.d("email updated", "User email address updated.");
-                                                        showAlertDialog("Attention!", "Your email address has been successfully changed.");
-
-                                                        //here
-
-                                                        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-                                                        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-                                                        rootRef.child("Users").child(uid).child("email").setValue(email);
-
-                                                    }
-                                                    else {
-                                                        showAlertDialog("Error", task.getException().getMessage());
-
-                                                    }
-                                                }
-                                            });
-                                    //----------------------------------------------------------\\
-                                }
-                                else {
-                                    showAlertDialog("Error", task.getException().getMessage());
-                                }
-
-
-                            }
-                        });
-
-
-
-
-            }
-        });
-        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-
-// Add a TextView here for the "Title" label, as noted in the comments
-        emailEditText = new EditText(this);
-        emailEditText.setHint("Enter new email");
-        emailEditText.setText(mAuth.getCurrentUser().getEmail());
-        layout.addView(emailEditText); // Notice this is an add method
-
-// Add another TextView here for the "Description" label
-        passwordEditText = new EditText(this);
-        passwordEditText.setHint("Enter your password");
-        passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        layout.addView(passwordEditText); // Another add method
-
-        dialog.setView(layout); // Again this is a set method, not add
-
-
-        AlertDialog alertDialog = dialog.create();
-        alertDialog.show();
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -404,7 +275,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                 }
                 return true;
             case R.id.editProfileMenu:
-                updateEmail();
+                startActivity(new Intent(HomeActivity.this, EditProfileActivity.class));
                 return true;
             case R.id.searchMenu:
                 startActivity(new Intent(HomeActivity.this, SearchActivity.class));

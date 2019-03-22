@@ -16,6 +16,9 @@
     <string name="privacy_private_description">When your account is private,
      only people you have added to your favorites can see your pictures.</string>
     <string name="privacy_public_description">Anyone will be able to see your pictures.</string>
+    <string name="edit_profile">Edit Profile</string>
+
+
 
 
 </resources>

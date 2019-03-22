@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    android:layoutDirection="ltr"
+    android:orientation="vertical"
+    tools:context="com.tekapic.EditProfileActivity">
+
+
+    <Button
+        android:id="@+id/changeUsernameEditProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/roundedbutton"
+        android:onClick="changeUsername"
+        android:text="Change Username" />
+
+    <Button
+        android:id="@+id/changeEmailEditProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/roundedbutton"
+        android:onClick="changeEmail"
+        android:text="Change Email" />
+
+    <Button
+        android:id="@+id/changePasswordEditProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/roundedbutton"
+        android:onClick="changePassword"
+        android:text="Change Password" />
+
+</LinearLayout>

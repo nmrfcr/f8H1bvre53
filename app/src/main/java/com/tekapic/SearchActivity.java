@@ -124,7 +124,6 @@ public class SearchActivity extends AppCompatActivity {
 
         Query query = mDatabaseReference.orderByChild("username").startAt(searchText).endAt(searchText + "\uf8ff");
 
-
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

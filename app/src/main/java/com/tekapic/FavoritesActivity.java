@@ -25,6 +25,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.tekapic.model.User;
 
+import java.util.ArrayList;
+
 public class FavoritesActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
@@ -32,6 +34,7 @@ public class FavoritesActivity extends AppCompatActivity {
     private TextView indicatorText;
     private FirebaseAuth mAuth;
     private android.support.v7.app.ActionBar actionBar;
+    private ArrayList<String> usersIDList = new ArrayList<String>();
 
 
 
@@ -68,7 +71,26 @@ public class FavoritesActivity extends AppCompatActivity {
         indicatorText = findViewById(R.id.favorites_indicator_text);
 
         mAuth = FirebaseAuth.getInstance();
-        mDatabaseReference =  FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).child("Favorites");
+//        mDatabaseReference =  FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).child("Favorites");
+
+        mDatabaseReference =  FirebaseDatabase.getInstance().getReference().child("Users");
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).child("Favorites");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    usersIDList.add(ds.child("userId").getValue(String.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
         mRecyclerView = findViewById(R.id.favorites_list);
         mRecyclerView.setHasFixedSize(true);
@@ -112,19 +134,27 @@ public class FavoritesActivity extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull final User model) {
 
+                for(String id : usersIDList) {
+                    if(id.equals(model.getUserId())) {
 
-                holder.setDetails(model.getUsername());
+                        holder.setDetails(model.getUsername());
 
-                holder.textView.setOnClickListener(new View.OnClickListener() {
+                        holder.textView.setOnClickListener(new View.OnClickListener() {
 
-                    @Override
-                    public void onClick(View v) {
-                        HomePeopleActivity.flag = false;
-                        HomePeopleActivity.user = model;
-                        HomePeopleActivity.firstVisibleItemPosition = 0;
-                        startActivity(new Intent(FavoritesActivity.this, HomePeopleActivity.class));
+                            @Override
+                            public void onClick(View v) {
+                                HomePeopleActivity.flag = false;
+                                HomePeopleActivity.user = model;
+                                HomePeopleActivity.firstVisibleItemPosition = 0;
+                                startActivity(new Intent(FavoritesActivity.this, HomePeopleActivity.class));
+                            }
+                        });
+
                     }
-                });
+                }
+
+
+
 
             }
 
