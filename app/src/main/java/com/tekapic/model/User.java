@@ -14,7 +14,7 @@ public class User {
         this.email = "none";
         this.username = "none";
         this.userId = "none";
-        this.accountPrivacy = "public";
+        this.accountPrivacy = "none";
     }
 
     public User(String email, String username, String userId, String accountPrivacy) {

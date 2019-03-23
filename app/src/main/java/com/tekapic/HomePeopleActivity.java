@@ -482,9 +482,6 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
 
     private void saveToFavorites() {
         databaseReference.child("userId").setValue(user.getUserId());
-        databaseReference.child("username").setValue(user.getUsername());
-        databaseReference.child("email").setValue(user.getEmail());
-
         isInFavorites = true;
     }
 

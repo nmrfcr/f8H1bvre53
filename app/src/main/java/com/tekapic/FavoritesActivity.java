@@ -25,16 +25,16 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.tekapic.model.User;
 
-import java.util.ArrayList;
 
 public class FavoritesActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private DatabaseReference mDatabaseReference;
+    private DatabaseReference favoritesDatabaseReference;
+
     private TextView indicatorText;
     private FirebaseAuth mAuth;
     private android.support.v7.app.ActionBar actionBar;
-    private ArrayList<String> usersIDList = new ArrayList<String>();
 
 
 
@@ -71,25 +71,10 @@ public class FavoritesActivity extends AppCompatActivity {
         indicatorText = findViewById(R.id.favorites_indicator_text);
 
         mAuth = FirebaseAuth.getInstance();
-//        mDatabaseReference =  FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).child("Favorites");
 
         mDatabaseReference =  FirebaseDatabase.getInstance().getReference().child("Users");
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).child("Favorites");
-
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    usersIDList.add(ds.child("userId").getValue(String.class));
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        favoritesDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).child("Favorites");
 
 
         mRecyclerView = findViewById(R.id.favorites_list);
@@ -102,7 +87,7 @@ public class FavoritesActivity extends AppCompatActivity {
 
     private void firebaseGetFavorites() {
 
-        Query query = mDatabaseReference;
+        Query query = favoritesDatabaseReference;
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -132,30 +117,36 @@ public class FavoritesActivity extends AppCompatActivity {
         FirebaseRecyclerAdapter<User, UserViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<User, UserViewHolder>
                 (options) {
             @Override
-            protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull final User model) {
+            protected void onBindViewHolder(@NonNull final UserViewHolder holder, int position, @NonNull final User model) {
 
-                for(String id : usersIDList) {
-                    if(id.equals(model.getUserId())) {
 
-                        holder.setDetails(model.getUsername());
+                mDatabaseReference.child(model.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        final User user = new User();
+                        user.setUserId(dataSnapshot.child("userId").getValue(String.class));
+                        user.setUsername(dataSnapshot.child("username").getValue(String.class));
+
+
+                        holder.setDetails(user.getUsername());
 
                         holder.textView.setOnClickListener(new View.OnClickListener() {
 
                             @Override
                             public void onClick(View v) {
                                 HomePeopleActivity.flag = false;
-                                HomePeopleActivity.user = model;
+                                HomePeopleActivity.user = user;
                                 HomePeopleActivity.firstVisibleItemPosition = 0;
                                 startActivity(new Intent(FavoritesActivity.this, HomePeopleActivity.class));
                             }
                         });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     }
-                }
-
-
-
-
+                });
             }
 
             @NonNull
