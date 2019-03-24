@@ -66,8 +66,11 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
     private static final int REQUEST_PHOTO_CAPTURE = 1;
     private static final int REQUEST_PHOTO_PICK = 2;
-    private static final String dstDir = Environment.getExternalStorageDirectory() +
-            File.separator + "Pictures" + File.separator + "Tekapic";
+
+    private static final String dstDir = Environment.getExternalStorageDirectory().getAbsolutePath() +
+            File.separator + Environment.DIRECTORY_PICTURES + File.separator + "Tekapic";
+
+
     private FirebaseAuth mAuth;
     private DatabaseReference mStatusDB;
     private RecyclerView mRecyclerView;
@@ -86,6 +89,73 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
     public static int firstVisibleItemPosition = 0;
     public static boolean isUserhasPics = false;
+
+//    @RequiresApi(api = Build.VERSION_CODES.M)
+//    private void save() {
+//
+////        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+////            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+////        }
+////        else {
+//
+//
+////        }
+//
+//
+//
+//        if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+//            //File write logic here
+//
+//
+//
+//            File newDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +
+//                    File.separator + Environment.DIRECTORY_PICTURES + File.separator + "Rokkk");
+//
+//            newDir.mkdirs();
+//        }
+//
+//
+//
+//    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private  void saveFile(String path) {
+
+        if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+
+            File f = new File(dstDir);
+            if (!f.exists()) {
+                f.mkdirs();
+            }
+
+            File direct = new File(path);
+            File file = new File(dstDir, direct.getName());
+
+            if (!direct.exists()) {
+                direct.mkdirs();
+            }
+
+
+
+            if (!file.exists()) {
+                try {
+                    file.createNewFile();
+                    FileChannel src = new FileInputStream(path).getChannel();
+                    FileChannel dst = new FileOutputStream(file).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+
+
+    }
 
 
 
@@ -364,6 +434,8 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                                 photoFile);
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
                         startActivityForResult(takePictureIntent, REQUEST_PHOTO_CAPTURE);
+
+
                     }
                 }
         }
@@ -381,26 +453,35 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
+
         return image;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == REQUEST_PHOTO_CAPTURE && resultCode == RESULT_OK) {
 
-                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                File f = new File(mCurrentPhotoPath);
-                Uri contentUri = Uri.fromFile(f);
-                mediaScanIntent.setData(contentUri);
-                this.sendBroadcast(mediaScanIntent);
 
-                PostActivity.pictureUri = contentUri;
-                Intent intent = new Intent(this, PostActivity.class);
-                startActivity(intent);
 
-                copyFileOrDirectory(mCurrentPhotoPath, dstDir);
+
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            File f = new File(mCurrentPhotoPath);
+            Uri contentUri = Uri.fromFile(f);
+            mediaScanIntent.setData(contentUri);
+            this.sendBroadcast(mediaScanIntent);
+
+            PostActivity.pictureUri = contentUri;
+            Intent intent = new Intent(this, PostActivity.class);
+            startActivity(intent);
+
+//            save();
+
+            saveFile(mCurrentPhotoPath);
+
+//                copyFileOrDirectory(mCurrentPhotoPath, dstDir);
 
         }
         else if(requestCode == REQUEST_PHOTO_PICK && resultCode == RESULT_OK) {

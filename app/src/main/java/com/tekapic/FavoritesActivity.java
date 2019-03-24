@@ -126,8 +126,6 @@ public class FavoritesActivity extends AppCompatActivity {
                         final User user = new User();
                         user.setUserId(dataSnapshot.child("userId").getValue(String.class));
                         user.setUsername(dataSnapshot.child("username").getValue(String.class));
-
-
                         holder.setDetails(user.getUsername());
 
                         holder.textView.setOnClickListener(new View.OnClickListener() {

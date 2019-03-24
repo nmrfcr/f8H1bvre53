@@ -34,7 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 public class EditProfileActivity extends AppCompatActivity {
 
     private ProgressDialog mDialog;
-    private EditText emailEditText, usernameEditText, passwordEditText;
+    private EditText emailEditText, usernameEditText, passwordEditText, newPasswordEditText;
     private FirebaseAuth mAuth;
     private String un;
     private DatabaseReference usersDatabaseReference;
@@ -45,8 +45,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     public void changeUsername(View view) {
-
-
 
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -396,6 +394,176 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     public void changePassword(View view) {
+
+
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Change Password");
+        dialog.setCancelable(false);
+
+
+        dialog.setPositiveButton("Change Password", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                if(isNetworkConnected() == false) {
+                    popUpAlertDialogConnectionError();
+                    return;
+                }
+
+                final String newPassword, oldPassword;
+
+                newPassword = newPasswordEditText.getText().toString();
+                oldPassword = passwordEditText.getText().toString();
+
+                if(newPassword.isEmpty()) {
+                    showAlertDialog("Error", "New password cannot be empty.");
+                    return;
+                }
+                if(oldPassword.isEmpty()) {
+                    showAlertDialog("Error", "Old password cannot be empty.");
+                    return;
+                }
+
+                //check if pass is strong method
+
+                if(newPassword.length() < 6) {
+                    showAlertDialog("Error", "New password must be at least 6 characters.");
+                    return;
+                }
+                if(isPasswordStrong(newPassword) == false) {
+                    showAlertDialog("Error", "Please choose a stronger new password. try a mix of letters and digits.");
+                    return;
+                }
+
+
+                mDialog.setMessage("Please wait...");
+                mDialog.show();
+                mDialog.setCancelable(false);
+
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                // Get auth credentials from the user for re-authentication
+                AuthCredential credential = EmailAuthProvider
+                        .getCredential(mAuth.getCurrentUser().getEmail(), oldPassword); // Current Login Credentials \\
+                // Prompt the user to re-provide their sign-in credentials
+                user.reauthenticate(credential)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                mDialog.dismiss();
+
+                                if(task.isSuccessful()) {
+                                    Log.d("User re-authenticated.", "User re-authenticated.");
+                                    //Now change your email address \\
+                                    //----------------Code for Changing Email Address----------\\
+                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                                    mDialog.setMessage("Please wait...");
+                                    mDialog.show();
+                                    mDialog.setCancelable(false);
+
+                                    user.updatePassword(newPassword)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+
+                                                    mDialog.dismiss();
+
+                                                    if (task.isSuccessful()) {
+                                                        showAlertDialog("Attention!", "Your password has been successfully changed.");
+                                                    }
+                                                    else {
+                                                        showAlertDialog("Error", task.getException().getMessage());
+
+                                                    }
+                                                }
+                                            });
+                                    //----------------------------------------------------------\\
+                                }
+                                else {
+                                    showAlertDialog("Error", task.getException().getMessage());
+                                }
+
+
+                            }
+                        });
+
+
+
+
+            }
+        });
+        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+// Add a TextView here for the "Title" label, as noted in the comments
+        newPasswordEditText = new EditText(this);
+        newPasswordEditText.setHint("New password");
+        newPasswordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        layout.addView(newPasswordEditText); // Notice this is an add method
+
+// Add another TextView here for the "Description" label
+        passwordEditText = new EditText(this);
+        passwordEditText.setHint("Old password");
+        passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        layout.addView(passwordEditText); // Another add method
+
+        dialog.setView(layout); // Again this is a set method, not add
+
+
+        AlertDialog alertDialog = dialog.create();
+        alertDialog.show();
+
+
+
+
+    }
+
+    private boolean isPasswordStrong(String password) {
+
+        boolean hasLetter = false;
+        boolean hasDigit = false;
+
+        for (int i = 0; i < password.length(); i++) {
+            char x = password.charAt(i);
+            if (Character.isLetter(x)) {
+
+                hasLetter = true;
+            }
+
+            else if (Character.isDigit(x)) {
+
+                hasDigit = true;
+            }
+
+            // no need to check further, break the loop
+            if(hasLetter && hasDigit){
+
+                break;
+            }
+
+        }
+        if (hasLetter && hasDigit) {
+//                System.out.println("STRONG");
+            return true;
+        } else {
+//                System.out.println("NOT STRONG");
+            return false;
+        }
+//        } else {
+//            System.out.println("HAVE AT LEAST 8 CHARACTERS");
+//        }
 
     }
 
