@@ -68,13 +68,12 @@ import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity implements PicturesRecyclerViewAdapter.ListItemClickListener {
 
-    private static final int REQUEST_PHOTO_CAPTURE = 1;
-    private static final int REQUEST_PHOTO_PICK = 2;
+    public static final int REQUEST_PHOTO_CAPTURE = 1;
+    public static final int REQUEST_PHOTO_PICK = 2;
 
-    private static final String dstDir = Environment.getExternalStorageDirectory().getAbsolutePath() +
-            File.separator + Environment.DIRECTORY_PICTURES + File.separator + "Tekapic";
 
-    private String picName;
+
+    public static String picName;
     private FirebaseAuth mAuth;
     private DatabaseReference mStatusDB;
     private RecyclerView mRecyclerView;
@@ -94,72 +93,6 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     public static int firstVisibleItemPosition = 0;
     public static boolean isUserhasPics = false;
 
-//    @RequiresApi(api = Build.VERSION_CODES.M)
-//    private void save() {
-//
-////        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-////            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-////        }
-////        else {
-//
-//
-////        }
-//
-//
-//
-//        if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-//            //File write logic here
-//
-//
-//
-//            File newDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +
-//                    File.separator + Environment.DIRECTORY_PICTURES + File.separator + "Rokkk");
-//
-//            newDir.mkdirs();
-//        }
-//
-//
-//
-//    }
-
-//    @RequiresApi(api = Build.VERSION_CODES.M)
-//    private  void saveFile(String path) {
-//
-//        if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-//
-//            File f = new File(dstDir);
-//            if (!f.exists()) {
-//                f.mkdirs();
-//            }
-//
-//            File direct = new File(path);
-//            File file = new File(dstDir, direct.getName());
-//
-//            if (!direct.exists()) {
-//                direct.mkdirs();
-//            }
-//
-//
-//
-//            if (!file.exists()) {
-//                try {
-//                    file.createNewFile();
-//                    FileChannel src = new FileInputStream(path).getChannel();
-//                    FileChannel dst = new FileOutputStream(file).getChannel();
-//                    dst.transferFrom(src, 0, src.size());
-//                    src.close();
-//                    dst.close();
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//        }
-//
-//
-//
-//    }
 
 
 
@@ -401,8 +334,8 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void dispatchChoosePhotoIntent() {
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PHOTO_PICK);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PHOTO_PICK);
         }
         else {
             Intent choosePhotoIntent = new Intent(Intent.ACTION_PICK);
@@ -420,10 +353,6 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
             requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},  REQUEST_PHOTO_CAPTURE);
         }
         else  {
-
-
-
-
 
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 // Ensure that there's a camera activity to handle the intent
@@ -459,79 +388,28 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                 storageDir      /* directory */
         );
         picName = image.getName();
-        Log.i("picName", picName);
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
-    public static void addImageToGallery(final String filePath, final Context context) {
-
-//        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-//        StrictMode.setVmPolicy(builder.build());
-//
-////        ContentValues values = new ContentValues();
-////
-////
-////
-////        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-////        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-////        values.put(MediaStore.MediaColumns.DATA, filePath);
-////
-////        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-//
-//        ContentValues values = new ContentValues();
-//
-//        values.put(MediaStore.Images.Media.TITLE, "New Picture");
-//        values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
-//        values.put(MediaStore.MediaColumns.DATA, filePath);
-//
-//        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI , values);
-
-        try {
-            MediaStore.Images.Media.insertImage(context.getContentResolver(), filePath, "" , "" );
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        PostActivity.requestCode = requestCode;
+
         if(requestCode == REQUEST_PHOTO_CAPTURE && resultCode == RESULT_OK) {
-
-            Log.i("mCurrentPhotoPath", mCurrentPhotoPath);
-
 
             File f = new File(mCurrentPhotoPath);
             Uri contentUri = Uri.fromFile(f);
-
 
             PostActivity.pictureUri = contentUri;
             Intent intent = new Intent(this, PostActivity.class);
             startActivity(intent);
 
-//            save();
-
-//            saveFile(mCurrentPhotoPath);
-
-            copyFileOrDirectory(mCurrentPhotoPath, dstDir);
-
-            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            File file = new File(dstDir +File.separator + picName);
-            Uri uri = Uri.fromFile(file);
-            mediaScanIntent.setData(uri);
-            this.sendBroadcast(mediaScanIntent);
-
-//            addImageToGallery(mCurrentPhotoPath, context);
-
-
-
-//            scanFile(mCurrentPhotoPath);
 
         }
         else if(requestCode == REQUEST_PHOTO_PICK && resultCode == RESULT_OK) {
@@ -774,60 +652,6 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
             }
         });
     }
-    /****************The starting  proccess of the pictures making**************/
-
-    public static void copyFileOrDirectory(String srcDir, String dstDir) {
-
-        try {
-            File src = new File(srcDir);
-            File dst = new File(dstDir, src.getName());
-
-            if (src.isDirectory()) {
-
-                String files[] = src.list();
-
-                int filesLength = files.length;
-
-                for (int i = 0; i < filesLength; i++) {
-                    String src1 = (new File(src, files[i]).getPath());
-                    String dst1 = dst.getPath();
-                    copyFileOrDirectory(src1, dst1);
-                }
-            } else {
-                copyFile(src, dst);
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void copyFile(File sourceFile, File destFile) throws IOException {
-
-        if (!destFile.getParentFile().exists())
-            destFile.getParentFile().mkdirs();
-        if (!destFile.exists()) {
-            destFile.createNewFile();
-        }
-        FileChannel source = null;
-        FileChannel destination = null;
-        try {
-
-            source = new FileInputStream(sourceFile).getChannel();
-            destination = new FileOutputStream(destFile).getChannel();
-            destination.transferFrom(source, 0, source.size());
-        }
-        finally {
-            if (source != null) {
-                source.close();
-            }
-            if (destination != null) {
-                destination.close();
-            }
-
-        }
-    }
-    /****************The end of the proccess of pictures making**************/
 
     @Override
     protected void onPause() {
