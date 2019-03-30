@@ -2,16 +2,19 @@ package com.tekapic;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -51,6 +54,7 @@ import com.google.firebase.storage.UploadTask;
 import com.tekapic.model.Picture;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -70,7 +74,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     private static final String dstDir = Environment.getExternalStorageDirectory().getAbsolutePath() +
             File.separator + Environment.DIRECTORY_PICTURES + File.separator + "Tekapic";
 
-
+    private String picName;
     private FirebaseAuth mAuth;
     private DatabaseReference mStatusDB;
     private RecyclerView mRecyclerView;
@@ -118,44 +122,44 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 //
 //    }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private  void saveFile(String path) {
-
-        if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-
-            File f = new File(dstDir);
-            if (!f.exists()) {
-                f.mkdirs();
-            }
-
-            File direct = new File(path);
-            File file = new File(dstDir, direct.getName());
-
-            if (!direct.exists()) {
-                direct.mkdirs();
-            }
-
-
-
-            if (!file.exists()) {
-                try {
-                    file.createNewFile();
-                    FileChannel src = new FileInputStream(path).getChannel();
-                    FileChannel dst = new FileOutputStream(file).getChannel();
-                    dst.transferFrom(src, 0, src.size());
-                    src.close();
-                    dst.close();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-
-
-
-    }
+//    @RequiresApi(api = Build.VERSION_CODES.M)
+//    private  void saveFile(String path) {
+//
+//        if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+//
+//            File f = new File(dstDir);
+//            if (!f.exists()) {
+//                f.mkdirs();
+//            }
+//
+//            File direct = new File(path);
+//            File file = new File(dstDir, direct.getName());
+//
+//            if (!direct.exists()) {
+//                direct.mkdirs();
+//            }
+//
+//
+//
+//            if (!file.exists()) {
+//                try {
+//                    file.createNewFile();
+//                    FileChannel src = new FileInputStream(path).getChannel();
+//                    FileChannel dst = new FileOutputStream(file).getChannel();
+//                    dst.transferFrom(src, 0, src.size());
+//                    src.close();
+//                    dst.close();
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//        }
+//
+//
+//
+//    }
 
 
 
@@ -412,10 +416,15 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{android.Manifest.permission.CAMERA}, REQUEST_PHOTO_CAPTURE);
         }
-        else if(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},  REQUEST_PHOTO_CAPTURE);
+        else if(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},  REQUEST_PHOTO_CAPTURE);
         }
         else  {
+
+
+
+
+
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 // Ensure that there's a camera activity to handle the intent
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -435,7 +444,6 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
                         startActivityForResult(takePictureIntent, REQUEST_PHOTO_CAPTURE);
 
-
                     }
                 }
         }
@@ -450,11 +458,43 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
-
+        picName = image.getName();
+        Log.i("picName", picName);
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
-
         return image;
+    }
+
+    public static void addImageToGallery(final String filePath, final Context context) {
+
+//        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+//        StrictMode.setVmPolicy(builder.build());
+//
+////        ContentValues values = new ContentValues();
+////
+////
+////
+////        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+////        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+////        values.put(MediaStore.MediaColumns.DATA, filePath);
+////
+////        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+//
+//        ContentValues values = new ContentValues();
+//
+//        values.put(MediaStore.Images.Media.TITLE, "New Picture");
+//        values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+//        values.put(MediaStore.MediaColumns.DATA, filePath);
+//
+//        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI , values);
+
+        try {
+            MediaStore.Images.Media.insertImage(context.getContentResolver(), filePath, "" , "" );
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -464,14 +504,12 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
         if(requestCode == REQUEST_PHOTO_CAPTURE && resultCode == RESULT_OK) {
 
+            Log.i("mCurrentPhotoPath", mCurrentPhotoPath);
 
 
-
-            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             File f = new File(mCurrentPhotoPath);
             Uri contentUri = Uri.fromFile(f);
-            mediaScanIntent.setData(contentUri);
-            this.sendBroadcast(mediaScanIntent);
+
 
             PostActivity.pictureUri = contentUri;
             Intent intent = new Intent(this, PostActivity.class);
@@ -479,9 +517,21 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
 //            save();
 
-            saveFile(mCurrentPhotoPath);
+//            saveFile(mCurrentPhotoPath);
 
-//                copyFileOrDirectory(mCurrentPhotoPath, dstDir);
+            copyFileOrDirectory(mCurrentPhotoPath, dstDir);
+
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            File file = new File(dstDir +File.separator + picName);
+            Uri uri = Uri.fromFile(file);
+            mediaScanIntent.setData(uri);
+            this.sendBroadcast(mediaScanIntent);
+
+//            addImageToGallery(mCurrentPhotoPath, context);
+
+
+
+//            scanFile(mCurrentPhotoPath);
 
         }
         else if(requestCode == REQUEST_PHOTO_PICK && resultCode == RESULT_OK) {
