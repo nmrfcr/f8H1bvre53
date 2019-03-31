@@ -346,7 +346,7 @@ public class PictureActivity extends AppCompatActivity {
 
 
         mAuth = FirebaseAuth.getInstance();
-        mStatusDB = FirebaseDatabase.getInstance().getReference().child(mAuth.getUid());
+        mStatusDB = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).child("Pictures");
         storageReference =  FirebaseStorage.getInstance().getReference().getStorage();
 
         hideSystemUI();

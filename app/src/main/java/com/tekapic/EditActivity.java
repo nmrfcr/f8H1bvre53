@@ -186,7 +186,7 @@ public class EditActivity extends AppCompatActivity {
         initialcheckBoxesArray();
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        mUsersDB = FirebaseDatabase.getInstance().getReference().child(currentUser.getUid());
+        mUsersDB = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUser.getUid()).child("Pictures");
 
         picture = PictureActivity.picture;
 

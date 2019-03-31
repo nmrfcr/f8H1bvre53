@@ -40,7 +40,7 @@ public class AlbumsPeopleActivity extends AppCompatActivity implements AlbumsRec
 
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
 
-        DatabaseReference usersdRef = rootRef.child(HomePeopleActivity.user.getUserId());
+        DatabaseReference usersdRef = rootRef.child("Users").child(HomePeopleActivity.user.getUserId()).child("Pictures");
 
         ValueEventListener eventListener = new ValueEventListener() {
 

@@ -19,6 +19,9 @@ public class LauncherActivity extends AppCompatActivity {
             @Override
             public void run() {
                 finish();
+
+                //get action intent send here
+
                 if (FirebaseAuth.getInstance().getCurrentUser() == null) {
                     startActivity(new Intent(LauncherActivity.this, MainActivity.class));
                 }

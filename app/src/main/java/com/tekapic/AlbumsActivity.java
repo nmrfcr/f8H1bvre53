@@ -44,7 +44,7 @@ public class AlbumsActivity extends AppCompatActivity implements AlbumsRecyclerV
 
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
 
-        DatabaseReference usersdRef = rootRef.child(mAuth.getUid());
+        DatabaseReference usersdRef = rootRef.child("Users").child(mAuth.getUid()).child("Pictures");
 
         ValueEventListener eventListener = new ValueEventListener() {
 

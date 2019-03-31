@@ -74,7 +74,7 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
 
         if(isPrivate) {
-            builder1.setMessage(user.getUsername() + " didn't add you to his/her favorites, therefore you don't have a permission to access this profile");
+            builder1.setMessage("For viewing " + user.getUsername() + "'s" + " albums, you need to be in " + user.getUsername() + "'s" + " favorites");
         }
         else {
             builder1.setMessage(user.getUsername() + " doesn't have any albums yet.");
@@ -131,7 +131,7 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
 
                         builder.setCancelable(false);
 
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        builder.setPositiveButton("ADD", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 saveToFavorites();
@@ -156,10 +156,40 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
 
                 }
                 else {
-                    deleteFromFavorites();
-                    Toast.makeText(getApplicationContext(), user.getUsername() + " removed from your favorites", Toast.LENGTH_LONG).show();
-                    item.setTitle("Add to favorites");
-                    item.setIcon(R.drawable.ic_star_border_black_24dp);
+
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(HomePeopleActivity.this);
+                    builder.setTitle("Remove " + user.getUsername() + " from favorites?");
+
+                    builder.setMessage("If your account is private, " +  user.getUsername()  + " will not be able to see your pictures anymore.");
+
+                    builder.setCancelable(false);
+
+                    builder.setPositiveButton("REMOVE", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            deleteFromFavorites();
+                            Toast.makeText(getApplicationContext(), user.getUsername() + " removed from your favorites", Toast.LENGTH_LONG).show();
+                            item.setTitle("Add to favorites");
+                            item.setIcon(R.drawable.ic_star_border_black_24dp);
+
+                        }
+                    });
+
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+
+
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+
+
+
                 }
                 return true;
             case R.id.albumsHomePeople:
@@ -210,7 +240,7 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
 
         noPicturesText = findViewById(R.id.textHomePeopleNoPics);
 
-        mStatusDB = FirebaseDatabase.getInstance().getReference().child(user.getUserId());
+        mStatusDB = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUserId()).child("Pictures");
 
         isInFavorites = false;
         mAuth = FirebaseAuth.getInstance();
@@ -329,7 +359,7 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
 
 
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference usersdRef = rootRef.child(user.getUserId());
+        DatabaseReference usersdRef = rootRef.child("Users").child(user.getUserId()).child("Pictures");
 
         ValueEventListener eventListener = new ValueEventListener() {
 
