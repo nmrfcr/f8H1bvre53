@@ -3,6 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
+    <item
+        android:title=""
+        android:id="@+id/likesPicturePeopleMenu"
+        app:showAsAction="always"
+        />
+
+
+    <item
+        android:icon="@drawable/ic_heart"
+        android:title="Like"
+        android:id="@+id/likePicturePeopleMenu"
+        app:showAsAction="always"
+        />
+
 
     <item
         android:title="Go To Album"

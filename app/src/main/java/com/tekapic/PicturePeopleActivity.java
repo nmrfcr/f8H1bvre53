@@ -6,14 +6,25 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.tekapic.model.Picture;
 import java.util.ArrayList;
 
@@ -23,6 +34,11 @@ public class PicturePeopleActivity extends AppCompatActivity {
     private HackyViewPager mViewPager;
     private android.support.v7.app.ActionBar actionBar;
     private String album;
+    private DatabaseReference databaseReferenceLikes, databaseReferenceLikedPictures;
+    private boolean liked = false;
+    private MenuItem item, itemLikes;
+    private long numberOfLikes;
+    private FirebaseAuth mAuth;
 
 
 
@@ -180,6 +196,26 @@ public class PicturePeopleActivity extends AppCompatActivity {
                 goBack();
                 return true;
 
+            case R.id.likePicturePeopleMenu:
+                if(liked) {
+                    liked = false;
+                    item.setIcon(R.drawable.ic_heart);
+                    databaseReferenceLikes.child(mAuth.getUid()).removeValue();
+
+                    databaseReferenceLikedPictures.child(picture.getPictureId()).removeValue();
+
+                }
+
+                else {
+                    liked = true;
+                    item.setIcon(R.drawable.ic_like);
+                    databaseReferenceLikes.child(mAuth.getUid()).child("userId").setValue(mAuth.getUid());
+
+                    databaseReferenceLikedPictures.child(picture.getPictureId()).child("pictureId").setValue(picture.getPictureId());
+                }
+                checkNumberOfLikes();
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -203,7 +239,15 @@ public class PicturePeopleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_picture_people);
+
+        picture = picturesList.get(clickedItemIndex);
+
 
         actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(0x80000000));
@@ -212,6 +256,9 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
         mViewPager.setAdapter(new TouchImageAdapter(this,picturesList));
         mViewPager.setCurrentItem(clickedItemIndex);
+
+        hideSystemUI();
+        showSystemUI();
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -228,6 +275,12 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
                 clickedItemIndex = position;
 
+                databaseReferenceLikes = FirebaseDatabase.getInstance().getReference().child("Users")
+                        .child(HomePeopleActivity.user.getUserId()).child("Pictures").child(picture.getPictureId()).child("Likes");
+
+                checkIfILikePicture();
+                checkNumberOfLikes();
+
             }
 
             @Override
@@ -236,11 +289,107 @@ public class PicturePeopleActivity extends AppCompatActivity {
             }
         });
 
-        hideSystemUI();
-        showSystemUI();
+        mAuth = FirebaseAuth.getInstance();
 
-        picture = picturesList.get(clickedItemIndex);
+        databaseReferenceLikes = FirebaseDatabase.getInstance().getReference().child("Users")
+                .child(HomePeopleActivity.user.getUserId()).child("Pictures").child(picture.getPictureId()).child("Likes");
 
+        databaseReferenceLikedPictures = FirebaseDatabase.getInstance().getReference().child("Users")
+                .child(mAuth.getUid()).child("LikedPictures").child(HomePeopleActivity.user.getUserId());
+
+
+
+
+
+
+//        databaseReferenceLikedPictures.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if(dataSnapshot.exists()) {
+//
+//                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+//
+//                        String pictureId = ds.child("pictureId").getValue(String.class);
+//
+//                        Toast.makeText(PicturePeopleActivity.this, pictureId, Toast.LENGTH_LONG).show();
+//                    }
+//
+//                }
+//                else {
+//
+//                    Toast.makeText(PicturePeopleActivity.this, "no data", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        item = menu.findItem(R.id.likePicturePeopleMenu);
+        itemLikes = menu.findItem(R.id.likesPicturePeopleMenu);
+
+
+        checkIfILikePicture();
+        checkNumberOfLikes();
+
+
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void checkIfILikePicture() {
+
+        databaseReferenceLikes.child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    item.setIcon(R.drawable.ic_like);
+                    liked = true;
+                }
+                else {
+                    item.setIcon(R.drawable.ic_heart);
+                    liked = false;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void checkNumberOfLikes() {
+        databaseReferenceLikes.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                numberOfLikes = dataSnapshot.getChildrenCount();
+
+                if(numberOfLikes == 0) {
+                    itemLikes.setTitle("");
+                }
+                else {
+                    itemLikes.setTitle(Long.toString(numberOfLikes));
+                }
+
+//                actionBar.setSubtitle("Likes: " + numberOfLikes);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 

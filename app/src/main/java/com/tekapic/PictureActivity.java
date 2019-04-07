@@ -18,12 +18,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.tekapic.model.Picture;
@@ -39,6 +44,12 @@ public class PictureActivity extends AppCompatActivity {
     private ProgressDialog mDialog;
     private android.support.v7.app.ActionBar actionBar;
     private String album;
+    private boolean liked = false;
+    private DatabaseReference databaseReferenceLikes, databaseReferenceLikedPictures;
+    private MenuItem item, itemLikes;
+    private long numberOfLikes;
+
+
 
 
     public static Picture picture;
@@ -262,6 +273,8 @@ public class PictureActivity extends AppCompatActivity {
         }
         switch (item.getItemId()) {
 
+
+
             case R.id.goToAlbumMenu:
                 goToAlbum();
                 return true;
@@ -280,9 +293,76 @@ public class PictureActivity extends AppCompatActivity {
                 goBack();
                 return true;
 
+            case R.id.likePictureMenu:
+                if(liked) {
+                    liked = false;
+                    item.setIcon(R.drawable.ic_heart);
+                    databaseReferenceLikes.child(mAuth.getUid()).removeValue();
+
+                    databaseReferenceLikedPictures.child(picture.getPictureId()).removeValue();
+
+                }
+
+                else {
+                    liked = true;
+                    item.setIcon(R.drawable.ic_like);
+                    databaseReferenceLikes.child(mAuth.getUid()).child("userId").setValue(mAuth.getUid());
+
+                    databaseReferenceLikedPictures.child(picture.getPictureId()).child("pictureId").setValue(picture.getPictureId());
+
+                }
+                checkNumberOfLikes();
+                return true;
+
+
+
+
+
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void checkIfILikePicture() {
+
+        databaseReferenceLikes.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    item.setIcon(R.drawable.ic_like);
+                    liked = true;
+                }
+                else {
+                    item.setIcon(R.drawable.ic_heart);
+                    liked = false;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        item = menu.findItem(R.id.likePictureMenu);
+        itemLikes = menu.findItem(R.id.likesPictureMenu);
+
+
+        checkIfILikePicture();
+        checkNumberOfLikes();
+
+
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+
+
 
 
     private void updatePicturePosition(int index) {
@@ -304,10 +384,20 @@ public class PictureActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_picture);
+
+        picture = picturesList.get(clickedItemIndex);
+
 
         actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(0x80000000));
+
+
 
         Log.i("PictureActivity", "onCreate was called");
 
@@ -316,6 +406,10 @@ public class PictureActivity extends AppCompatActivity {
 
         mViewPager.setAdapter(new TouchImageAdapter(this,picturesList));
         mViewPager.setCurrentItem(clickedItemIndex);
+
+
+        hideSystemUI();
+        showSystemUI();
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -333,6 +427,12 @@ public class PictureActivity extends AppCompatActivity {
 
                 clickedItemIndex = position;
 
+                databaseReferenceLikes = FirebaseDatabase.getInstance().getReference().child("Users")
+                        .child(mAuth.getUid()).child("Pictures").child(picture.getPictureId()).child("Likes");
+
+                checkIfILikePicture();
+                checkNumberOfLikes();
+
             }
 
             @Override
@@ -349,12 +449,36 @@ public class PictureActivity extends AppCompatActivity {
         mStatusDB = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).child("Pictures");
         storageReference =  FirebaseStorage.getInstance().getReference().getStorage();
 
-        hideSystemUI();
-        showSystemUI();
+        databaseReferenceLikes = FirebaseDatabase.getInstance().getReference().child("Users")
+                .child(mAuth.getUid()).child("Pictures").child(picture.getPictureId()).child("Likes");
 
-        picture = picturesList.get(clickedItemIndex);
+        databaseReferenceLikedPictures = FirebaseDatabase.getInstance().getReference().child("Users")
+                .child(mAuth.getUid()).child("LikedPictures").child(mAuth.getUid());
 
+    }
 
+    private void checkNumberOfLikes() {
+        databaseReferenceLikes.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                numberOfLikes = dataSnapshot.getChildrenCount();
+
+                if(numberOfLikes == 0) {
+                    itemLikes.setTitle("");
+                }
+                else {
+                    itemLikes.setTitle(Long.toString(numberOfLikes));
+                }
+
+//                actionBar.setSubtitle("Likes: " + numberOfLikes);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -381,6 +505,8 @@ public class PictureActivity extends AppCompatActivity {
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
+
     }
 
 

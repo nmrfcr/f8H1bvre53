@@ -2,9 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item
+        android:title=""
+        android:id="@+id/likesPictureMenu"
+        app:showAsAction="always"
+        />
 
 
-
+    <item
+        android:icon="@drawable/ic_heart"
+        android:title="Like"
+        android:id="@+id/likePictureMenu"
+        app:showAsAction="always"
+        />
 
 
 
@@ -32,6 +42,10 @@
         android:id="@+id/deletePictureMenu"
         app:showAsAction="never"
         />
+
+
+
+
 
 
 
