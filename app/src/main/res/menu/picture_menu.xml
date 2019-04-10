@@ -26,8 +26,8 @@
 
 
     <item
-        android:title="Go To Album"
-        android:id="@+id/goToAlbumMenu"
+        android:title="Show Albums"
+        android:id="@+id/showAlbumsMenu"
         app:showAsAction="never"
         />
 

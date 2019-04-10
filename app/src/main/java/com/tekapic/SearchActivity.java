@@ -163,7 +163,7 @@ public class SearchActivity extends AppCompatActivity {
                             startActivity(new Intent(SearchActivity.this, HomeActivity.class));
                             return;
                         }
-                        HomePeopleActivity.flag = true;
+                        HomePeopleActivity.flag = 0;
                         HomePeopleActivity.user = model;
                         HomePeopleActivity.firstVisibleItemPosition = 0;
                         startActivity(new Intent(SearchActivity.this, HomePeopleActivity.class));

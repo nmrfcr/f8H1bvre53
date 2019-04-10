@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,17 +26,14 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.tekapic.model.User;
 
-
-public class FavoritesActivity extends AppCompatActivity {
+public class LikesActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private DatabaseReference mDatabaseReference;
-    private DatabaseReference favoritesDatabaseReference;
+    private DatabaseReference databaseReferenceLikes;
 
-    private TextView indicatorText;
     private FirebaseAuth mAuth;
     private android.support.v7.app.ActionBar actionBar;
-
 
 
     private boolean isNetworkConnected() {
@@ -60,46 +58,39 @@ public class FavoritesActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favorites);
+        setContentView(R.layout.activity_likes);
+
 
         actionBar = getSupportActionBar();
-
-        indicatorText = findViewById(R.id.favorites_indicator_text);
 
         mAuth = FirebaseAuth.getInstance();
 
         mDatabaseReference =  FirebaseDatabase.getInstance().getReference().child("Users");
 
-        favoritesDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).child("Favorites");
+        databaseReferenceLikes = FirebaseDatabase.getInstance().getReference().child("Users")
+                .child(mAuth.getUid()).child("Pictures").child(PictureActivity.picture.getPictureId()).child("Likes");
 
-
-        mRecyclerView = findViewById(R.id.favorites_list);
+        mRecyclerView = findViewById(R.id.likes_list);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        firebaseGetFavorites();
-
+        getLikesFromFirebase();
     }
 
-    private void firebaseGetFavorites() {
+    private void getLikesFromFirebase() {
 
-        Query query = favoritesDatabaseReference;
+        Query query = databaseReferenceLikes;
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists()) {
-                    indicatorText.setVisibility(View.VISIBLE);
-                    mRecyclerView.setVisibility(View.GONE);
-
+                //go back
                 }
                 else {
-                    indicatorText.setVisibility(View.GONE);
-                    mRecyclerView.setVisibility(View.VISIBLE);
                     actionBar.setSubtitle("(" + Long.toString(dataSnapshot.getChildrenCount()) +")");
                 }
             }
@@ -114,10 +105,10 @@ public class FavoritesActivity extends AppCompatActivity {
                 .setQuery(query, User.class)
                 .build();
 
-        FirebaseRecyclerAdapter<User, UserViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<User, UserViewHolder>
+        FirebaseRecyclerAdapter<User, LikesActivity.UserViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<User, LikesActivity.UserViewHolder>
                 (options) {
             @Override
-            protected void onBindViewHolder(@NonNull final UserViewHolder holder, int position, @NonNull final User model) {
+            protected void onBindViewHolder(@NonNull final LikesActivity.UserViewHolder holder, int position, @NonNull final User model) {
 
 
                 mDatabaseReference.child(model.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -132,10 +123,17 @@ public class FavoritesActivity extends AppCompatActivity {
 
                             @Override
                             public void onClick(View v) {
-                                HomePeopleActivity.flag = 1;
+
+                                if(mAuth.getUid().equals(user.getUserId())) {
+                                    finish();
+                                    startActivity(new Intent(LikesActivity.this, HomeActivity.class));
+                                    return;
+                                }
+
+                                HomePeopleActivity.flag = 2;
                                 HomePeopleActivity.user = user;
                                 HomePeopleActivity.firstVisibleItemPosition = 0;
-                                startActivity(new Intent(FavoritesActivity.this, HomePeopleActivity.class));
+                                startActivity(new Intent(LikesActivity.this, HomePeopleActivity.class));
                             }
                         });
                     }
@@ -149,12 +147,12 @@ public class FavoritesActivity extends AppCompatActivity {
 
             @NonNull
             @Override
-            public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public LikesActivity.UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.result_list_layout, parent, false);
 
-                return new UserViewHolder(view);
+                return new LikesActivity.UserViewHolder(view);
             }
 
         };
@@ -196,11 +194,10 @@ public class FavoritesActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        finish();
-        Intent intent = new Intent(FavoritesActivity.this, HomeActivity.class);
-        startActivity(intent);
-    }
+//    @Override
+//    public void onBackPressed() {
+//        finish();
+//        startActivity(new Intent(LikesActivity.this, HomeActivity.class));
+//    }
 
 }

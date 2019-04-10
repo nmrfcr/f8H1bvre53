@@ -214,6 +214,8 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
         finish();
     }
 
+
+
     @Override
     protected void onPause() {
         super.onPause();

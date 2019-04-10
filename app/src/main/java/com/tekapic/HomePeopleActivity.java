@@ -57,7 +57,7 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
     private boolean isPrivate = true;
 
 
-    public static boolean flag;
+    public static int flag;
     public static User user;
     public static int firstVisibleItemPosition = 0;
 
@@ -494,13 +494,17 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
 
     private void goBack() {
         finish();
-        if(flag) {
-            Intent intent = new Intent(HomePeopleActivity.this, SearchActivity.class);
-            startActivity(intent);
-        }
-        else {
-            Intent intent = new Intent(HomePeopleActivity.this, FavoritesActivity.class);
-            startActivity(intent);
+
+        switch (flag) {
+            case 0:
+                startActivity(new Intent(HomePeopleActivity.this, SearchActivity.class));
+                break;
+            case 1:
+                startActivity(new Intent(HomePeopleActivity.this, FavoritesActivity.class));
+                break;
+            case 2:
+                startActivity(new Intent(HomePeopleActivity.this, LikesActivity.class));
+                break;
         }
     }
 

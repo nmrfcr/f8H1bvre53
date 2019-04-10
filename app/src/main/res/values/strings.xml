@@ -17,7 +17,8 @@
      only people you have added to your favorites can see your pictures.</string>
     <string name="privacy_public_description">Anyone will be able to see your pictures.</string>
     <string name="edit_profile">Edit Profile</string>
-
+    <string name="title_activity_likes">LikesActivity</string>
+    <string name="likes">Likes</string>
 
 
 

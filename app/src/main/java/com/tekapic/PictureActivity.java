@@ -131,136 +131,92 @@ public class PictureActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void   goToAlbum()  {
-
-        album = "";
+    private void   showAlbums()  {
 
 
-        int size = 0;
         ArrayList<String> albumsList = new ArrayList<String>();
 
-
-
         if(picture.getMe().equals("1")) {
-           ++size;
-           albumsList.add(Picture.albumsNamesUpperCase[0]);
+            albumsList.add(Picture.albumsNamesUpperCase[0]);
         }
         if(picture.getFamily().equals("1")) {
-            ++size;
             albumsList.add(Picture.albumsNamesUpperCase[1]);
         }
         if(picture.getFriends().equals("1")) {
-            ++size;
             albumsList.add(Picture.albumsNamesUpperCase[2]);
         }
         if(picture.getLove().equals("1")) {
-            ++size;
             albumsList.add(Picture.albumsNamesUpperCase[3]);
         }
         if(picture.getPets().equals("1")) {
-            ++size;
             albumsList.add(Picture.albumsNamesUpperCase[4]);
         }
         if(picture.getNature().equals("1")) {
-            ++size;
             albumsList.add(Picture.albumsNamesUpperCase[5]);
         }
         if(picture.getSport().equals("1")) {
-            ++size;
             albumsList.add(Picture.albumsNamesUpperCase[6]);
         }
         if(picture.getPersons().equals("1")) {
-            ++size;
             albumsList.add(Picture.albumsNamesUpperCase[7]);
         }
         if(picture.getAnimals().equals("1")) {
-            ++size;
             albumsList.add(Picture.albumsNamesUpperCase[8]);
         }
         if(picture.getVehicles().equals("1")) {
-            ++size;
             albumsList.add(Picture.albumsNamesUpperCase[9]);
         }
         if(picture.getViews().equals("1")) {
-            ++size;
             albumsList.add(Picture.albumsNamesUpperCase[10]);
         }
         if(picture.getFood().equals("1")) {
-            ++size;
             albumsList.add(Picture.albumsNamesUpperCase[11]);
         }
         if(picture.getThings().equals("1")) {
-            ++size;
             albumsList.add(Picture.albumsNamesUpperCase[12]);
         }
         if(picture.getFunny().equals("1")) {
-            ++size;
             albumsList.add(Picture.albumsNamesUpperCase[13]);
         }
         if(picture.getPlaces().equals("1")) {
-            ++size;
             albumsList.add(Picture.albumsNamesUpperCase[14]);
         }
         if(picture.getArt().equals("1")) {
-            ++size;
             albumsList.add(Picture.albumsNamesUpperCase[15]);
         }
 
+        String albums = "";
 
+        for(String album: albumsList) {
+            albums += album + ", ";
+        }
 
-
-        final String[] albums = new String[size];
-
-        for(int i = 0; i < size; i++) {
-            albums[i] = albumsList.get(i);
+        if(albums.endsWith(" "))
+        {
+            albums = albums.substring(0,albums.length() - 1);
         }
 
 
-
-        album = albums[0];
+        if(albums.endsWith(","))
+        {
+            albums = albums.substring(0,albums.length() - 1);
+        }
 
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-
-        builder1.setTitle("Select an album:");
-
-        builder1.setSingleChoiceItems(albums, 0, new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int item) {
-//                PicturesActivity.wantedAlbum = albums[item];
-                album = albums[item];
-
-            }
-        });
+        builder1.setTitle("Albums");
+        builder1.setMessage(albums);
 
         builder1.setPositiveButton(
-                "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                        if(isNetworkConnected() == false) {
-                            popUpAlertDialogConnectionError();
-                            return;
-                        }
-//                        Toast.makeText(PictureActivity.this, album, Toast.LENGTH_SHORT).show();
-//                        finish();
-                        album = album.substring(0, 1).toLowerCase() + album.substring(1);
-                        PicturesActivity.wantedAlbum = album;
-                        Intent intent = new Intent(PictureActivity.this, PicturesActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-        builder1.setNegativeButton(
-                "CANCEL",
+                "Close",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                     }
                 });
-
 
         AlertDialog alertDialog = builder1.create();
         alertDialog.show();
+
 
     }
 
@@ -275,8 +231,8 @@ public class PictureActivity extends AppCompatActivity {
 
 
 
-            case R.id.goToAlbumMenu:
-                goToAlbum();
+            case R.id.showAlbumsMenu:
+                showAlbums();
                 return true;
 
             case R.id.editPictureMenu:
@@ -312,6 +268,10 @@ public class PictureActivity extends AppCompatActivity {
 
                 }
                 checkNumberOfLikes();
+                return true;
+
+            case R.id.likesPictureMenu:
+                startActivity(new Intent(PictureActivity.this, LikesActivity.class));
                 return true;
 
 
@@ -465,8 +425,10 @@ public class PictureActivity extends AppCompatActivity {
 
                 if(numberOfLikes == 0) {
                     itemLikes.setTitle("");
+                    itemLikes.setEnabled(false);
                 }
                 else {
+                    itemLikes.setEnabled(true);
                     itemLikes.setTitle(Long.toString(numberOfLikes));
                 }
 

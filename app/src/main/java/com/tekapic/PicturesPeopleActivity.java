@@ -118,10 +118,10 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
 
     }
 
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(PicturesPeopleActivity.this, AlbumsPeopleActivity.class));
-    }
+//    @Override
+//    public void onBackPressed() {
+//        startActivity(new Intent(PicturesPeopleActivity.this, AlbumsPeopleActivity.class));
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
