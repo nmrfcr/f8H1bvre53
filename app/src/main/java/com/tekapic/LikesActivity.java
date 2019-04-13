@@ -10,10 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -28,12 +30,19 @@ import com.tekapic.model.User;
 
 public class LikesActivity extends AppCompatActivity {
 
+    private Query query;
+    private ValueEventListener valueEventListener;
+
     private RecyclerView mRecyclerView;
     private DatabaseReference mDatabaseReference;
     private DatabaseReference databaseReferenceLikes;
 
     private FirebaseAuth mAuth;
     private android.support.v7.app.ActionBar actionBar;
+
+    public static String userId, pictureId;
+    public static int flag;
+
 
 
     private boolean isNetworkConnected() {
@@ -71,7 +80,7 @@ public class LikesActivity extends AppCompatActivity {
         mDatabaseReference =  FirebaseDatabase.getInstance().getReference().child("Users");
 
         databaseReferenceLikes = FirebaseDatabase.getInstance().getReference().child("Users")
-                .child(mAuth.getUid()).child("Pictures").child(PictureActivity.picture.getPictureId()).child("Likes");
+                .child(userId).child("Pictures").child(pictureId).child("Likes");
 
         mRecyclerView = findViewById(R.id.likes_list);
         mRecyclerView.setHasFixedSize(true);
@@ -80,15 +89,28 @@ public class LikesActivity extends AppCompatActivity {
         getLikesFromFirebase();
     }
 
+    private void goBack() {
+        finish();
+
+        switch (flag) {
+            case 0:
+                startActivity(new Intent(LikesActivity.this, PictureActivity.class));
+                break;
+            case 1:
+                startActivity(new Intent(LikesActivity.this, PicturePeopleActivity.class));
+                break;
+        }
+    }
+
     private void getLikesFromFirebase() {
 
-        Query query = databaseReferenceLikes;
+        query = databaseReferenceLikes;
 
-        query.addValueEventListener(new ValueEventListener() {
+        valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists()) {
-                //go back
+                    goBack();
                 }
                 else {
                     actionBar.setSubtitle("(" + Long.toString(dataSnapshot.getChildrenCount()) +")");
@@ -99,7 +121,27 @@ public class LikesActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+        databaseReferenceLikes.addValueEventListener(valueEventListener);
+
+
+
+//        query.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if(!dataSnapshot.exists()) {
+//                goBack();
+//                }
+//                else {
+//                    actionBar.setSubtitle("(" + Long.toString(dataSnapshot.getChildrenCount()) +")");
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         final FirebaseRecyclerOptions<User> options = new FirebaseRecyclerOptions.Builder<User>()
                 .setQuery(query, User.class)
@@ -111,7 +153,7 @@ public class LikesActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull final LikesActivity.UserViewHolder holder, int position, @NonNull final User model) {
 
 
-                mDatabaseReference.child(model.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                mDatabaseReference.child(model.getUserId()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         final User user = new User();
@@ -134,6 +176,8 @@ public class LikesActivity extends AppCompatActivity {
                                 HomePeopleActivity.user = user;
                                 HomePeopleActivity.firstVisibleItemPosition = 0;
                                 startActivity(new Intent(LikesActivity.this, HomePeopleActivity.class));
+
+
                             }
                         });
                     }
@@ -144,6 +188,8 @@ public class LikesActivity extends AppCompatActivity {
                     }
                 });
             }
+
+
 
             @NonNull
             @Override
@@ -194,7 +240,15 @@ public class LikesActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
+    @Override
+    protected void onPause() {
+
+        databaseReferenceLikes.removeEventListener(valueEventListener);
+
+
+        super.onPause();
+    }
+    //    @Override
 //    public void onBackPressed() {
 //        finish();
 //        startActivity(new Intent(LikesActivity.this, HomeActivity.class));

@@ -271,6 +271,11 @@ public class PictureActivity extends AppCompatActivity {
                 return true;
 
             case R.id.likesPictureMenu:
+
+                LikesActivity.flag = 0;
+                LikesActivity.userId = mAuth.getUid();
+                LikesActivity.pictureId = picture.getPictureId();
+
                 startActivity(new Intent(PictureActivity.this, LikesActivity.class));
                 return true;
 
@@ -284,7 +289,7 @@ public class PictureActivity extends AppCompatActivity {
 
     private void checkIfILikePicture() {
 
-        databaseReferenceLikes.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReferenceLikes.child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -418,7 +423,7 @@ public class PictureActivity extends AppCompatActivity {
     }
 
     private void checkNumberOfLikes() {
-        databaseReferenceLikes.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReferenceLikes.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 numberOfLikes = dataSnapshot.getChildrenCount();

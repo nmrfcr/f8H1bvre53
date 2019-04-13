@@ -127,7 +127,7 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
                         AlertDialog.Builder builder = new AlertDialog.Builder(HomePeopleActivity.this);
                         builder.setTitle("Add " + user.getUsername() + " to favorites?");
 
-                        builder.setMessage("If your account is private, only users who in your favorites will be able to see your pictures.");
+                        builder.setMessage("If your account is private, " + user.getUsername() +  " will be able to see your pictures.");
 
                         builder.setCancelable(false);
 

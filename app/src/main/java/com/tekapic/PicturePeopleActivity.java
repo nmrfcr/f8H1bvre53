@@ -182,6 +182,16 @@ public class PicturePeopleActivity extends AppCompatActivity {
                 checkNumberOfLikes();
                 return true;
 
+
+            case R.id.likesPicturePeopleMenu:
+
+                LikesActivity.flag = 1;
+                LikesActivity.userId = HomePeopleActivity.user.getUserId();
+                LikesActivity.pictureId = picture.getPictureId();
+
+                startActivity(new Intent(PicturePeopleActivity.this, LikesActivity.class));
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
