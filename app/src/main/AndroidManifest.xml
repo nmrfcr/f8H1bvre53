@@ -11,6 +11,7 @@
 
     <application
 
+        android:launchMode="singleTop"
         android:name=".App"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
@@ -67,9 +68,7 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="image/*" />
             </intent-filter>
 

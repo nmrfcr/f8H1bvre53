@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -16,7 +17,10 @@ public class LauncherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
 
-
+        if (!isTaskRoot()) {
+            finish();
+            return;
+        }
 
         Handler mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
@@ -33,6 +37,8 @@ public class LauncherActivity extends AppCompatActivity {
                     Intent intent = getIntent();
                     if(intent != null) {
                         if (Intent.ACTION_SEND.equals(intent.getAction())) {
+
+
 
 
 
