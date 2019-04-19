@@ -54,7 +54,7 @@ public class PostActivity extends AppCompatActivity {
     private DatabaseReference mUsersDB;
     private Picture picture;
 
-    public  static Uri pictureUri;
+    private Uri pictureUri;
 
 
 
@@ -254,20 +254,10 @@ public class PostActivity extends AppCompatActivity {
 
 
 
-//        Intent intent = getIntent();
-//        if(intent != null) {
-//            if (Intent.ACTION_SEND.equals(intent.getAction())) {
-//
-//                Intent intent2 = new Intent(PostActivity.this, LauncherActivity.class);
-//                intent2.putExtra(EXTRA_MESSAGE, 1);
-//                startActivity(intent2);
-//                finish();
-//                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-//                    pictureUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-//                }
-//                return;
-//            }
-//        }
+        Intent intent = getIntent();
+        if(intent != null) {
+            pictureUri = intent.getParcelableExtra("imageUri");
+        }
 
 
         setContentView(R.layout.activity_post);

@@ -38,12 +38,11 @@ public class LauncherActivity extends AppCompatActivity {
                     if(intent != null) {
                         if (Intent.ACTION_SEND.equals(intent.getAction())) {
 
+                            Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
 
-
-
-
-                            PostActivity.pictureUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-                            startActivity(new Intent(LauncherActivity.this, PostActivity.class));
+                            Intent intent2 = new Intent(LauncherActivity.this, PostActivity.class);
+                            intent2.putExtra("imageUri", imageUri);
+                            startActivity(intent2);
                         }
                         else {
                             startActivity(new Intent(LauncherActivity.this, HomeActivity.class));

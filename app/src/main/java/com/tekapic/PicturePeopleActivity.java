@@ -19,6 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -136,6 +137,110 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
     }
 
+    private void showStatusReport(String message) {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setMessage(message);
+
+        builder1.setPositiveButton(
+                "Close",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
+    }
+
+    private void sendEmail(final String report){
+
+
+//        BackgroundMail backgroundMail = new BackgroundMail(this);
+//        backgroundMail.setGmailUserName("tatyanakon45@gmail.com");
+//        backgroundMail.setGmailPassword("Ey5NmHcS1z");
+//        backgroundMail.setMailTo("tekapic2018@gmail.com");
+//        backgroundMail.setType(BackgroundMail.TYPE_PLAIN);
+//        backgroundMail.setFormSubject("Report Abuse");
+//        backgroundMail.setFormBody(report);
+//        backgroundMail.send();
+
+
+
+        BackgroundMail.newBuilder(this)
+                .withUsername("tatyanakon45@gmail.com")
+                .withPassword("Ey5NmHcS1z")
+                .withMailto("tekapic2018@gmail.com")
+                .withType(BackgroundMail.TYPE_PLAIN)
+                .withSubject("Report Abuse")
+                .withBody(report)
+
+                .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
+                    @Override
+                    public void onSuccess() {
+                        showStatusReport("Your report has been submitted successfully.");
+                    }
+                })
+                .withOnFailCallback(new BackgroundMail.OnFailCallback() {
+                    @Override
+                    public void onFail() {
+                        showStatusReport("Unfortunately unable to submit your report at this time, please try again");
+                    }
+                })
+
+                .send();
+
+    }
+
+    private void reportAbuse() {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setTitle("Report Abuse");
+        builder1.setMessage("Are you sure you want to report this picture?");
+
+        builder1.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        String report;
+
+//                        String reason = "Abusive Content";
+
+                        String userIdOfReporter = mAuth.getUid();
+
+                        String userIdWhoGotReported = HomePeopleActivity.user.getUserId();
+                        String pictureIdWhichReported = picture.getPictureId();
+                        String picuteUrlWhichReported = picture.getPictureUrl();
+
+                        report = "Report Abuse" + "\n\n";
+
+                        report = report + "User Id of reporter: " + userIdOfReporter + "\n\n";
+
+                        report = report + "User Id who got reported: " + userIdWhoGotReported + "\n";
+                        report = report + "Picture Id which reported: " + pictureIdWhichReported + "\n";
+                        report = report + "Picute url which reported: " + picuteUrlWhichReported + "\n";
+
+                        Log.i("Report Abuse", report);
+
+                        sendEmail(report);
+
+                    }
+                });
+        builder1.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
+
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -155,7 +260,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
                 return true;
 
             case R.id.reportAbusePicturePeople:
-                Toast.makeText(this, "Report Abuse", Toast.LENGTH_SHORT).show();
+                reportAbuse();
                 return true;
 
             case android.R.id.home:

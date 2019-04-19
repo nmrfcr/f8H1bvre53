@@ -399,8 +399,9 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
             Uri contentUri = Uri.fromFile(f);
 
 
-            PostActivity.pictureUri = contentUri;
+//            PostActivity.pictureUri = contentUri;
             Intent intent = new Intent(this, PostActivity.class);
+            intent.putExtra("imageUri", contentUri);
             startActivity(intent);
 
 
@@ -419,8 +420,9 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
             //success choosing photo
             mPhotoUri = data.getData();
 
-            PostActivity.pictureUri = mPhotoUri;
+//            PostActivity.pictureUri = mPhotoUri;
             Intent intent = new Intent(this, PostActivity.class);
+            intent.putExtra("imageUri", mPhotoUri);
             startActivity(intent);
 
         }
