@@ -1,20 +1,20 @@
 package com.tekapic;
 
-/**
- * Created by LEV on 17/01/2019.
- */
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -22,46 +22,28 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.github.chrisbanes.photoview.PhotoView;
-import com.tekapic.model.Picture;
-import java.util.ArrayList;
 
-public class TouchImageAdapter extends PagerAdapter {
 
-    private Context context;
-    private ArrayList<Picture> picturesList = new ArrayList<>();
-    private boolean isSystemUIHidden;
-    private PhotoView img;
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class PictureFragment extends Fragment {
 
-    public TouchImageAdapter(Context context,ArrayList<Picture> picturesList){
-        this.picturesList = picturesList;
-        this.context = context;
-        isSystemUIHidden = false;
+    private PhotoView photoView;
+    private ImageView imageView;
+//    private boolean isSystemUIHidden = false;
+
+
+    public PictureFragment() {
+        // Required empty public constructor
     }
 
 
 
-    @Override
-    public int getCount() {
-        return picturesList.size();
-    }
-
-
-
-    @Override
-    public View instantiateItem(ViewGroup container, int position) {
-
-        Log.i("instantiateItem", "position: " + Integer.toString(position));
-
-        img = new PhotoView(container.getContext());
-        ViewGroup.LayoutParams lp= new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        img.setLayoutParams(lp);
-
-
-
-
+    private void setPicture(final String pictureUrl, final Context context) {
 
         Glide.with(context)
-                .load(picturesList.get(position).getPictureUrl()).apply(new RequestOptions().override(1000, 1000).placeholder(R.drawable.loading_picture))
+                .load(pictureUrl).apply(new RequestOptions().override(1000, 1000))
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -69,73 +51,73 @@ public class TouchImageAdapter extends PagerAdapter {
                         Log.i("onLoadFailed", "Failed to load picture");
                         Toast.makeText(context, "Failed to load picture.", Toast.LENGTH_LONG).show();
 
-//                        goBack();
+                        //1. go back?
+                        //2. delete that data?
 
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        img.setImageDrawable(resource);
 
+                        imageView.setVisibility(View.GONE);
+                        photoView.setVisibility(View.VISIBLE);
+                        photoView.setImageDrawable(resource);
 
                         return false;
                     }
                 })
-                .into(img);
+                .into(photoView);
+    }
 
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_picture, container, false);
 
-        container.addView(img, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        photoView = view.findViewById(R.id.photo_view);
+        imageView = view.findViewById(R.id.loading_picture);
 
-
-
-        img.setOnClickListener(new View.OnClickListener() {
+        photoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Log.i("System Ui Visibility", Integer.toString(getSystemUiVisibility() ));
 
                 if(getSystemUiVisibility() == 3328) {
-                    isSystemUIHidden = false;
+                    FragmentCollectionAdapter.isSystemUIHidden = false;
                 }
 
-                if(isSystemUIHidden == false) {
+                if(FragmentCollectionAdapter.isSystemUIHidden == false) {
                     hideSystemUI();
-                    isSystemUIHidden = true;
+                    FragmentCollectionAdapter.isSystemUIHidden = true;
                 }
                 else {
                     showSystemUI();
-                    isSystemUIHidden = false;
+                    FragmentCollectionAdapter.isSystemUIHidden = false;
                 }
             }
         });
 
-        return img;
+
+        String pictureUrl = getArguments().getString("pictureUrl");
+
+        Context context = getActivity();
+
+        setPicture(pictureUrl, context);
+
+        return  view;
     }
-
-
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((View) object);
-    }
-
-    @Override
-    public boolean isViewFromObject(View view, Object object) {
-        return view == object;
-    }
-
-
-
 
     private int getSystemUiVisibility() {
-        View decorView = ((Activity) context).getWindow().getDecorView();
+        View decorView = ((Activity) getActivity()).getWindow().getDecorView();
         return decorView.getSystemUiVisibility();
     }
 
     private void showSystemUI() {
-        View decorView = ((Activity) context).getWindow().getDecorView();
+        View decorView = ((Activity) getActivity()).getWindow().getDecorView();
 
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -147,7 +129,7 @@ public class TouchImageAdapter extends PagerAdapter {
         // Enables regular immersive mode.
         // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
         // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        View decorView = ((Activity) context).getWindow().getDecorView();
+        View decorView = ((Activity) getActivity()).getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE
                         // Set the content to appear under the system bars so that the

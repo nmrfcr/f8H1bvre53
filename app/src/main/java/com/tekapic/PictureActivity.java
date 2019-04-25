@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -21,6 +23,13 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,8 +57,7 @@ public class PictureActivity extends AppCompatActivity {
     private DatabaseReference databaseReferenceLikes, databaseReferenceLikedPictures;
     private MenuItem item, itemLikes;
     private long numberOfLikes;
-
-
+    private FragmentCollectionAdapter fragmentCollectionAdapter;
 
 
     public static Picture picture;
@@ -57,7 +65,8 @@ public class PictureActivity extends AppCompatActivity {
     public static int clickedItemIndex;
     public static ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
 
-    AlertDialog alertDialog1;
+
+
 
     private void deledePictureFromFirebase() {
 
@@ -367,9 +376,9 @@ public class PictureActivity extends AppCompatActivity {
         Log.i("PictureActivity", "onCreate was called");
 
         mViewPager = findViewById(R.id.view_pager);
+        fragmentCollectionAdapter = new FragmentCollectionAdapter(getSupportFragmentManager(), picturesList);
+        mViewPager.setAdapter(fragmentCollectionAdapter);
 
-
-        mViewPager.setAdapter(new TouchImageAdapter(this,picturesList));
         mViewPager.setCurrentItem(clickedItemIndex);
 
 

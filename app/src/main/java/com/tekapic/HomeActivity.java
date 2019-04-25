@@ -285,9 +285,11 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
             case R.id.searchMenu:
                 startActivity(new Intent(HomeActivity.this, SearchActivity.class));
                 return true;
-            case R.id.exploreMenu:
-                Toast.makeText(context, "Explore", Toast.LENGTH_SHORT).show();
-                return true;
+
+//            case R.id.exploreMenu:
+//                Toast.makeText(context, "Explore", Toast.LENGTH_SHORT).show();
+//                return true;
+
             case R.id.favoritesMenu:
                 startActivity(new Intent(HomeActivity.this, FavoritesActivity.class));
                 return true;

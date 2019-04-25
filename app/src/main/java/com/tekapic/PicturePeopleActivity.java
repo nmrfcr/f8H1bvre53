@@ -40,6 +40,8 @@ public class PicturePeopleActivity extends AppCompatActivity {
     private MenuItem item, itemLikes;
     private long numberOfLikes;
     private FirebaseAuth mAuth;
+    private FragmentCollectionAdapter fragmentCollectionAdapter;
+
 
 
 
@@ -334,8 +336,9 @@ public class PicturePeopleActivity extends AppCompatActivity {
         actionBar.setBackgroundDrawable(new ColorDrawable(0x80000000));
 
         mViewPager = findViewById(R.id.view_pager_people);
+        fragmentCollectionAdapter = new FragmentCollectionAdapter(getSupportFragmentManager(), picturesList);
+        mViewPager.setAdapter(fragmentCollectionAdapter);
 
-        mViewPager.setAdapter(new TouchImageAdapter(this,picturesList));
         mViewPager.setCurrentItem(clickedItemIndex);
 
         hideSystemUI();
