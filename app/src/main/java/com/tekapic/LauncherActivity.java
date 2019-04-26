@@ -17,10 +17,10 @@ public class LauncherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
 
-        if (!isTaskRoot()) {
-            finish();
-            return;
-        }
+//        if (!isTaskRoot()) {
+//            finish();
+//            return;
+//        }
 
         Handler mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
@@ -34,22 +34,7 @@ public class LauncherActivity extends AppCompatActivity {
                     startActivity(new Intent(LauncherActivity.this, MainActivity.class));
                 }
                 else {
-                    Intent intent = getIntent();
-                    if(intent != null) {
-                        if (Intent.ACTION_SEND.equals(intent.getAction())) {
-
-                            Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-
-                            Intent intent2 = new Intent(LauncherActivity.this, PostActivity.class);
-                            intent2.putExtra("imageUri", imageUri);
-                            startActivity(intent2);
-                        }
-                        else {
-                            startActivity(new Intent(LauncherActivity.this, HomeActivity.class));
-
-                        }
-                    }
-
+                    startActivity(new Intent(LauncherActivity.this, HomeActivity.class));
                 }
 
             }

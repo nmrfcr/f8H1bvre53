@@ -32,7 +32,7 @@
 
 
     <item
-        android:title="Report Abuse"
+        android:title="Report Picture"
         android:id="@+id/reportAbusePicturePeople"
         app:showAsAction="never"
         />

@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
@@ -41,7 +42,10 @@ public class PicturePeopleActivity extends AppCompatActivity {
     private long numberOfLikes;
     private FirebaseAuth mAuth;
     private FragmentCollectionAdapter fragmentCollectionAdapter;
-
+    private String reportReason = "";
+    private Button button;
+    private boolean flag;
+    private AlertDialog alertDialog;
 
 
 
@@ -197,7 +201,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
     private void reportAbuse() {
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setTitle("Report Abuse");
+        builder1.setTitle("Report Picture");
         builder1.setMessage("Are you sure you want to report this picture?");
 
         builder1.setPositiveButton(
@@ -216,6 +220,8 @@ public class PicturePeopleActivity extends AppCompatActivity {
                         String picuteUrlWhichReported = picture.getPictureUrl();
 
                         report = "Report Abuse" + "\n\n";
+
+                        report = report + "Report reason: " + reportReason + "\n\n";
 
                         report = report + "User Id of reporter: " + userIdOfReporter + "\n\n";
 
@@ -243,6 +249,92 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
     }
 
+    private void setPictureReportReason() {
+
+        reportReason = "";
+
+        final String[] reasons =
+                {"Sexual content", "Violent or repulsive content", "Hateful or abusive content",
+                "Harmful or dangerous acts", "Spam or misleading"};
+
+        final AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+
+        builder1.setTitle("Report Picture");
+
+        builder1.setSingleChoiceItems(reasons, -1, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int item) {
+
+                ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+
+                switch (item) {
+                    case 0:
+                        reportReason = reasons[0];
+                        break;
+                    case 1:
+                        reportReason = reasons[1];
+                        break;
+                    case 2:
+                        reportReason = reasons[2];
+                        break;
+                    case 3:
+                        reportReason = reasons[3];
+                        break;
+                    case 4:
+                        reportReason = reasons[4];
+                        break;
+                }
+
+
+            }
+        });
+
+        builder1.setPositiveButton(
+                "REPORT",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        if(isNetworkConnected() == false) {
+                            popUpAlertDialogConnectionError();
+                            return;
+                        }
+
+                        reportAbuse();
+
+                    }
+                });
+
+        builder1.setNegativeButton(
+                "CANCEL",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+
+
+        alertDialog = builder1.create();
+
+        alertDialog.show();
+
+        // Initially disable the button
+        ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+
+//        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+//            @Override
+//            public void onShow(DialogInterface dialog) {
+//
+//                     button = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+//                    if (button != null) {
+//                        button.setEnabled(false);
+//                    }
+//
+//            }
+//        });
+
+
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -262,7 +354,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
                 return true;
 
             case R.id.reportAbusePicturePeople:
-                reportAbuse();
+               setPictureReportReason();
                 return true;
 
             case android.R.id.home:

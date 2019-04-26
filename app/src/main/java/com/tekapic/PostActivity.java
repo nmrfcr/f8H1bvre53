@@ -252,15 +252,28 @@ public class PostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         Intent intent = getIntent();
+
         if(intent != null) {
-            pictureUri = intent.getParcelableExtra("imageUri");
+            if (Intent.ACTION_SEND.equals(intent.getAction())) {
+
+                if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                    startActivity(new Intent(PostActivity.this, MainActivity.class));
+                    finish();
+                    return;
+                }
+                else {
+                    pictureUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                }
+            }
+            else {
+                pictureUri = intent.getParcelableExtra("imageUri");
+            }
         }
 
-
         setContentView(R.layout.activity_post);
+
+
 
         setTitle(R.string.add_new_picture);
 

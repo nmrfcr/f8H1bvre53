@@ -36,6 +36,7 @@
             android:label="@string/login"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".PostActivity"
             android:grantUriPermissions="true"
@@ -43,7 +44,15 @@
             android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/EditPictureTheme">
-        </activity>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+
+        </activity
+            >
         <activity
             android:name=".AlbumsActivity"
             android:label="@string/albums"
@@ -66,11 +75,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="image/*" />
-            </intent-filter>
+
 
 
         </activity>
