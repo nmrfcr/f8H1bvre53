@@ -529,6 +529,8 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
         ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPosition(firstVisibleItemPosition);
         firstVisibleItemPosition = 0;
 
+        checkWarning();
+
 
     }
 
@@ -723,5 +725,55 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
         firstVisibleItemPosition = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
 
+    }
+
+    private void checkWarning() {
+
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).
+                child("warnForViolatingTermsOfUse");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean isHasWarning = dataSnapshot.getValue(Boolean.class);
+
+                if(isHasWarning) {
+                    warnByAlertDialog();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    private void warnByAlertDialog() {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setTitle("Warning!");
+        builder1.setMessage("We removed your picture because it was against our terms of use, " +
+                "if you violate our terms of use again, your account may be deleted.");
+
+        builder1.setCancelable(false);
+
+        builder1.setPositiveButton(
+                "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).
+                                child("warnForViolatingTermsOfUse");
+
+                         databaseReference.setValue(false);
+
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
     }
 }

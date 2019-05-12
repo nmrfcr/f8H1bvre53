@@ -38,6 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ProgressDialog mDialog;
     private boolean userRegisteredSuccessfully;
     private DatabaseReference mUsersDB;
+    private String buttonName = "Ok";
 
 
 
@@ -143,15 +144,15 @@ public class RegisterActivity extends AppCompatActivity {
         }
         else {
 
-            if(Character.isDigit(username.charAt(0))) {
-                showAlertDialog("Error", "Username cannot start with a digit.");
-                return;
-
-            }
-            else {
-                //good username
-
-            }
+//            if(Character.isDigit(username.charAt(0))) {
+//                showAlertDialog("Error", "Username cannot start with a digit.");
+//                return;
+//
+//            }
+//            else {
+//                //good username
+//
+//            }
 
         }
 
@@ -235,8 +236,12 @@ public class RegisterActivity extends AppCompatActivity {
         builder.setMessage(message);
         builder.setCancelable(!userRegisteredSuccessfully);
 
+        if(title.isEmpty()) {
+            buttonName = "Log In";
+        }
 
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+        builder.setPositiveButton(buttonName, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -283,10 +288,10 @@ public class RegisterActivity extends AppCompatActivity {
                                    userRegisteredSuccessfully = true;
                                    String username = mUsernameEditText.getText().toString().trim();
 
-                                   com.tekapic.model.User newUser = new com.tekapic.model.User(currentUser.getEmail(), username, currentUser.getUid(), "public");
+                                   com.tekapic.model.User newUser = new com.tekapic.model.User(currentUser.getEmail(), username, currentUser.getUid(), "public", 0, false);
                                    mUsersDB.child(currentUser.getUid()).setValue(newUser);
 
-                                   showAlertDialog("Affirmation!", "You have successfully registered.");
+                                   showAlertDialog("", "You have registered successfully.");
 
                                }
                            });

@@ -9,19 +9,26 @@ public class User {
     private String username;
     private String userId;
     private String accountPrivacy;
+    private int numberOfViolatingTermsOfUse;
+    private boolean warnForViolatingTermsOfUse;
 
     public User() {
         this.email = "none";
         this.username = "none";
         this.userId = "none";
         this.accountPrivacy = "none";
+        this.numberOfViolatingTermsOfUse = -1;
+        this.warnForViolatingTermsOfUse = false;
     }
 
-    public User(String email, String username, String userId, String accountPrivacy) {
+    public User(String email, String username, String userId, String accountPrivacy, int numberOfViolatingTermsOfUse,
+                boolean warnForViolatingTermsOfUse) {
         this.email = email;
         this.username = username;
         this.userId = userId;
         this.accountPrivacy = accountPrivacy;
+        this.numberOfViolatingTermsOfUse = numberOfViolatingTermsOfUse;
+        this.warnForViolatingTermsOfUse = warnForViolatingTermsOfUse;
     }
 
     public String getEmail() {
@@ -54,5 +61,21 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public int getNumberOfViolatingTermsOfUse() {
+        return numberOfViolatingTermsOfUse;
+    }
+
+    public void setNumberOfViolatingTermsOfUse(int numberOfViolatingTermsOfUse) {
+        this.numberOfViolatingTermsOfUse = numberOfViolatingTermsOfUse;
+    }
+
+    public boolean isWarnForViolatingTermsOfUse() {
+        return warnForViolatingTermsOfUse;
+    }
+
+    public void setWarnForViolatingTermsOfUse(boolean warnForViolatingTermsOfUse) {
+        this.warnForViolatingTermsOfUse = warnForViolatingTermsOfUse;
     }
 }

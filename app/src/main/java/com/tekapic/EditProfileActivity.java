@@ -65,6 +65,9 @@ public class EditProfileActivity extends AppCompatActivity {
                 final String username, password;
 
                 username = usernameEditText.getText().toString();
+
+                Log.i("username", username);
+
                 final String usernameLowerCase = username.toLowerCase();
                 password = passwordEditText.getText().toString();
 
@@ -100,10 +103,12 @@ public class EditProfileActivity extends AppCompatActivity {
                         showAlertDialog("Error", "Username cannot contain only numbers.");
                         return;
                     }
-                    if(Character.isDigit(usernameLowerCase.charAt(0))) {
-                        showAlertDialog("Error", "Username cannot start with a digit.");
-                        return;
-                    }
+
+//                    if(Character.isDigit(usernameLowerCase.charAt(0))) {
+//                        showAlertDialog("Error", "Username cannot start with a digit.");
+//                        return;
+//                    }
+
                 }
                 else {
                     showAlertDialog("Error", "Username can contain letters or letters with numbers.");

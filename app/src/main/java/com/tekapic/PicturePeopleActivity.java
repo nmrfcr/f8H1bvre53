@@ -219,15 +219,19 @@ public class PicturePeopleActivity extends AppCompatActivity {
                         String pictureIdWhichReported = picture.getPictureId();
                         String picuteUrlWhichReported = picture.getPictureUrl();
 
-                        report = "Report Abuse" + "\n\n";
 
-                        report = report + "Report reason: " + reportReason + "\n\n";
+                        report = "Report reason: " + reportReason + "\n\n";
 
-                        report = report + "User Id of reporter: " + userIdOfReporter + "\n\n";
 
-                        report = report + "User Id who got reported: " + userIdWhoGotReported + "\n";
-                        report = report + "Picture Id which reported: " + pictureIdWhichReported + "\n";
-                        report = report + "Picute url which reported: " + picuteUrlWhichReported + "\n";
+                        report = report + "Picute url which reported:\n"  + picuteUrlWhichReported + "\n";
+
+                        report = report + "User Id who got reported:\n" + userIdWhoGotReported + "\n\n";
+
+                        report = report + "Picture Id which reported:\n" + pictureIdWhichReported + "\n\n";
+
+
+                        report = report + "User Id of reporter:\n" + userIdOfReporter;
+
 
                         Log.i("Report Abuse", report);
 
