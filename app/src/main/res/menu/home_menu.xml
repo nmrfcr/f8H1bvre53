@@ -5,12 +5,12 @@
 
 
 
-    <!--<item-->
-        <!--android:icon="@drawable/ic_explore_black_24dp"-->
-        <!--android:title="Explore"-->
-        <!--android:id="@+id/exploreMenu"-->
-        <!--app:showAsAction="always"-->
-        <!--/>-->
+    <item
+        android:icon="@drawable/ic_explore_black_24dp"
+        android:title="Explore"
+        android:id="@+id/exploreMenu"
+        app:showAsAction="always"
+        />
 
 
     <item
@@ -30,7 +30,7 @@
 
 
     <item
-        android:icon="@drawable/ic_photo_album_black_24dp"
+
         android:title="Albums"
         android:id="@+id/albums"
         app:showAsAction="always"/>

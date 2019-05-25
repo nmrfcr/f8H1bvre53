@@ -99,6 +99,9 @@ public class LikesActivity extends AppCompatActivity {
             case 1:
                 startActivity(new Intent(LikesActivity.this, PicturePeopleActivity.class));
                 break;
+            case 2:
+                startActivity(new Intent(LikesActivity.this, PictureExploreActivity.class));
+                break;
         }
     }
 

@@ -49,19 +49,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
-            android:background="@drawable/roundedbutton"
+            android:background="@drawable/roundedbuttonsingup"
             android:onClick="register"
             android:text="@string/sign_up"
+            android:textColor="@color/white"
             tools:ignore="OnClick" />
 
+
+
         <Button
+            android:textColor="@color/colorButtons"
             android:id="@+id/loginButtonMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:background="@drawable/roundedbutton"
+            android:background="@drawable/roundedbuttonlogin"
             android:onClick="login"
             android:text="@string/login" />
+
+
 
 
 

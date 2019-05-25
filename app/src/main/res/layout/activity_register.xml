@@ -9,13 +9,6 @@
     android:layoutDirection="ltr"
     tools:context="com.tekapic.RegisterActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Create New Account"
-        android:textAlignment="center"
-        android:textStyle="bold" />
 
 
     <EditText
@@ -45,6 +38,7 @@
         android:inputType="textPassword" />
 
     <Button
+        android:textColor="@android:color/white"
         android:id="@+id/registerButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

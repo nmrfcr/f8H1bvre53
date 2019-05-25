@@ -13,4 +13,7 @@
     <color name="colorTintt">#6F000000</color>
     <color name="noColor">#00000000</color>
 
+    <color name="colorGreyDefault">#757575</color>
+
+
 </resources>

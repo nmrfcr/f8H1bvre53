@@ -1,6 +1,7 @@
 package com.tekapic;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -18,6 +19,9 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.internal.BottomNavigationMenuView;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -57,6 +61,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -140,7 +145,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
         builder1.setTitle("Albums");
-        builder1.setMessage("Please add pictures first.");
+        builder1.setMessage("Add picture first.");
 
         builder1.setPositiveButton(
                 "OK",
@@ -271,6 +276,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                 popUpAlertDialog();
                 //allert dialog
                 return true;
+
             case R.id.albums:
                 if(isUserhasPics) {
                     startActivity(new Intent(HomeActivity.this, AlbumsActivity.class));
@@ -279,6 +285,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                     albumsIconclicked();
                 }
                 return true;
+
             case R.id.editProfileMenu:
                 startActivity(new Intent(HomeActivity.this, EditProfileActivity.class));
                 return true;
@@ -286,9 +293,9 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                 startActivity(new Intent(HomeActivity.this, SearchActivity.class));
                 return true;
 
-//            case R.id.exploreMenu:
-//                Toast.makeText(context, "Explore", Toast.LENGTH_SHORT).show();
-//                return true;
+            case R.id.exploreMenu:
+                startActivity(new Intent(HomeActivity.this, ExploreActivity.class));
+                return true;
 
             case R.id.favoritesMenu:
                 startActivity(new Intent(HomeActivity.this, FavoritesActivity.class));
@@ -492,6 +499,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
 
         actionBar = getSupportActionBar();
 
@@ -776,4 +784,6 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
         AlertDialog alertDialog = builder1.create();
         alertDialog.show();
     }
+
+
 }

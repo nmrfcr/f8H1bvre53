@@ -10,6 +10,7 @@
 
 
     <Button
+        android:textColor="@android:color/white"
         android:id="@+id/changeUsernameEditProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,6 +20,7 @@
         android:text="Change Username" />
 
     <Button
+        android:textColor="@android:color/white"
         android:id="@+id/changeEmailEditProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,6 +30,7 @@
         android:text="Change Email" />
 
     <Button
+        android:textColor="@android:color/white"
         android:id="@+id/changePasswordEditProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

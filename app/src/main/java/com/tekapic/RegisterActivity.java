@@ -4,7 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -246,9 +248,9 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 if(userRegisteredSuccessfully) {
-                    mAuth.signOut();
                     finish();
-                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                    startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+
                 }
             }
         });
@@ -286,12 +288,21 @@ public class RegisterActivity extends AppCompatActivity {
                                @Override
                                public void onSuccess(Void aVoid) {
                                    userRegisteredSuccessfully = true;
+
                                    String username = mUsernameEditText.getText().toString().trim();
 
                                    com.tekapic.model.User newUser = new com.tekapic.model.User(currentUser.getEmail(), username, currentUser.getUid(), "public", 0, false);
                                    mUsersDB.child(currentUser.getUid()).setValue(newUser);
 
+                                   SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                   SharedPreferences.Editor editor = preferences.edit();
+                                   editor.putString("email", currentUser.getEmail());
+                                   editor.apply();
+
                                    showAlertDialog("", "You have registered successfully.");
+
+
+
 
                                }
                            });

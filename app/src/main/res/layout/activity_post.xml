@@ -18,7 +18,8 @@
 
 
     <Button
-        android:textColor="@android:color/black"
+
+        android:textColor="@android:color/white"
 
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
@@ -28,7 +29,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/roundedbutton"
         android:onClick="post"
-        android:text="Add Picture Now" />
+        android:text="Add Picture" />
 
     <ImageView
         android:id="@+id/imageViewPost"
@@ -74,6 +75,7 @@
                     android:orientation="vertical">
 
                     <CheckBox
+                        android:buttonTint="@color/white"
                         android:id="@+id/checkBox_me"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
@@ -97,6 +99,7 @@
                     android:orientation="vertical">
 
                     <CheckBox
+                        android:buttonTint="@color/white"
                         android:id="@+id/checkBox_family"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
@@ -118,6 +121,7 @@
                     android:orientation="vertical">
 
                     <CheckBox
+                        android:buttonTint="@color/white"
                         android:id="@+id/checkBox_friends"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
@@ -140,6 +144,7 @@
                     android:orientation="vertical">
 
                     <CheckBox
+                        android:buttonTint="@color/white"
                         android:id="@+id/checkBox_love"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
@@ -163,6 +168,7 @@
                     android:orientation="vertical">
 
                     <CheckBox
+                        android:buttonTint="@color/white"
                         android:id="@+id/checkBox_pets"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
@@ -185,6 +191,7 @@
                     android:orientation="vertical">
 
                     <CheckBox
+                        android:buttonTint="@color/white"
                         android:id="@+id/checkBox_nature"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
@@ -207,6 +214,7 @@
                     android:orientation="vertical">
 
                     <CheckBox
+                        android:buttonTint="@color/white"
                         android:id="@+id/checkBox_sport"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
@@ -230,6 +238,7 @@
                     android:orientation="vertical">
 
                     <CheckBox
+                        android:buttonTint="@color/white"
                         android:id="@+id/checkBox_persons"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
@@ -252,6 +261,7 @@
                     android:orientation="vertical">
 
                     <CheckBox
+                        android:buttonTint="@color/white"
                         android:id="@+id/checkBox_animals"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
@@ -274,6 +284,7 @@
                     android:orientation="vertical">
 
                     <CheckBox
+                        android:buttonTint="@color/white"
                         android:id="@+id/checkBox_vehicles"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
@@ -297,6 +308,7 @@
                     android:orientation="vertical">
 
                     <CheckBox
+                        android:buttonTint="@color/white"
                         android:id="@+id/checkBox_views"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
@@ -319,6 +331,7 @@
                     android:orientation="vertical">
 
                     <CheckBox
+                        android:buttonTint="@color/white"
                         android:id="@+id/checkBox_food"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
@@ -341,6 +354,7 @@
                     android:orientation="vertical">
 
                     <CheckBox
+                        android:buttonTint="@color/white"
                         android:id="@+id/checkBox_things"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
@@ -364,6 +378,7 @@
                     android:orientation="vertical">
 
                     <CheckBox
+                        android:buttonTint="@color/white"
                         android:id="@+id/checkBox_funny"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
@@ -386,6 +401,7 @@
                     android:orientation="vertical">
 
                     <CheckBox
+                        android:buttonTint="@color/white"
                         android:id="@+id/checkBox_places"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
@@ -408,6 +424,7 @@
                     android:orientation="vertical">
 
                     <CheckBox
+                        android:buttonTint="@color/white"
                         android:id="@+id/checkBox_art"
                         android:layout_width="100dp"
                         android:layout_height="100dp"

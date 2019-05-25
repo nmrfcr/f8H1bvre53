@@ -11,7 +11,6 @@
 
 
     <item
-        android:icon="@drawable/ic_photo_album_black_24dp"
         android:title="Albums"
         android:id="@+id/albumsHomePeople"
         app:showAsAction="always" />

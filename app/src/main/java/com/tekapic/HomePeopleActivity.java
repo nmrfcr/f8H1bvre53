@@ -505,6 +505,9 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
             case 2:
                 startActivity(new Intent(HomePeopleActivity.this, LikesActivity.class));
                 break;
+            case 3:
+                startActivity(new Intent(HomePeopleActivity.this, PictureExploreActivity.class));
+                break;
         }
     }
 
