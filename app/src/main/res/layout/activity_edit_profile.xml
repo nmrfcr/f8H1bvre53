@@ -8,6 +8,28 @@
     android:orientation="vertical"
     tools:context="com.tekapic.EditProfileActivity">
 
+    <TextView
+        android:onClick="changeProfilePictueText"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/textViewProfilePicEdPro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Change Profile Picture"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        />
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:onClick="changeProfilePictueImage"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:id="@+id/profile_picture_editpro"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@drawable/profile_pic" />
+
 
     <Button
         android:textColor="@android:color/white"

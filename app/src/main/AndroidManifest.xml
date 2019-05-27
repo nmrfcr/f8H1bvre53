@@ -26,6 +26,7 @@
             android:label="@string/profile"
             android:screenOrientation="portrait" />
         <activity
+            android:grantUriPermissions="true"
             android:name=".RegisterActivity"
             android:label="@string/sign_up"
             android:parentActivityName=".MainActivity"
@@ -137,6 +138,7 @@
             android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:grantUriPermissions="true"
             android:name=".EditProfileActivity"
             android:label="@string/edit_profile"
             android:parentActivityName=".HomeActivity"

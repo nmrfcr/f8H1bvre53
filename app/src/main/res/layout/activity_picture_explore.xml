@@ -9,6 +9,8 @@
     android:orientation="horizontal"
     tools:context="com.tekapic.PictureExploreActivity">
 
+
+
     <com.tekapic.HackyViewPager
         android:id="@+id/view_pager_explore"
         android:layout_width="match_parent"

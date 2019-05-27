@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -164,7 +165,7 @@ public class LikesActivity extends AppCompatActivity {
                         user.setUsername(dataSnapshot.child("username").getValue(String.class));
                         holder.setDetails(user.getUsername());
 
-                        holder.textView.setOnClickListener(new View.OnClickListener() {
+                        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
 
                             @Override
                             public void onClick(View v) {
@@ -225,6 +226,8 @@ public class LikesActivity extends AppCompatActivity {
 
         public View mView;
         public TextView textView;
+        public LinearLayout linearLayout;
+
 
 
 
@@ -233,6 +236,8 @@ public class LikesActivity extends AppCompatActivity {
 
             mView = itemView;
             textView = mView.findViewById(R.id.email_result);
+            linearLayout = mView.findViewById(R.id.users_list);
+
         }
 
         public void setDetails(String userEmail) {

@@ -9,7 +9,27 @@
     android:layoutDirection="ltr"
     tools:context="com.tekapic.RegisterActivity">
 
+    <TextView
+        android:onClick="addProfilePictueText"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/textViewProfilePicReg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Profile Picture"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+       />
 
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:onClick="addProfilePictueImage"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:id="@+id/profile_picture_register"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@drawable/profile_pic" />
 
     <EditText
         android:id="@+id/emailEditTextRegister"

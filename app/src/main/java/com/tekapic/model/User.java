@@ -11,8 +11,10 @@ public class User {
     private String accountPrivacy;
     private int numberOfViolatingTermsOfUse;
     private boolean warnForViolatingTermsOfUse;
+    private String profilePictureUrl;
 
     public User() {
+        this.profilePictureUrl = "none";
         this.email = "none";
         this.username = "none";
         this.userId = "none";
@@ -22,13 +24,14 @@ public class User {
     }
 
     public User(String email, String username, String userId, String accountPrivacy, int numberOfViolatingTermsOfUse,
-                boolean warnForViolatingTermsOfUse) {
+                boolean warnForViolatingTermsOfUse, String profilePictureUrl) {
         this.email = email;
         this.username = username;
         this.userId = userId;
         this.accountPrivacy = accountPrivacy;
         this.numberOfViolatingTermsOfUse = numberOfViolatingTermsOfUse;
         this.warnForViolatingTermsOfUse = warnForViolatingTermsOfUse;
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public String getEmail() {
@@ -77,5 +80,13 @@ public class User {
 
     public void setWarnForViolatingTermsOfUse(boolean warnForViolatingTermsOfUse) {
         this.warnForViolatingTermsOfUse = warnForViolatingTermsOfUse;
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 }
