@@ -34,6 +34,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -73,7 +75,10 @@ public class EditProfileActivity extends AppCompatActivity {
     private Uri mPhotoUri;
     private ImageView imageView;
     private StorageReference mStorage;
+    private FirebaseStorage storageReference;
     private Uri profilePictureUri = null;
+    private String profilePictureUrl;
+    private boolean toRemoveOnly = false;
 
 
     private static final String dstDir = Environment.getExternalStorageDirectory().getAbsolutePath() +
@@ -89,10 +94,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
         profilePictureUri = uri;
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if(!profilePictureUrl.equals("none")) {
+            deleteProfilePictureToFirebaseStorage();
+            return;
         }
 
         uploadProfilePictureToFirebaseStorage();
@@ -120,11 +124,22 @@ public class EditProfileActivity extends AppCompatActivity {
                 dispatchChoosePhotoIntent();
             }
         });
-        builder.setNeutralButton("   Cancel", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton("   Remove", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //cancel
-                dialog.dismiss();
+               if(!profilePictureUrl.equals("none")) {
+
+                   Glide.with(context)
+                           .load(R.drawable.profile_pic)
+                           .into(imageView);
+
+                   toRemoveOnly = true;
+
+                   usersDatabaseReference.child(mAuth.getUid()).child("profilePictureUrl").setValue("none");
+
+                   deleteProfilePictureToFirebaseStorage();
+               }
             }
         });
 
@@ -151,7 +166,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         positiveButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_photo_camera_black_24dp, 0, 0, 0);
         negativeButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_image_black_24dp, 0, 0, 0);
-        neutralButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cancel_black_24dp, 0, 0, 0);
+        neutralButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_delete_black_24dp, 0, 0, 0);
 //
 //        negativeButtonLL.leftMargin = 45;
         negativeButton.setLayoutParams(negativeButtonLL);
@@ -728,6 +743,7 @@ public class EditProfileActivity extends AppCompatActivity {
         mDialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
         mStorage = FirebaseStorage.getInstance().getReference();
+        storageReference =  FirebaseStorage.getInstance().getReference().getStorage();
 
 
         usersDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -738,7 +754,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                 un = dataSnapshot.child("username").getValue(String.class);
 
-                String profilePictureUrl = dataSnapshot.child("profilePictureUrl").getValue(String.class);
+                profilePictureUrl = dataSnapshot.child("profilePictureUrl").getValue(String.class);
 
                 if(!profilePictureUrl.equals("none")) {
 
@@ -1017,4 +1033,36 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
+
+
+    private void deleteProfilePictureToFirebaseStorage() {
+
+        StorageReference photoRef = storageReference.getReferenceFromUrl(profilePictureUrl);
+
+        photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+                if(toRemoveOnly) {
+                    toRemoveOnly = false;
+                    return;
+                }
+
+                uploadProfilePictureToFirebaseStorage();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+
+            }
+        });
+
+    }
+
+
+
+
 }
