@@ -13,8 +13,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,7 +36,7 @@ public class FavoritesActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private DatabaseReference mDatabaseReference;
     private DatabaseReference favoritesDatabaseReference;
-
+    private Context context;
     private TextView indicatorText;
     private FirebaseAuth mAuth;
     private android.support.v7.app.ActionBar actionBar;
@@ -66,6 +70,8 @@ public class FavoritesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
+
+        context = this;
 
         actionBar = getSupportActionBar();
 
@@ -127,7 +133,11 @@ public class FavoritesActivity extends AppCompatActivity {
                         final User user = new User();
                         user.setUserId(dataSnapshot.child("userId").getValue(String.class));
                         user.setUsername(dataSnapshot.child("username").getValue(String.class));
-                        holder.setDetails(user.getUsername());
+                        user.setProfilePictureUrl(dataSnapshot.child("profilePictureUrl").getValue(String.class));
+
+                        holder.setUsername(user.getUsername());
+                        holder.setProfilePicture(user.getProfilePictureUrl(), context);
+
 
                         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
 
@@ -180,6 +190,7 @@ public class FavoritesActivity extends AppCompatActivity {
         public View mView;
         public TextView textView;
         public LinearLayout linearLayout;
+        public ImageView imageView;
 
 
 
@@ -190,13 +201,27 @@ public class FavoritesActivity extends AppCompatActivity {
             mView = itemView;
             textView = mView.findViewById(R.id.email_result);
             linearLayout = mView.findViewById(R.id.users_list);
+            imageView = mView.findViewById(R.id.profile_image);
+
 
         }
 
-        public void setDetails(String userEmail) {
-
+        public void setUsername(String userEmail) {
 
             textView.setText(userEmail);
+        }
+
+        public void setProfilePicture(String profilePictureUrl, Context context) {
+
+            if(profilePictureUrl.equals("none")) {
+                return;
+            }
+
+            Glide.with(context)
+                    .load(profilePictureUrl)
+                    .apply(new RequestOptions().placeholder(R.drawable.profile_pic))
+                    .into(imageView);
+
 
         }
     }

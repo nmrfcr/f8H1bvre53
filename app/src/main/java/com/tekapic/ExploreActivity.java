@@ -84,9 +84,12 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
 
                 for (DataSnapshot userDataSnapshot : dataSnapshot.getChildren()) {
 
-                    usersIdList.add(userDataSnapshot.child("userId").getValue(String.class));
 
                     DataSnapshot pictureDataSnapshot = userDataSnapshot.child("Pictures");
+
+                    if(pictureDataSnapshot.hasChildren()) {
+                        usersIdList.add(userDataSnapshot.child("userId").getValue(String.class));
+                    }
 
                     int i = 0;
 
@@ -198,6 +201,7 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
             popUpAlertDialogConnectionError();
             return;
         }
+
         int x = 0;
         for(String userId: usersIdList) {
             if(clickedItemIndex == x++) {
@@ -224,6 +228,25 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
 
             }
         }
+
+
+
+
+
+
+
+
+//        int clickedPosition = getAdapterPosition();
+//        int x = 0;
+//
+//        for(Picture picture : picturesList) {
+//            if(x++ == clickedPosition) {
+//
+//
+//                mOnClickListener.onListItemClick(clickedPosition, picture, getItemCount(), picturesList);
+//                break;
+//            }
+//        }
 
 
     }

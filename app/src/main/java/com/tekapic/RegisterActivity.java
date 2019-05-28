@@ -98,6 +98,12 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     public void reqeustAddingProfilePicture() {
+
+        if(isNetworkConnected() == false) {
+            popUpAlertDialogConnectionError();
+            return;
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
 
 

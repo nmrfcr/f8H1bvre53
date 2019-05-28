@@ -95,7 +95,7 @@ public class EditProfileActivity extends AppCompatActivity {
         profilePictureUri = uri;
 
         if(!profilePictureUrl.equals("none")) {
-            deleteProfilePictureToFirebaseStorage();
+            deleteProfilePictureFromFirebaseStorage();
             return;
         }
 
@@ -104,6 +104,14 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     public void reqeustAddingProfilePicture() {
+
+
+        if(isNetworkConnected() == false) {
+            popUpAlertDialogConnectionError();
+            return;
+        }
+
+
         AlertDialog.Builder builder = new AlertDialog.Builder(EditProfileActivity.this);
 
 
@@ -136,9 +144,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
                    toRemoveOnly = true;
 
-                   usersDatabaseReference.child(mAuth.getUid()).child("profilePictureUrl").setValue("none");
 
-                   deleteProfilePictureToFirebaseStorage();
+                   deleteProfilePictureFromFirebaseStorage();
                }
             }
         });
@@ -1020,9 +1027,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
                             Uri uploadedImageUri = task.getResult();
 
-                            String pictureUrl = uploadedImageUri.toString();
+                            profilePictureUrl = uploadedImageUri.toString();
 
-                            usersDatabaseReference.child(mAuth.getUid()).child("profilePictureUrl").setValue(pictureUrl);
+                            usersDatabaseReference.child(mAuth.getUid()).child("profilePictureUrl").setValue(profilePictureUrl);
 
                         }
 
@@ -1036,9 +1043,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
 
-
-
-    private void deleteProfilePictureToFirebaseStorage() {
+    private void deleteProfilePictureFromFirebaseStorage() {
 
         StorageReference photoRef = storageReference.getReferenceFromUrl(profilePictureUrl);
 
@@ -1046,7 +1051,8 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
 
-                if(toRemoveOnly) {
+                if (toRemoveOnly) {
+                    usersDatabaseReference.child(mAuth.getUid()).child("profilePictureUrl").setValue("none");
                     toRemoveOnly = false;
                     return;
                 }
@@ -1059,8 +1065,10 @@ public class EditProfileActivity extends AppCompatActivity {
 
             }
         });
-
     }
+
+
+
 
 
 

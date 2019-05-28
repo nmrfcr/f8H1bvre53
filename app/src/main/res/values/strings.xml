@@ -20,6 +20,8 @@
     <string name="title_activity_likes">LikesActivity</string>
     <string name="likes">Likes</string>
     <string name="explore">Explore</string>
+    <string name="no_text"></string>
+
 
 
     <!-- TODO: Remove or change this placeholder text -->

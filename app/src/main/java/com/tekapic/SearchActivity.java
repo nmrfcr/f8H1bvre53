@@ -15,9 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,6 +40,8 @@ public class SearchActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseReference;
     private TextView indicatorText;
     private String profileEmail;
+    private Context context;
+
     private static String searchText = "";
 
 
@@ -66,6 +72,8 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        context = this;
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         profileEmail = mAuth.getCurrentUser().getEmail();
@@ -153,7 +161,14 @@ public class SearchActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull final User model) {
 
 
-                holder.setDetails(model.getUsername());
+                holder.setUsername(model.getUsername());
+
+                String profilePictureUrl = model.getProfilePictureUrl();
+                if(!profilePictureUrl.equals("none")) {
+
+                    holder.setProfilePicture(profilePictureUrl, context);
+                }
+
 
                 holder.linearLayout.setOnClickListener(new View.OnClickListener() {
 
@@ -212,6 +227,7 @@ public class SearchActivity extends AppCompatActivity {
         public View mView;
         public TextView textView;
         public LinearLayout linearLayout;
+        public ImageView imageView;
 
 
 
@@ -221,13 +237,24 @@ public class SearchActivity extends AppCompatActivity {
             mView = itemView;
             textView = mView.findViewById(R.id.email_result);
             linearLayout = mView.findViewById(R.id.users_list);
+            imageView = mView.findViewById(R.id.profile_image);
 
         }
 
-        public void setDetails(String userEmail) {
+        public void setUsername(String userEmail) {
 
 
             textView.setText(userEmail);
+
+        }
+
+        public void setProfilePicture(String profilePictureUrl, Context context) {
+
+            Glide.with(context)
+                    .load(profilePictureUrl)
+                    .apply(new RequestOptions().placeholder(R.drawable.profile_pic))
+                    .into(imageView);
+
 
         }
     }
