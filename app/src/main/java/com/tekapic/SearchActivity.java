@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,13 +13,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -41,6 +46,10 @@ public class SearchActivity extends AppCompatActivity {
     private TextView indicatorText;
     private String profileEmail;
     private Context context;
+    private BottomNavigationView bottomNavigationView;
+    private ProgressBar progressBar;
+    private LinearLayout linearLayout;
+
 
     private static String searchText = "";
 
@@ -75,10 +84,17 @@ public class SearchActivity extends AppCompatActivity {
 
         context = this;
 
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.search_nav);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
+
+
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         profileEmail = mAuth.getCurrentUser().getEmail();
 
+        linearLayout = findViewById(R.id.textAndProBarLayoutSearch);
         indicatorText = findViewById(R.id.results_indicator_text);
+        progressBar = findViewById(R.id.progressBarSearch);
 
         mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users");
 
@@ -88,14 +104,15 @@ public class SearchActivity extends AppCompatActivity {
 
         searchView = findViewById(R.id.search);
 
-        searchView.setIconifiedByDefault(false);
 
-        searchView.setIconified(false);
+//        searchView.setIconifiedByDefault(false);
 
-        searchView.setFocusable(true);
+//        searchView.setIconified(false);
+//
+//        searchView.setFocusable(true);
 
-        InputMethodManager imm = (InputMethodManager)   getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+//        InputMethodManager imm = (InputMethodManager)   getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         if(!searchText.isEmpty()) {
             searchView.setQuery(searchText, false);
@@ -114,10 +131,14 @@ public class SearchActivity extends AppCompatActivity {
                 searchText = query.toLowerCase();
                 firebaseUserSearch(query.toLowerCase());
 
-                indicatorText.setVisibility(View.VISIBLE);
+                linearLayout.setVisibility(View.VISIBLE);
                 indicatorText.setText("Searching...");
+                progressBar.setVisibility(View.VISIBLE);
+
+
                 mRecyclerView.setVisibility(View.GONE);
-                
+
+
                 return false;
             }
 
@@ -136,12 +157,19 @@ public class SearchActivity extends AppCompatActivity {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                progressBar.setVisibility(View.GONE);
+
                 if(!dataSnapshot.exists()) {
+
                     indicatorText.setText("No Results Found");
+                    progressBar.setVisibility(View.GONE);
+
                 }
                 else {
+                    linearLayout.setVisibility(View.GONE);
                     mRecyclerView.setVisibility(View.VISIBLE);
-                    indicatorText.setVisibility(View.GONE);
+
                 }
             }
 
@@ -175,7 +203,7 @@ public class SearchActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if(profileEmail.equals(model.getEmail())) {
-                            finish();
+//                            finish();
                             startActivity(new Intent(SearchActivity.this, HomeActivity.class));
                             return;
                         }
@@ -204,18 +232,26 @@ public class SearchActivity extends AppCompatActivity {
         firebaseRecyclerAdapter.startListening();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        InputMethodManager imm = (InputMethodManager)getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//
+//        InputMethodManager imm = (InputMethodManager)getSystemService(
+//                Context.INPUT_METHOD_SERVICE);
+//        imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+//    }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(2);
+        menuItem.setChecked(true);
+
+        menuItem.setEnabled(false);
+
+
 
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
@@ -259,15 +295,36 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
+//    @Override
+//    public void onBackPressed() {
+//
+//        finish();
+//        Intent intent = new Intent(SearchActivity.this, HomeActivity.class);
+//        startActivity(intent);
+//
+//
+//    }
 
-        finish();
-        Intent intent = new Intent(SearchActivity.this, HomeActivity.class);
-        startActivity(intent);
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+                    switch (item.getItemId()) {
+                        case R.id.nav_explore:
+                            startActivity(new Intent(SearchActivity.this, ExploreActivity.class));
+                            break;
+                        case R.id.nav_add_picture:
+                            Toast.makeText(context, "Add Picture", Toast.LENGTH_SHORT).show();
+                            break;
+                        case R.id.nav_profile:
+                            startActivity(new Intent(SearchActivity.this, HomeActivity.class));
+                            break;
+                    }
 
-    }
+                    return true;
+                }
+            };
 
 
 

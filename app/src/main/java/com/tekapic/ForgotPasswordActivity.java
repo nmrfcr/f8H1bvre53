@@ -97,6 +97,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     public void onBackPressed() {
+        finish();
         startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class));
     }
 

@@ -62,6 +62,7 @@
             android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/PictureTheme" />
+
         <activity
             android:name=".LauncherActivity"
             android:screenOrientation="portrait"
@@ -72,6 +73,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".EditActivity"
             android:label="@string/update_albums"
@@ -104,9 +106,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/MainActivityTheme" />
         <activity
+            android:windowSoftInputMode="adjustPan"
             android:name=".SearchActivity"
             android:label="@string/search_people"
-            android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".HomePeopleActivity"
@@ -151,10 +153,10 @@
         <activity
             android:name=".ExploreActivity"
             android:label="@string/explore"
-            android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait"></activity>
 
         <activity
+            android:theme="@style/PictureTheme"
             android:label="@string/no_text"
             android:parentActivityName=".ExploreActivity"
             android:screenOrientation="portrait"

@@ -114,9 +114,11 @@ public class LoginActivity extends AppCompatActivity {
                     editor.apply();
 
 
-                    //take the user to HomeActivity
+                    Intent intent = new Intent(LoginActivity.this,ExploreActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+
                     finish();
-                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                 }
             }
         });
@@ -129,10 +131,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-    }
+//    @Override
+//    public void onBackPressed() {
+//        finish();
+//        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//    }
 
 
     private void popUpAlertDialogConnectionError() {

@@ -382,8 +382,11 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 if(userRegisteredSuccessfully) {
+                    Intent intent = new Intent(RegisterActivity.this,ExploreActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+
                     finish();
-                    startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
 
                 }
             }
@@ -453,9 +456,10 @@ public class RegisterActivity extends AppCompatActivity {
 
 
 
-    public void onBackPressed() {
-        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-    }
+//    public void onBackPressed() {
+//        finish();
+//        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+//    }
 
 
     private void popUpAlertDialogConnectionError() {

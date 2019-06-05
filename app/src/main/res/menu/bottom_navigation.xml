@@ -1,29 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-    <item
-        android:icon="@drawable/ic_person_black_24dp"
-        android:title="Profile"
-        android:id="@+id/nav_profile"
-        />
-
     <item
         android:icon="@drawable/ic_explore_black_24dp"
-        android:title="Explore"
+        android:title="Discover"
         android:id="@+id/nav_explore"
         />
 
-
-
-
-    <!--<item-->
-        <!--android:icon="@drawable/ic_add_a_photo_black_24dp"-->
-        <!--android:title="Add Picture"-->
-        <!--android:id="@+id/nav_add_picture"-->
-        <!--/>-->
-
-
+    <item
+        android:icon="@drawable/ic_add_a_photo_black_24dp"
+        android:title="Add Picture"
+        android:id="@+id/nav_add_picture"
+        />
 
 
     <item
@@ -31,6 +19,15 @@
         android:title="Search"
         android:id="@+id/nav_search"
         />
+
+
+    <item
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="Profile"
+        android:id="@+id/nav_profile"
+        />
+
+
 
 
 

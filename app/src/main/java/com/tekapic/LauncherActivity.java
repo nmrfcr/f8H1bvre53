@@ -34,7 +34,7 @@ public class LauncherActivity extends AppCompatActivity {
                     startActivity(new Intent(LauncherActivity.this, MainActivity.class));
                 }
                 else {
-                    startActivity(new Intent(LauncherActivity.this, HomeActivity.class));
+                    startActivity(new Intent(LauncherActivity.this, ExploreActivity.class));
                 }
 
             }

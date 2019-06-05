@@ -1,10 +1,14 @@
 package com.tekapic;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.internal.BottomNavigationMenuView;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +16,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tekapic.model.Picture;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -35,6 +42,7 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
     private ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
     private PicturesRecyclerViewAdapter adapter;
     private ArrayList<String> usersIdList=new ArrayList<String>() ;
+    private BottomNavigationView bottomNavigationView;
 
 
     private boolean isNetworkConnected() {
@@ -63,6 +71,12 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
     protected void onResume() {
         super.onResume();
 
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(0);
+        menuItem.setChecked(true);
+
+        menuItem.setEnabled(false);
+
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
         }
@@ -84,51 +98,58 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
 
                 for (DataSnapshot userDataSnapshot : dataSnapshot.getChildren()) {
 
+                    String accountPrivacy = userDataSnapshot.child("accountPrivacy").getValue(String.class);
 
                     DataSnapshot pictureDataSnapshot = userDataSnapshot.child("Pictures");
 
-                    if(pictureDataSnapshot.hasChildren()) {
+                    if(pictureDataSnapshot.hasChildren() && accountPrivacy.equals("public")) {
                         usersIdList.add(userDataSnapshot.child("userId").getValue(String.class));
-                    }
-
-                    int i = 0;
-
-                    for(DataSnapshot ds: pictureDataSnapshot.getChildren()) {
-
-                        if(i++ == pictureDataSnapshot.getChildrenCount() - 1) {
-
-                            String pictureUrl = ds.child("pictureUrl").getValue(String.class);
-
-                            String date = ds.child("date").getValue(String.class);
-
-                            String pictureId = ds.child("pictureId").getValue(String.class);
-
-                            String me = ds.child("me").getValue(String.class);
-                            String family = ds.child("family").getValue(String.class);
-                            String friends = ds.child("friends").getValue(String.class);
-                            String love = ds.child("love").getValue(String.class);
-                            String pets = ds.child("pets").getValue(String.class);
-                            String nature = ds.child("nature").getValue(String.class);
-                            String sport = ds.child("sport").getValue(String.class);
-                            String persons = ds.child("persons").getValue(String.class);
-                            String animals = ds.child("animals").getValue(String.class);
-                            String vehicles = ds.child("vehicles").getValue(String.class);
-                            String views = ds.child("views").getValue(String.class);
-                            String food = ds.child("food").getValue(String.class);
-                            String things = ds.child("things").getValue(String.class);
-                            String funny = ds.child("funny").getValue(String.class);
-                            String places = ds.child("places").getValue(String.class);
-                            String art = ds.child("art").getValue(String.class);
-
-                            Picture picture = new Picture(pictureId, pictureUrl, date, me, family, friends, love, pets, nature, sport, persons, animals, vehicles, views, food, things, funny, places, art);
 
 
-                            picturesList.add(picture);
+                        int i = 0;
+
+                        for(DataSnapshot ds: pictureDataSnapshot.getChildren()) {
+
+                            if(i++ == pictureDataSnapshot.getChildrenCount() - 1) {
+
+                                String pictureUrl = ds.child("pictureUrl").getValue(String.class);
+
+                                String date = ds.child("date").getValue(String.class);
+
+                                String pictureId = ds.child("pictureId").getValue(String.class);
+
+                                String me = ds.child("me").getValue(String.class);
+                                String family = ds.child("family").getValue(String.class);
+                                String friends = ds.child("friends").getValue(String.class);
+                                String love = ds.child("love").getValue(String.class);
+                                String pets = ds.child("pets").getValue(String.class);
+                                String nature = ds.child("nature").getValue(String.class);
+                                String sport = ds.child("sport").getValue(String.class);
+                                String persons = ds.child("persons").getValue(String.class);
+                                String animals = ds.child("animals").getValue(String.class);
+                                String vehicles = ds.child("vehicles").getValue(String.class);
+                                String views = ds.child("views").getValue(String.class);
+                                String food = ds.child("food").getValue(String.class);
+                                String things = ds.child("things").getValue(String.class);
+                                String funny = ds.child("funny").getValue(String.class);
+                                String places = ds.child("places").getValue(String.class);
+                                String art = ds.child("art").getValue(String.class);
+
+                                Picture picture = new Picture(pictureId, pictureUrl, date, me, family, friends, love, pets, nature, sport, persons, animals, vehicles, views, food, things, funny, places, art);
+
+
+                                picturesList.add(picture);
+
+                            }
+
 
                         }
 
 
                     }
+
+
+
 
                 }
 
@@ -156,6 +177,11 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_explore);
+
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.explore_nav);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
+
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
 
@@ -187,12 +213,12 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
 
     }
 
-    @Override
-    public void onBackPressed() {
-        finish();
-        Intent intent = new Intent(ExploreActivity.this, HomeActivity.class);
-        startActivity(intent);
-    }
+//    @Override
+//    public void onBackPressed() {
+//        finish();
+//        Intent intent = new Intent(ExploreActivity.this, HomeActivity.class);
+//        startActivity(intent);
+//    }
 
     @Override
     public void onListItemClick(int clickedItemIndex, Picture picture, int picturesListSize, ArrayList<Picture> picturesList) {
@@ -247,7 +273,39 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
 //                break;
 //            }
 //        }
-
-
     }
+
+
+
+
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                    switch (item.getItemId()) {
+                        case R.id.nav_add_picture:
+                            Toast.makeText(context, "Add Picture", Toast.LENGTH_SHORT).show();
+                            break;
+                        case R.id.nav_search:
+                            startActivity(new Intent(ExploreActivity.this, SearchActivity.class));
+                            break;
+                        case R.id.nav_profile:
+                            startActivity(new Intent(ExploreActivity.this, HomeActivity.class));
+
+                            break;
+                    }
+
+                    return true;
+                }
+            };
+
+
+
+
+
+
+
+
 }

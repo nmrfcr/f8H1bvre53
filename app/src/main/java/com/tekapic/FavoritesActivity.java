@@ -130,6 +130,9 @@ public class FavoritesActivity extends AppCompatActivity {
                 mDatabaseReference.child(model.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(!dataSnapshot.exists()) {
+                            return;
+                        }
                         final User user = new User();
                         user.setUserId(dataSnapshot.child("userId").getValue(String.class));
                         user.setUsername(dataSnapshot.child("username").getValue(String.class));
@@ -226,11 +229,11 @@ public class FavoritesActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        finish();
-        Intent intent = new Intent(FavoritesActivity.this, HomeActivity.class);
-        startActivity(intent);
-    }
+//    @Override
+//    public void onBackPressed() {
+//        finish();
+//        Intent intent = new Intent(FavoritesActivity.this, HomeActivity.class);
+//        startActivity(intent);
+//    }
 
 }

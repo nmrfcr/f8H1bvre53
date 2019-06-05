@@ -81,7 +81,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
     private String picName;
     private FirebaseAuth mAuth;
-    private DatabaseReference mStatusDB;
+    private DatabaseReference databaseReference;
     private RecyclerView mRecyclerView;
     private Uri mPhotoUri;
     private Button button;
@@ -95,6 +95,8 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     private PicturesRecyclerViewAdapter.ListItemClickListener mOnClickListener;
     private Context context;
     private android.support.v7.app.ActionBar actionBar;
+    private BottomNavigationView bottomNavigationView;
+
 
     public static int firstVisibleItemPosition = 0;
     public static boolean isUserhasPics = false;
@@ -240,8 +242,12 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
 
     private void goToMainActivity() {
+
+        Intent intent = new Intent(HomeActivity.this,MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+
         finish();
-        startActivity(new Intent(HomeActivity.this, MainActivity.class));
     }
 
     private void showAlertDialog(String title, String message) {
@@ -289,13 +295,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
             case R.id.editProfileMenu:
                 startActivity(new Intent(HomeActivity.this, EditProfileActivity.class));
                 return true;
-            case R.id.searchMenu:
-                startActivity(new Intent(HomeActivity.this, SearchActivity.class));
-                return true;
 
-            case R.id.exploreMenu:
-                startActivity(new Intent(HomeActivity.this, ExploreActivity.class));
-                return true;
 
             case R.id.favoritesMenu:
                 startActivity(new Intent(HomeActivity.this, FavoritesActivity.class));
@@ -313,15 +313,19 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     protected void onResume() {
         super.onResume();
 
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(3);
+        menuItem.setChecked(true);
+
+        menuItem.setEnabled(false);
+
+
 
         if(!isNetworkConnected()) {
             popUpAlertDialogConnectionError();
         }
 
-        if(mAuth.getCurrentUser() == null) {
-            goToMainActivity();
-        }
-        checkIfUserHasAnyPictures();
+
 
     }
 
@@ -483,14 +487,15 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
             // permissions this app might request
         }
     }
-    @Override
-    public void onBackPressed() {
-//        super.onBackPressed();
-        Intent startMain = new Intent(Intent.ACTION_MAIN);
-        startMain.addCategory(Intent.CATEGORY_HOME);
-        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(startMain);
-    }
+//    @Override
+//    public void onBackPressed() {
+////        super.onBackPressed();
+//        Intent startMain = new Intent(Intent.ACTION_MAIN);
+//        startMain.addCategory(Intent.CATEGORY_HOME);
+//        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(startMain);
+//    }
+
 
 
 
@@ -499,6 +504,17 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+         bottomNavigationView = (BottomNavigationView) findViewById(R.id.profile_nav);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+
+
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
+
+
+
+
 
 
         actionBar = getSupportActionBar();
@@ -516,7 +532,10 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
         button = findViewById(R.id.addNewPicButton);
         imageViewIcon = findViewById(R.id.imageViewHomeIcon);
 
-        mStatusDB = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).child("Pictures");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid());
+
+//        checkWarning();
+
 
         checkIfUserHasAnyPictures();
 
@@ -537,7 +556,6 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
         ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPosition(firstVisibleItemPosition);
         firstVisibleItemPosition = 0;
 
-        checkWarning();
 
 
     }
@@ -549,9 +567,6 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
         checkIfUserHasAnyPictures();
 
-
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference usersdRef = rootRef.child("Users").child(mAuth.getUid()).child("Pictures");
 
         actionBar.setSubtitle("(" + Integer.toString(picturesList.size()) +")");
 
@@ -619,7 +634,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
             }
         };
-        usersdRef.addValueEventListener(eventListener);
+        databaseReference.child("Pictures").addValueEventListener(eventListener);
 
     }
 
@@ -646,7 +661,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
 
     private void checkIfUserHasAnyPictures() {
-        mStatusDB.addValueEventListener(new ValueEventListener() {
+        databaseReference.child("Pictures").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
 
@@ -737,24 +752,41 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
 
     private void checkWarning() {
 
-        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).
-                child("warnForViolatingTermsOfUse");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child("3rssB9giMBQ4nzmwm2cpfs8KABb2");
 
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                boolean isHasWarning = dataSnapshot.getValue(Boolean.class);
 
-                if(isHasWarning) {
-                    warnByAlertDialog();
-                }
-            }
+        databaseReference.child("warnForViolatingTermsOfUse").setValue("0");
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+
+//
+//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                boolean hasWarning;
+////                Boolean hasWarning = dataSnapshot.child("warnForViolatingTermsOfUse").getValue(Boolean.class);
+//                String value = dataSnapshot.child("warnForViolatingTermsOfUse").getValue(String.class);
+//
+//
+//                if(value.equals("1")) {
+//                    hasWarning = true;
+//                }
+//                else {
+//                    hasWarning = false;
+//                }
+//
+//
+//                if(hasWarning) {
+//                    warnByAlertDialog();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
 
     }
@@ -776,7 +808,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                          DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).
                                 child("warnForViolatingTermsOfUse");
 
-                         databaseReference.setValue(false);
+                         databaseReference.setValue("0");
 
                     }
                 });
@@ -784,6 +816,30 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
         AlertDialog alertDialog = builder1.create();
         alertDialog.show();
     }
+
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                    switch (item.getItemId()) {
+                        case R.id.nav_explore:
+                            startActivity(new Intent(HomeActivity.this, ExploreActivity.class));
+                            break;
+
+                        case R.id.nav_add_picture:
+                            Toast.makeText(context, "Add Picture", Toast.LENGTH_SHORT).show();
+                            break;
+
+                        case R.id.nav_search:
+                            startActivity(new Intent(HomeActivity.this, SearchActivity.class));
+                            break;
+                    }
+
+                    return true;
+                }
+            };
 
 
 }

@@ -156,4 +156,6 @@ public class AccountPrivacyActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder1.create();
         alertDialog.show();
     }
+
+
 }

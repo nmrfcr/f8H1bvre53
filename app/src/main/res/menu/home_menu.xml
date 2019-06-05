@@ -5,21 +5,6 @@
 
 
 
-    <item
-        android:icon="@drawable/ic_explore_black_24dp"
-        android:title="Explore"
-        android:id="@+id/exploreMenu"
-        app:showAsAction="always"
-        />
-
-
-    <item
-        android:icon="@drawable/ic_search_black_24dp"
-        android:title="Search"
-        android:id="@+id/searchMenu"
-        app:showAsAction="always"
-        />
-
 
     <item
         android:icon="@drawable/ic_add_a_photo_black_24dp"

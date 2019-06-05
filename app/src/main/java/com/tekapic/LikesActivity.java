@@ -165,6 +165,10 @@ public class LikesActivity extends AppCompatActivity {
                 mDatabaseReference.child(model.getUserId()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        if(!dataSnapshot.exists()) {
+                            return;
+                        }
                         final User user = new User();
                         user.setUserId(dataSnapshot.child("userId").getValue(String.class));
                         user.setUsername(dataSnapshot.child("username").getValue(String.class));
