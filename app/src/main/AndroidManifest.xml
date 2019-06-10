@@ -26,8 +26,8 @@
             android:label="@string/profile"
             android:screenOrientation="portrait" />
         <activity
-            android:grantUriPermissions="true"
             android:name=".RegisterActivity"
+            android:grantUriPermissions="true"
             android:label="@string/sign_up"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
@@ -39,7 +39,7 @@
         <activity
             android:name=".PostActivity"
             android:grantUriPermissions="true"
-            android:label="@string/app_name"
+            android:label="@string/new_picture"
             android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/EditPictureTheme">
@@ -62,7 +62,6 @@
             android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/PictureTheme" />
-
         <activity
             android:name=".LauncherActivity"
             android:screenOrientation="portrait"
@@ -73,7 +72,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".EditActivity"
             android:label="@string/update_albums"
@@ -106,10 +104,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/MainActivityTheme" />
         <activity
-            android:windowSoftInputMode="adjustPan"
             android:name=".SearchActivity"
             android:label="@string/search_people"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".HomePeopleActivity"
             android:parentActivityName=".SearchActivity"
@@ -140,8 +138,8 @@
             android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:grantUriPermissions="true"
             android:name=".EditProfileActivity"
+            android:grantUriPermissions="true"
             android:label="@string/edit_profile"
             android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait" />
@@ -153,14 +151,19 @@
         <activity
             android:name=".ExploreActivity"
             android:label="@string/explore"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
-            android:theme="@style/PictureTheme"
+            android:name=".PictureExploreActivity"
             android:label="@string/no_text"
             android:parentActivityName=".ExploreActivity"
             android:screenOrientation="portrait"
-            android:name=".PictureExploreActivity">
+            android:theme="@style/PictureTheme"></activity>
+
+        <activity
+            android:grantUriPermissions="true"
+            android:label="@string/add_picture"
+            android:screenOrientation="portrait"
+            android:name=".AddPictureActivity">
 
         </activity>
     </application>

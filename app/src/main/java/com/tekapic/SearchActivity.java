@@ -246,7 +246,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onResume();
 
         Menu menu = bottomNavigationView.getMenu();
-        MenuItem menuItem = menu.getItem(2);
+        MenuItem menuItem = menu.getItem(1);
         menuItem.setChecked(true);
 
         menuItem.setEnabled(false);
@@ -315,7 +315,7 @@ public class SearchActivity extends AppCompatActivity {
                             startActivity(new Intent(SearchActivity.this, ExploreActivity.class));
                             break;
                         case R.id.nav_add_picture:
-                            Toast.makeText(context, "Add Picture", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(SearchActivity.this, AddPictureActivity.class));
                             break;
                         case R.id.nav_profile:
                             startActivity(new Intent(SearchActivity.this, HomeActivity.class));

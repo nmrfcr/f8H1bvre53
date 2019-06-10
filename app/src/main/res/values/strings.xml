@@ -9,7 +9,7 @@
     <string name="albums">Albums</string>
     <string name="picture">Picture</string>
     <string name="update_albums">Update Albums</string>
-    <string name="add_new_picture">Add New Picture</string>
+    <string name="new_picture">New Picture</string>
     <string name="search_people">Search</string>
     <string name="favorites">Favorites</string>
     <string name="account_privacy">Account Privacy</string>
@@ -19,8 +19,9 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="title_activity_likes">LikesActivity</string>
     <string name="likes">Likes</string>
-    <string name="explore">Discover</string>
+    <string name="explore">Explore</string>
     <string name="no_text"></string>
+    <string name="add_picture">Add Picture</string>
 
 
 

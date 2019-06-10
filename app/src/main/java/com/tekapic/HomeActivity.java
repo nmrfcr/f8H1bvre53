@@ -278,10 +278,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
             case R.id.logoutMenu:
                 popUpAlertDialogLogOut();
                 return true;
-            case R.id.addNewMenu:
-                popUpAlertDialog();
-                //allert dialog
-                return true;
+
 
             case R.id.albums:
                 if(isUserhasPics) {
@@ -384,6 +381,7 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                 }
         }
     }
+
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -828,13 +826,15 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
                             startActivity(new Intent(HomeActivity.this, ExploreActivity.class));
                             break;
 
-                        case R.id.nav_add_picture:
-                            Toast.makeText(context, "Add Picture", Toast.LENGTH_SHORT).show();
-                            break;
-
                         case R.id.nav_search:
                             startActivity(new Intent(HomeActivity.this, SearchActivity.class));
                             break;
+
+                        case R.id.nav_add_picture:
+                            startActivity(new Intent(HomeActivity.this, AddPictureActivity.class));
+                            break;
+
+
                     }
 
                     return true;

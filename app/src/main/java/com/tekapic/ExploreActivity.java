@@ -285,12 +285,15 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                     switch (item.getItemId()) {
-                        case R.id.nav_add_picture:
-                            Toast.makeText(context, "Add Picture", Toast.LENGTH_SHORT).show();
-                            break;
+
                         case R.id.nav_search:
                             startActivity(new Intent(ExploreActivity.this, SearchActivity.class));
                             break;
+
+                        case R.id.nav_add_picture:
+                            startActivity(new Intent(ExploreActivity.this, AddPictureActivity.class));
+                            break;
+
                         case R.id.nav_profile:
                             startActivity(new Intent(ExploreActivity.this, HomeActivity.class));
 

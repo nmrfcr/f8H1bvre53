@@ -7,14 +7,6 @@
 
 
     <item
-        android:icon="@drawable/ic_add_a_photo_black_24dp"
-        android:title="Add new picture"
-        android:id="@+id/addNewMenu"
-        app:showAsAction="always"
-        />
-
-
-    <item
 
         android:title="Albums"
         android:id="@+id/albums"

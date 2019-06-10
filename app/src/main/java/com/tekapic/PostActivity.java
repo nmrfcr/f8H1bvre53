@@ -275,7 +275,7 @@ public class PostActivity extends AppCompatActivity {
 
 
 
-        setTitle(R.string.add_new_picture);
+        setTitle(R.string.new_picture);
 
         imageView = findViewById(R.id.imageViewPost);
 

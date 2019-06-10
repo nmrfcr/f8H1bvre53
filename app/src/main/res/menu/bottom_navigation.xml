@@ -3,14 +3,8 @@
 
     <item
         android:icon="@drawable/ic_explore_black_24dp"
-        android:title="Discover"
+        android:title="Explore"
         android:id="@+id/nav_explore"
-        />
-
-    <item
-        android:icon="@drawable/ic_add_a_photo_black_24dp"
-        android:title="Add Picture"
-        android:id="@+id/nav_add_picture"
         />
 
 
@@ -18,6 +12,12 @@
         android:icon="@drawable/ic_search_black_24dp"
         android:title="Search"
         android:id="@+id/nav_search"
+        />
+
+    <item
+        android:icon="@drawable/ic_add_a_photo_black_24dp"
+        android:title="Add Picture"
+        android:id="@+id/nav_add_picture"
         />
 
 

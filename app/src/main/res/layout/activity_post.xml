@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/roundedbutton"
         android:onClick="post"
-        android:text="Add Picture" />
+        android:text="Share" />
 
     <ImageView
         android:id="@+id/imageViewPost"

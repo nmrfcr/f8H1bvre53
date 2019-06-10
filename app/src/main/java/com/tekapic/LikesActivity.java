@@ -44,6 +44,8 @@ public class LikesActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private android.support.v7.app.ActionBar actionBar;
+    private String userIdOfDeletedUser = "";
+
 
     public static String userId, pictureId;
     public static int flag;
@@ -167,43 +169,54 @@ public class LikesActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                         if(!dataSnapshot.exists()) {
-                            return;
-                        }
-                        final User user = new User();
-                        user.setUserId(dataSnapshot.child("userId").getValue(String.class));
-                        user.setUsername(dataSnapshot.child("username").getValue(String.class));
-                        user.setProfilePictureUrl(dataSnapshot.child("profilePictureUrl").getValue(String.class));
+                            holder.setUsername("Deleted User");
+                            userIdOfDeletedUser = dataSnapshot.getKey();
 
+                            holder.linearLayout.setOnClickListener(new View.OnClickListener() {
 
-                        holder.setUsername(user.getUsername());
-
-
-                        try {
-                            holder.setProfilePicture(user.getProfilePictureUrl(), context);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-
-                        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
-
-                            @Override
-                            public void onClick(View v) {
-
-                                if(mAuth.getUid().equals(user.getUserId())) {
-                                    finish();
-                                    startActivity(new Intent(LikesActivity.this, HomeActivity.class));
-                                    return;
+                                @Override
+                                public void onClick(View v) {
+                                    removeDeletedUserFromLikes();
                                 }
+                            });
 
-                                HomePeopleActivity.flag = 2;
-                                HomePeopleActivity.user = user;
-                                HomePeopleActivity.firstVisibleItemPosition = 0;
-                                startActivity(new Intent(LikesActivity.this, HomePeopleActivity.class));
+                        }
+                        else {
 
+                            final User user = new User();
+                            user.setUserId(dataSnapshot.child("userId").getValue(String.class));
+                            user.setUsername(dataSnapshot.child("username").getValue(String.class));
+                            user.setProfilePictureUrl(dataSnapshot.child("profilePictureUrl").getValue(String.class));
 
+                            holder.setUsername(user.getUsername());
+
+                            try {
+                                holder.setProfilePicture(user.getProfilePictureUrl(), context);
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        });
+
+                            holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+
+                                @Override
+                                public void onClick(View v) {
+
+                                    if(mAuth.getUid().equals(user.getUserId())) {
+                                        startActivity(new Intent(LikesActivity.this, HomeActivity.class));
+                                        return;
+                                    }
+
+                                    HomePeopleActivity.flag = 2;
+                                    HomePeopleActivity.user = user;
+                                    HomePeopleActivity.firstVisibleItemPosition = 0;
+                                    startActivity(new Intent(LikesActivity.this, HomePeopleActivity.class));
+
+
+                                }
+                            });
+
+
+                        }
                     }
 
                     @Override
@@ -291,6 +304,24 @@ public class LikesActivity extends AppCompatActivity {
 
 
         super.onPause();
+    }
+
+    private void removeDeletedUserFromLikes() {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setMessage("This user is no longer exists");
+
+        builder1.setPositiveButton(
+                "Remove",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Log.i("User Id of Deleted User", userIdOfDeletedUser);
+                        databaseReferenceLikes.child(userIdOfDeletedUser).removeValue();
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
     }
     //    @Override
 //    public void onBackPressed() {

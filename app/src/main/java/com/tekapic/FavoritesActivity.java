@@ -10,12 +10,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -40,6 +42,7 @@ public class FavoritesActivity extends AppCompatActivity {
     private TextView indicatorText;
     private FirebaseAuth mAuth;
     private android.support.v7.app.ActionBar actionBar;
+    private String userIdOfDeletedUser = "";
 
 
 
@@ -130,28 +133,47 @@ public class FavoritesActivity extends AppCompatActivity {
                 mDatabaseReference.child(model.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                         if(!dataSnapshot.exists()) {
-                            return;
+                            holder.setUsername("Deleted User");
+                            userIdOfDeletedUser = dataSnapshot.getKey();
+
+                            holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+
+                                @Override
+                                public void onClick(View v) {
+                                    removeDeletedUserFromFavorites();
+                                }
+                            });
+
                         }
-                        final User user = new User();
-                        user.setUserId(dataSnapshot.child("userId").getValue(String.class));
-                        user.setUsername(dataSnapshot.child("username").getValue(String.class));
-                        user.setProfilePictureUrl(dataSnapshot.child("profilePictureUrl").getValue(String.class));
+                        else {
 
-                        holder.setUsername(user.getUsername());
-                        holder.setProfilePicture(user.getProfilePictureUrl(), context);
+                            final User user = new User();
+                            user.setUserId(dataSnapshot.child("userId").getValue(String.class));
+                            user.setUsername(dataSnapshot.child("username").getValue(String.class));
+                            user.setProfilePictureUrl(dataSnapshot.child("profilePictureUrl").getValue(String.class));
+
+                            holder.setUsername(user.getUsername());
+                            holder.setProfilePicture(user.getProfilePictureUrl(), context);
+
+                            holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+
+                                @Override
+                                public void onClick(View v) {
+                                    HomePeopleActivity.flag = 1;
+                                    HomePeopleActivity.user = user;
+                                    HomePeopleActivity.firstVisibleItemPosition = 0;
+                                    startActivity(new Intent(FavoritesActivity.this, HomePeopleActivity.class));
+                                }
+                            });
 
 
-                        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                        }
 
-                            @Override
-                            public void onClick(View v) {
-                                HomePeopleActivity.flag = 1;
-                                HomePeopleActivity.user = user;
-                                HomePeopleActivity.firstVisibleItemPosition = 0;
-                                startActivity(new Intent(FavoritesActivity.this, HomePeopleActivity.class));
-                            }
-                        });
+
+
+
                     }
 
                     @Override
@@ -228,6 +250,25 @@ public class FavoritesActivity extends AppCompatActivity {
 
         }
     }
+
+    private void removeDeletedUserFromFavorites() {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setMessage("This user is no longer exists");
+
+        builder1.setPositiveButton(
+                "Remove",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Log.i("User Id of Deleted User", userIdOfDeletedUser);
+                        favoritesDatabaseReference.child(userIdOfDeletedUser).removeValue();
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
+    }
+
 
 //    @Override
 //    public void onBackPressed() {
