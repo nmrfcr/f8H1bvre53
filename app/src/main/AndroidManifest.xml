@@ -157,15 +157,17 @@
             android:label="@string/no_text"
             android:parentActivityName=".ExploreActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/PictureTheme"></activity>
-
+            android:theme="@style/PictureTheme" />
         <activity
+            android:name=".AddPictureActivity"
             android:grantUriPermissions="true"
             android:label="@string/add_picture"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:screenOrientation="portrait"
-            android:name=".AddPictureActivity">
-
-        </activity>
+            android:name=".ProfileActivity"
+            android:label="@string/profile"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

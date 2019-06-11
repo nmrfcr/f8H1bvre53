@@ -295,7 +295,7 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
                             break;
 
                         case R.id.nav_profile:
-                            startActivity(new Intent(ExploreActivity.this, HomeActivity.class));
+                            startActivity(new Intent(ExploreActivity.this, ProfileActivity.class));
 
                             break;
                     }
