@@ -2,9 +2,46 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.tekapic.ProfileActivity">
+
+    <!--<item-->
+        <!--android:id="@+id/action_settings"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="@string/action_settings"-->
+        <!--app:showAsAction="never" />-->
+
+
+
+
+
+
+
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:title="Favorites"
+        android:id="@+id/favoritesMenu"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:title="Edit Profile"
+        android:id="@+id/editProfileMenu"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:title="Account Privacy"
+        android:id="@+id/accountPrivacyMenu"
+        app:showAsAction="never"
+        />
+
+
+
+    <item
+        android:title="Log Out"
+        android:id="@+id/logoutMenu"
+        app:showAsAction="never"
+        />
+
+
+
+
 </menu>

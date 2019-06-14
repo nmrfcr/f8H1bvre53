@@ -503,13 +503,9 @@ public class HomeActivity extends AppCompatActivity implements PicturesRecyclerV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-         bottomNavigationView = (BottomNavigationView) findViewById(R.id.profile_nav);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.profile_nav);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
-
-
-
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
-
 
 
 

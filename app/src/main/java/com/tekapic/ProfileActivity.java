@@ -1,13 +1,19 @@
 package com.tekapic;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -24,10 +30,15 @@ import android.view.ViewGroup;
 
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class ProfileActivity extends AppCompatActivity  {
 
     private BottomNavigationView bottomNavigationView;
+    private FirebaseAuth mAuth;
+
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -43,6 +54,10 @@ public class ProfileActivity extends AppCompatActivity  {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
+    public void share(View v) {
+        startActivity(new Intent(ProfileActivity.this, AddPictureActivity.class));
+    }
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -79,6 +94,11 @@ public class ProfileActivity extends AppCompatActivity  {
         MenuItem menuItem = menu.getItem(3);
         menuItem.setChecked(true);
 
+        if(!isNetworkConnected()) {
+            popUpAlertDialogConnectionError();
+        }
+
+
 
     }
 
@@ -108,6 +128,7 @@ public class ProfileActivity extends AppCompatActivity  {
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
+        mAuth = FirebaseAuth.getInstance();
 
 
     }
@@ -120,20 +141,92 @@ public class ProfileActivity extends AppCompatActivity  {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
+
+    private void popUpAlertDialogConnectionError() {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setTitle("Error");
+        builder1.setMessage("There might be problems with the server or network connection.");
+
+        builder1.setPositiveButton(
+                "TRY AGAIN",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
+    }
+
+    private void popUpAlertDialogLogOut() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
+        builder.setMessage("Log Out of Tekapic?");
+
+        builder.setPositiveButton("Log Out", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                if(isNetworkConnected() == false) {
+                    popUpAlertDialogConnectionError();
+                    return;
+                }
+
+                mAuth.signOut();
+
+                Intent intent = new Intent(ProfileActivity.this,MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+
+                finish();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+@Override
+public boolean onOptionsItemSelected(MenuItem item) {
+
+    if(isNetworkConnected() == false) {
+        popUpAlertDialogConnectionError();
+        return false;
+    }
+
+    switch (item.getItemId()) {
+
+        case R.id.logoutMenu:
+            popUpAlertDialogLogOut();
+            return true;
+
+        case R.id.editProfileMenu:
+            startActivity(new Intent(ProfileActivity.this, EditProfileActivity.class));
+            return true;
+
+        case R.id.favoritesMenu:
+            startActivity(new Intent(ProfileActivity.this, FavoritesActivity.class));
+            return true;
+
+        case R.id.accountPrivacyMenu:
+            startActivity(new Intent(ProfileActivity.this, AccountPrivacyActivity.class));
+            return true;
+
+    }
+    return super.onOptionsItemSelected(item);
+}
 
 
 

@@ -1,13 +1,46 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.tekapic.AllPicturesFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="All Pictures Fragment" />
 
-</FrameLayout>
+
+
+    <TextView
+        android:id="@+id/allPicturesTextView"
+        android:visibility="gone"
+        android:layout_margin="40dp"
+        android:text="@string/all_pictures"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <Button
+        android:id="@+id/allPicturesButton"
+        android:visibility="gone"
+        android:layout_margin="20dp"
+        android:textColor="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/roundedbuttonsingup"
+        android:onClick="share"
+        android:text="Add your first picture"
+        />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/allPicturesRecyclerView"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:scrollbars="vertical">
+    </android.support.v7.widget.RecyclerView>
+
+
+
+
+
+
+</LinearLayout>
