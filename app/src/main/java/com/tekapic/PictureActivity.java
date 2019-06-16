@@ -79,7 +79,8 @@ public class PictureActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
                 mDialog.dismiss();
-                goBack();
+//                goBack();
+                onBackPressed();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -255,7 +256,8 @@ public class PictureActivity extends AppCompatActivity {
                 popUpAlertDialog();
                 return true;
             case android.R.id.home:
-                goBack();
+                onBackPressed();
+//                goBack();
                 return true;
 
             case R.id.likePictureMenu:
@@ -488,21 +490,21 @@ public class PictureActivity extends AppCompatActivity {
 
 
 
-    private void goBack() {
-        finish();
-        if(isPictureFromAlbum) {
-            startActivity(new Intent(PictureActivity.this, PicturesActivity.class));
-        }
-        else {
-            startActivity(new Intent(PictureActivity.this, HomeActivity.class));
-
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        goBack();
-    }
+//    private void goBack() {
+//        finish();
+//        if(isPictureFromAlbum) {
+//            startActivity(new Intent(PictureActivity.this, PicturesActivity.class));
+//        }
+//        else {
+//            startActivity(new Intent(PictureActivity.this, ProfileActivity.class));
+//
+//        }
+//    }
+//
+//    @Override
+//    public void onBackPressed() {
+//        goBack();
+//    }
 
 
     private void popUpAlertDialogConnectionError() {

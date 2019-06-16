@@ -318,7 +318,7 @@ public class SearchActivity extends AppCompatActivity {
                             startActivity(new Intent(SearchActivity.this, AddPictureActivity.class));
                             break;
                         case R.id.nav_profile:
-                            startActivity(new Intent(SearchActivity.this, HomeActivity.class));
+                            startActivity(new Intent(SearchActivity.this, ProfileActivity.class));
                             break;
                     }
 

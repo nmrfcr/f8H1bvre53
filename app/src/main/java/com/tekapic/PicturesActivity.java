@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,6 +36,69 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
 
     public static String wantedAlbum;
     public static int fVisibleItemPosition = 0;
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void checkIfAlbumExists() {
+
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference usersdRef = rootRef.child("Users").child(mAuth.getUid()).child("Pictures");
+
+        ValueEventListener eventListener = new ValueEventListener() {
+
+            boolean wasCalled = false;
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                boolean hasAnyPicture = false;
+
+                if(wasCalled) {
+                    picturesList.clear();
+
+                }
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                    String albumValue = ds.child(wantedAlbum).getValue(String.class);
+                    if(albumValue.equals("1")) {
+
+                        hasAnyPicture = true;
+                        break;
+                    }
+                }
+
+                if(hasAnyPicture == false) {
+//                    finish();
+//                    startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
+//                    return;
+                    onBackPressed();
+                    return;
+                }
+
+
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        usersdRef.addValueEventListener(eventListener);
+
+    }
 
 
     private void getPicturesByAlbum() {
@@ -96,8 +161,10 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
                 }
 
                 if(hasAnyPicture == false) {
-                    finish();
-                    startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
+//                    finish();
+//                    startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
+//                    return;
+                    onBackPressed();
                     return;
                 }
 
@@ -189,7 +256,11 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
 
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
+            return;
         }
+
+      //check if has pics
+        checkIfAlbumExists();
     }
 
     @Override
@@ -211,7 +282,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
         Intent intent = new Intent(PicturesActivity.this, PictureActivity.class);
         startActivity(intent);
 
-        finish();
+//        finish();
     }
 
 
@@ -223,4 +294,5 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
         fVisibleItemPosition = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
 
     }
+
 }

@@ -109,7 +109,7 @@ public class PostActivity extends AppCompatActivity {
 
         finish();
         Toast.makeText(getApplicationContext(), "Uploading..", Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(PostActivity.this, HomeActivity.class);
+        Intent intent = new Intent(PostActivity.this, ProfileActivity.class);
         startActivity(intent);
 
         String timeStamp;

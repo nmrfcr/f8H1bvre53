@@ -361,7 +361,7 @@ public class AddPictureActivity extends AppCompatActivity {
                             break;
 
                         case R.id.nav_profile:
-                            startActivity(new Intent(AddPictureActivity.this, HomeActivity.class));
+                            startActivity(new Intent(AddPictureActivity.this, ProfileActivity.class));
 
                             break;
                     }

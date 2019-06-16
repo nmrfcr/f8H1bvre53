@@ -1,8 +1,11 @@
 package com.tekapic;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
@@ -13,6 +16,7 @@ import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,6 +32,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +43,7 @@ public class ProfileActivity extends AppCompatActivity  {
 
     private BottomNavigationView bottomNavigationView;
     private FirebaseAuth mAuth;
+    private TextView textView1, textView2, textView3, textView4;
 
 
     /**
@@ -94,6 +100,9 @@ public class ProfileActivity extends AppCompatActivity  {
         MenuItem menuItem = menu.getItem(3);
         menuItem.setChecked(true);
 
+        menuItem.setEnabled(false);
+
+
         if(!isNetworkConnected()) {
             popUpAlertDialogConnectionError();
         }
@@ -129,6 +138,81 @@ public class ProfileActivity extends AppCompatActivity  {
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
         mAuth = FirebaseAuth.getInstance();
+
+
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                textView1 = findViewById(R.id.t1);
+                textView2 = findViewById(R.id.t2);
+                textView3 = findViewById(R.id.t3);
+                textView4 = findViewById(R.id.t4);
+
+                int c = ResourcesCompat.getColor(getResources(), R.color.colorPrimaryDark, null);
+
+                if(tab.getPosition() == 0) {
+                    textView1.setTextColor(c);
+                    textView2.setTextColor(c);
+                    textView1.setTypeface(textView1.getTypeface(), Typeface.BOLD);
+                    textView2.setTypeface(textView2.getTypeface(), Typeface.BOLD);
+                }
+                else {
+                    textView3.setTextColor(c);
+                    textView4.setTextColor(c);
+                    textView3.setTypeface(textView3.getTypeface(), Typeface.BOLD);
+                    textView4.setTypeface(textView4.getTypeface(), Typeface.BOLD);
+                }
+
+                //do stuff here
+//                Toast.makeText(ProfileActivity.this, "selected: " + Integer.toString(tab.getPosition()), Toast.LENGTH_SHORT).show();
+//                textView3.setTypeface(textView3.getTypeface(), Typeface.BOLD);
+//                textView4.setTypeface(textView4.getTypeface(), Typeface.BOLD);
+
+
+
+
+                /////////////////////////
+
+
+
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+                textView1 = findViewById(R.id.t1);
+                textView2 = findViewById(R.id.t2);
+                textView3 = findViewById(R.id.t3);
+                textView4 = findViewById(R.id.t4);
+
+                int c = ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null);
+
+                if(tab.getPosition() == 0) {
+                    textView1.setTextColor(c);
+                    textView2.setTextColor(c);
+                    textView1.setTypeface(null, Typeface.NORMAL);
+                    textView2.setTypeface(null, Typeface.NORMAL);
+
+                }
+                else {
+                    textView3.setTextColor(c);
+                    textView4.setTextColor(c);
+                    textView3.setTypeface(null, Typeface.NORMAL);
+                    textView4.setTypeface(null, Typeface.NORMAL);
+                }
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
 
     }

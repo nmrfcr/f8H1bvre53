@@ -9,6 +9,8 @@
 
 
     <TextView
+        android:id="@+id/albumsTextView"
+        android:visibility="gone"
         android:layout_margin="40dp"
         android:text="@string/all_pictures"
         android:layout_width="wrap_content"
@@ -17,6 +19,8 @@
 
 
     <Button
+        android:id="@+id/albumsButton"
+        android:visibility="gone"
         android:layout_margin="20dp"
         android:textColor="@color/white"
         android:layout_width="match_parent"
@@ -26,6 +30,13 @@
         android:onClick="share"
         android:text="Add your first picture"
         />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/albumsFragmentRecyclerView"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:scrollbars="vertical">
+    </android.support.v7.widget.RecyclerView>
 
 
 

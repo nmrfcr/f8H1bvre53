@@ -59,7 +59,7 @@
         <activity
             android:name=".PictureActivity"
             android:label="@string/picture"
-            android:parentActivityName=".HomeActivity"
+            android:parentActivityName=".ProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/PictureTheme" />
         <activity
@@ -80,7 +80,7 @@
             android:theme="@style/EditPictureTheme" />
         <activity
             android:name=".PicturesActivity"
-            android:parentActivityName=".AlbumsActivity"
+            android:parentActivityName=".ProfileActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ForgotPasswordActivity"

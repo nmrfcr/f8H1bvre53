@@ -72,14 +72,16 @@ public class EditActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         mDialog.dismiss();
-                        finish();
 
-                        if(PictureActivity.isPictureFromAlbum) {
-                            startActivity(new Intent(EditActivity.this, PicturesActivity.class));
-                        }
-                        else {
-                            startActivity(new Intent(EditActivity.this, HomeActivity.class));
-                        }
+//                        finish();
+//
+//                        if(PictureActivity.isPictureFromAlbum) {
+//                            startActivity(new Intent(EditActivity.this, PicturesActivity.class));
+//                        }
+//                        else {
+//                            startActivity(new Intent(EditActivity.this, HomeActivity.class));
+//                        }
+                    onBackPressed();
 
                         Toast.makeText(EditActivity.this, "Albums updated.", Toast.LENGTH_SHORT).show();
 
@@ -303,6 +305,8 @@ public class EditActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder1.create();
         alertDialog.show();
     }
+
+
 
 
 }

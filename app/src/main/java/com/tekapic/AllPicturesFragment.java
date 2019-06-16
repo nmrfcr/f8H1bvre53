@@ -1,14 +1,15 @@
 package com.tekapic;
 
-import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,10 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -30,11 +28,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tekapic.model.Picture;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-
-import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 
 /**
@@ -45,11 +40,11 @@ import static com.firebase.ui.auth.AuthUI.getApplicationContext;
  * Use the {@link AllPicturesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AllPicturesFragment extends Fragment {
+public class AllPicturesFragment extends Fragment implements PicturesRecyclerViewAdapter.ListItemClickListener {
 
-
-
-
+    private TextView textView2;
+    private TabLayout tabLayout;
+    private View view;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private RecyclerView mRecyclerView;
@@ -110,6 +105,17 @@ public class AllPicturesFragment extends Fragment {
         }
 
 
+        View view = getLayoutInflater().inflate(R.layout.all_pictures_tab, null);
+        TabLayout tabLayout = getActivity().findViewById(R.id.tabs);
+        tabLayout.getTabAt(0).setCustomView(view);
+
+//        TextView textView1 = getActivity().findViewById(R.id.t1);
+         textView2 = getActivity().findViewById(R.id.t2);
+//
+//        textView1.setText("ALL PICTURES");
+//        textView2.setText("(0)");
+
+
 
 
 
@@ -146,6 +152,7 @@ public class AllPicturesFragment extends Fragment {
 
         checkIfUserHasAnyPictures();
 
+        textView2.setText("(" + Integer.toString(picturesList.size()) + ")");
 
 //        actionBar.setSubtitle("(" + Integer.toString(picturesList.size()) +")");
 
@@ -201,6 +208,7 @@ public class AllPicturesFragment extends Fragment {
 
 
 //                actionBar.setSubtitle("(" + Integer.toString(picturesList.size()) + ")");
+                textView2.setText("(" + Integer.toString(picturesList.size()) + ")");
                 Collections.reverse(picturesList);
                 adapter = new PicturesRecyclerViewAdapter(picturesList, mOnClickListener, context);
                 mRecyclerView.setAdapter(adapter);
@@ -225,7 +233,10 @@ public class AllPicturesFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_all_pictures, container, false);
 
-        textView =rootView.findViewById(R.id.allPicturesTextView);
+
+
+
+        textView = rootView.findViewById(R.id.allPicturesTextView);
         button =  rootView.findViewById(R.id.allPicturesButton);
 
         mRecyclerView = rootView.findViewById(R.id.allPicturesRecyclerView);
@@ -245,7 +256,7 @@ public class AllPicturesFragment extends Fragment {
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.addItemDecoration(new SpacesItemDecoration(3));
 
-//        mOnClickListener = (PicturesRecyclerViewAdapter.ListItemClickListener) getContext();
+        mOnClickListener =  this;
         context = getContext();
 
         getPictures();
@@ -261,6 +272,51 @@ public class AllPicturesFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onListItemClick(int clickedItemIndex, Picture picture, int picturesListSize, ArrayList<Picture> picturesList) {
+
+        if(isNetworkConnected() == false) {
+            popUpAlertDialogConnectionError();
+            return;
+        }
+
+        PictureActivity.picturesList.clear();
+        PictureActivity.clickedItemIndex = clickedItemIndex;
+
+        for(Picture p : picturesList) {
+            PictureActivity.picturesList.add(p);
+        }
+
+        PictureActivity.isPictureFromAlbum = false;
+
+        Intent intent = new Intent(getActivity(), PictureActivity.class);
+        startActivity(intent);
+
+
+
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+    private void popUpAlertDialogConnectionError() {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+        builder1.setTitle("Error");
+        builder1.setMessage("There might be problems with the server or network connection.");
+
+        builder1.setPositiveButton(
+                "TRY AGAIN",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
+    }
 
 
 //    @Override
@@ -302,6 +358,7 @@ public class AllPicturesFragment extends Fragment {
         firstVisibleItemPosition = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
 
     }
+
 
 
 }
