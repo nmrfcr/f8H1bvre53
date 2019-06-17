@@ -202,7 +202,7 @@ public class LikesActivity extends AppCompatActivity {
                                 public void onClick(View v) {
 
                                     if(mAuth.getUid().equals(user.getUserId())) {
-                                        startActivity(new Intent(LikesActivity.this, HomeActivity.class));
+                                        startActivity(new Intent(LikesActivity.this, ProfileActivity.class));
                                         return;
                                     }
 

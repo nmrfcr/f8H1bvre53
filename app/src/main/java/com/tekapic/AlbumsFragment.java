@@ -231,8 +231,11 @@ public class AlbumsFragment extends Fragment implements AlbumsRecyclerViewAdapte
 
                 for(int i = 0; i < Picture.numberOfAlbums; i++) {
                     if(albumsMap.get(Picture.albumsNames[i])) {
-                        int id = getResources().getIdentifier("com.tekapic:drawable/" + Picture.albumsNames[i], null, null);
-                        albumsList.add(new Album(Picture.albumsNames[i], id));
+
+                        if(isAdded()) {
+                            int id = getResources().getIdentifier("com.tekapic:drawable/" + Picture.albumsNames[i], null, null);
+                            albumsList.add(new Album(Picture.albumsNames[i], id));
+                        }
                     }
                 }
 

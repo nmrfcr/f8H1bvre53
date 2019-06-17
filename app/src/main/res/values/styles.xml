@@ -87,5 +87,10 @@
         <item name="android:layoutDirection" tools:ignore="NewApi">ltr</item>
     </style>
 
+    <style name="Widget.BottomNavigationView"
+        parent="Widget.Design.BottomNavigationView">
+        <item name="android:textStyle">bold</item>
+    </style>
+
 
 </resources>

@@ -204,7 +204,7 @@ public class SearchActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         if(profileEmail.equals(model.getEmail())) {
 //                            finish();
-                            startActivity(new Intent(SearchActivity.this, HomeActivity.class));
+                            startActivity(new Intent(SearchActivity.this, ProfileActivity.class));
                             return;
                         }
                         HomePeopleActivity.flag = 0;

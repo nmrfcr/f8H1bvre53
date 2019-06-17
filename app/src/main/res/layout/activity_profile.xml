@@ -71,6 +71,7 @@
 
 
     <android.support.design.widget.BottomNavigationView
+
         app:itemTextColor="@color/bottom_nav_color"
         app:itemIconTint="@color/bottom_nav_color"
         android:id="@+id/profile2_nav"
