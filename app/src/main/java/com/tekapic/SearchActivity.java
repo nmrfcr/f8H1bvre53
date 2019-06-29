@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -207,10 +209,14 @@ public class SearchActivity extends AppCompatActivity {
                             startActivity(new Intent(SearchActivity.this, ProfileActivity.class));
                             return;
                         }
-                        HomePeopleActivity.flag = 0;
-                        HomePeopleActivity.user = model;
-                        HomePeopleActivity.firstVisibleItemPosition = 0;
-                        startActivity(new Intent(SearchActivity.this, HomePeopleActivity.class));
+                        ProfilePeopleActivity.user = model;
+                        ProfilePeopleActivity.index = 1;
+                        startActivity(new Intent(SearchActivity.this, ProfilePeopleActivity.class));
+
+//                        HomePeopleActivity.flag = 0;
+//                        HomePeopleActivity.user = model;
+//                        HomePeopleActivity.firstVisibleItemPosition = 0;
+//                        startActivity(new Intent(SearchActivity.this, HomePeopleActivity.class));
                     }
                 });
 
@@ -248,9 +254,12 @@ public class SearchActivity extends AppCompatActivity {
         Menu menu = bottomNavigationView.getMenu();
         MenuItem menuItem = menu.getItem(1);
         menuItem.setChecked(true);
-
         menuItem.setEnabled(false);
 
+        SpannableStringBuilder title = new SpannableStringBuilder(menuItem.getTitle());
+        StyleSpan styleSpan = new StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
+        title.setSpan(styleSpan, 0, title.length(), 0);
+        menuItem.setTitle((title));
 
 
         if(isNetworkConnected() == false) {

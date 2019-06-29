@@ -26,6 +26,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -99,8 +101,12 @@ public class ProfileActivity extends AppCompatActivity  {
         Menu menu = bottomNavigationView.getMenu();
         MenuItem menuItem = menu.getItem(3);
         menuItem.setChecked(true);
-
         menuItem.setEnabled(false);
+
+        SpannableStringBuilder title = new SpannableStringBuilder(menuItem.getTitle());
+        StyleSpan styleSpan = new StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
+        title.setSpan(styleSpan, 0, title.length(), 0);
+        menuItem.setTitle((title));
 
 
         if(!isNetworkConnected()) {

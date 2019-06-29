@@ -3,62 +3,101 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="10dp"
     android:layoutDirection="ltr"
     android:orientation="vertical"
     tools:context="com.tekapic.EditProfileActivity">
 
-    <TextView
-        android:onClick="changeProfilePictueText"
-        android:textSize="18sp"
-        android:layout_marginTop="10dp"
-        android:id="@+id/textViewProfilePicEdPro"
+
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight="9"
+        android:layout_height="0dp"
+        android:layout_width="match_parent">
+
+        <TextView
+            android:onClick="changeProfilePictueText"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/textViewProfilePicEdPro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Change Profile Picture"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            />
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:onClick="changeProfilePictueImage"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:id="@+id/profile_picture_editpro"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/profile_pic" />
+
+
+        <Button
+            android:textColor="@android:color/white"
+            android:id="@+id/changeUsernameEditProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/roundedbutton"
+            android:onClick="changeUsername"
+            android:text="Change Username" />
+
+        <Button
+            android:textColor="@android:color/white"
+            android:id="@+id/changeEmailEditProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/roundedbutton"
+            android:onClick="changeEmail"
+            android:text="Change Email" />
+
+        <Button
+            android:textColor="@android:color/white"
+            android:id="@+id/changePasswordEditProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/roundedbutton"
+            android:onClick="changePassword"
+            android:text="Change Password" />
+
+
+    </LinearLayout>
+
+
+    <android.support.design.widget.BottomNavigationView
+
+        app:itemTextColor="@color/bottom_nav_color"
+        app:itemIconTint="@color/bottom_nav_color"
+        android:id="@+id/edit_profile_nav"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Change Profile Picture"
-        android:textAlignment="center"
-        android:textColor="@android:color/black"
-        />
+        android:layout_height="0dp"
+        app:menu="@menu/bottom_navigation" />
 
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:onClick="changeProfilePictueImage"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"
-        android:id="@+id/profile_picture_editpro"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:src="@drawable/profile_pic" />
 
 
-    <Button
-        android:textColor="@android:color/white"
-        android:id="@+id/changeUsernameEditProfile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/roundedbutton"
-        android:onClick="changeUsername"
-        android:text="Change Username" />
 
-    <Button
-        android:textColor="@android:color/white"
-        android:id="@+id/changeEmailEditProfile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/roundedbutton"
-        android:onClick="changeEmail"
-        android:text="Change Email" />
 
-    <Button
-        android:textColor="@android:color/white"
-        android:id="@+id/changePasswordEditProfile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/roundedbutton"
-        android:onClick="changePassword"
-        android:text="Change Password" />
+
+
+
+
+
+
+
+
+
 
 </LinearLayout>

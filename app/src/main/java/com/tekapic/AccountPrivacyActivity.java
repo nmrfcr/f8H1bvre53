@@ -2,10 +2,17 @@ package com.tekapic;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
@@ -22,6 +29,8 @@ public class AccountPrivacyActivity extends AppCompatActivity {
     private boolean isSwitchCheckSetted;
     private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
+    private BottomNavigationView bottomNavigationView;
+
 
 
     public void popUpPrivacyAlertDialog(final String privacy, int message) {
@@ -66,6 +75,10 @@ public class AccountPrivacyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_privacy);
+
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.account_privacy_nav);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 
         isSwitchCheckSetted = false;
 
@@ -130,6 +143,15 @@ public class AccountPrivacyActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(3);
+        menuItem.setChecked(true);
+
+        SpannableStringBuilder title = new SpannableStringBuilder(menuItem.getTitle());
+        StyleSpan styleSpan = new StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
+        title.setSpan(styleSpan, 0, title.length(), 0);
+        menuItem.setTitle((title));
+
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
         }
@@ -156,6 +178,36 @@ public class AccountPrivacyActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder1.create();
         alertDialog.show();
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                    switch (item.getItemId()) {
+
+                        case R.id.nav_explore:
+                            startActivity(new Intent(AccountPrivacyActivity.this, ExploreActivity.class));
+                            break;
+                        case R.id.nav_search:
+                            startActivity(new Intent(AccountPrivacyActivity.this, SearchActivity.class));
+                            break;
+
+                        case R.id.nav_add_picture:
+                            startActivity(new Intent(AccountPrivacyActivity.this, AddPictureActivity.class));
+                            break;
+
+                        case R.id.nav_profile:
+                            startActivity(new Intent(AccountPrivacyActivity.this, ProfileActivity.class));
+
+                            break;
+                    }
+
+                    return true;
+                }
+            };
+
+
 
 
 }

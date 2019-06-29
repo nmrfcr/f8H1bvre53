@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -20,10 +21,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.DigitsKeyListener;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,6 +84,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private Uri profilePictureUri = null;
     private String profilePictureUrl;
     private boolean toRemoveOnly = false;
+    private BottomNavigationView bottomNavigationView;
+
 
 
     private static final String dstDir = Environment.getExternalStorageDirectory().getAbsolutePath() +
@@ -215,7 +222,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Change Username");
-        dialog.setCancelable(false);
+//        dialog.setCancelable(false);
 
 
         dialog.setPositiveButton("Change Username", new DialogInterface.OnClickListener() {
@@ -395,7 +402,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Change Email");
-        dialog.setCancelable(false);
+//        dialog.setCancelable(false);
 
 
         dialog.setPositiveButton("Change Email", new DialogInterface.OnClickListener() {
@@ -570,7 +577,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Change Password");
-        dialog.setCancelable(false);
+//        dialog.setCancelable(false);
 
 
         dialog.setPositiveButton("Change Password", new DialogInterface.OnClickListener() {
@@ -742,6 +749,10 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.edit_profile_nav);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 
         context = this;
 
@@ -1068,9 +1079,50 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(3);
+        menuItem.setChecked(true);
+
+        SpannableStringBuilder title = new SpannableStringBuilder(menuItem.getTitle());
+        StyleSpan styleSpan = new StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
+        title.setSpan(styleSpan, 0, title.length(), 0);
+        menuItem.setTitle((title));
 
 
+        if(isNetworkConnected() == false) {
+            popUpAlertDialogConnectionError();
+        }
+    }
 
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+                    switch (item.getItemId()) {
 
+                        case R.id.nav_explore:
+                            startActivity(new Intent(EditProfileActivity.this, ExploreActivity.class));
+                            break;
+                        case R.id.nav_search:
+                            startActivity(new Intent(EditProfileActivity.this, SearchActivity.class));
+                            break;
+
+                        case R.id.nav_add_picture:
+                            startActivity(new Intent(EditProfileActivity.this, AddPictureActivity.class));
+                            break;
+
+                        case R.id.nav_profile:
+                            startActivity(new Intent(EditProfileActivity.this, ProfileActivity.class));
+
+                            break;
+                    }
+
+                    return true;
+                }
+            };
 }

@@ -3,15 +3,22 @@ package com.tekapic;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -43,6 +50,8 @@ public class FavoritesActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private android.support.v7.app.ActionBar actionBar;
     private String userIdOfDeletedUser = "";
+    private BottomNavigationView bottomNavigationView;
+
 
 
 
@@ -73,6 +82,10 @@ public class FavoritesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
+
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.favorites_nav);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 
         context = this;
 
@@ -161,10 +174,14 @@ public class FavoritesActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onClick(View v) {
-                                    HomePeopleActivity.flag = 1;
-                                    HomePeopleActivity.user = user;
-                                    HomePeopleActivity.firstVisibleItemPosition = 0;
-                                    startActivity(new Intent(FavoritesActivity.this, HomePeopleActivity.class));
+//                                    HomePeopleActivity.flag = 1;
+//                                    HomePeopleActivity.user = user;
+//                                    HomePeopleActivity.firstVisibleItemPosition = 0;
+//                                    startActivity(new Intent(FavoritesActivity.this, HomePeopleActivity.class));
+                                    ProfilePeopleActivity.user = user;
+                                    ProfilePeopleActivity.index = 3;
+                                    startActivity(new Intent(FavoritesActivity.this, ProfilePeopleActivity.class));
+
                                 }
                             });
 
@@ -204,6 +221,17 @@ public class FavoritesActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(3);
+        menuItem.setChecked(true);
+
+        SpannableStringBuilder title = new SpannableStringBuilder(menuItem.getTitle());
+        StyleSpan styleSpan = new StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
+        title.setSpan(styleSpan, 0, title.length(), 0);
+        menuItem.setTitle((title));
+
+
 
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
@@ -268,6 +296,34 @@ public class FavoritesActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder1.create();
         alertDialog.show();
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                    switch (item.getItemId()) {
+
+                        case R.id.nav_explore:
+                            startActivity(new Intent(FavoritesActivity.this, ExploreActivity.class));
+                            break;
+                        case R.id.nav_search:
+                            startActivity(new Intent(FavoritesActivity.this, SearchActivity.class));
+                            break;
+
+                        case R.id.nav_add_picture:
+                            startActivity(new Intent(FavoritesActivity.this, AddPictureActivity.class));
+                            break;
+
+                        case R.id.nav_profile:
+                            startActivity(new Intent(FavoritesActivity.this, ProfileActivity.class));
+
+                            break;
+                    }
+
+                    return true;
+                }
+            };
 
 
 //    @Override

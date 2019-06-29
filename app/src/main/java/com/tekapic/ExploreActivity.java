@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -75,13 +77,16 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
         super.onResume();
 
 
-
         Menu menu = bottomNavigationView.getMenu();
         MenuItem menuItem = menu.getItem(0);
-
         menuItem.setChecked(true);
-
         menuItem.setEnabled(false);
+
+        SpannableStringBuilder title = new SpannableStringBuilder(menuItem.getTitle());
+        StyleSpan styleSpan = new StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
+        title.setSpan(styleSpan, 0, title.length(), 0);
+        menuItem.setTitle((title));
+
 
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();

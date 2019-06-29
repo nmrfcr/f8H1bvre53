@@ -8,20 +8,51 @@
     android:orientation="vertical"
     tools:context="com.tekapic.FavoritesActivity">
 
-    <TextView
-        android:visibility="gone"
-        android:textSize="16sp"
-        android:layout_marginTop="50dp"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimaryDark"
-        android:id="@+id/favorites_indicator_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="You didn't save any favorites yet" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight="9"
+        android:layout_height="0dp"
+        android:layout_width="match_parent">
+
+        <TextView
+            android:visibility="gone"
+            android:textSize="16sp"
+            android:layout_marginTop="50dp"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:id="@+id/favorites_indicator_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="You didn't save any favorites yet" />
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/favorites_list"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/favorites_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+    </LinearLayout>
+
+
+    <android.support.design.widget.BottomNavigationView
+
+        app:itemTextColor="@color/bottom_nav_color"
+        app:itemIconTint="@color/bottom_nav_color"
+        android:id="@+id/favorites_nav"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        app:menu="@menu/bottom_navigation" />
+
+
+
+
+
+
+
+
+
+
 </LinearLayout>

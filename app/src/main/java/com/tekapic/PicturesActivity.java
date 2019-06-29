@@ -5,12 +5,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,13 +40,17 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
 
     public static String wantedAlbum;
     public static int fVisibleItemPosition = 0;
+    private BottomNavigationView bottomNavigationView;
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+
             case android.R.id.home:
                 onBackPressed();
                 return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -195,11 +203,14 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_pictures);
 
         String album = wantedAlbum.substring(0, 1).toUpperCase() + wantedAlbum.substring(1);
         setTitle(album);
 
-        setContentView(R.layout.activity_pictures);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.pictures_nav);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 
         actionBar = getSupportActionBar();
 
@@ -253,6 +264,15 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
     protected void onResume() {
         super.onResume();
 
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(3);
+        menuItem.setChecked(true);
+
+        SpannableStringBuilder title = new SpannableStringBuilder(menuItem.getTitle());
+        StyleSpan styleSpan = new StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
+        title.setSpan(styleSpan, 0, title.length(), 0);
+        menuItem.setTitle((title));
+
 
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
@@ -294,5 +314,33 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
         fVisibleItemPosition = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
 
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                    switch (item.getItemId()) {
+
+                        case R.id.nav_explore:
+                            startActivity(new Intent(PicturesActivity.this, ExploreActivity.class));
+                            break;
+                        case R.id.nav_search:
+                            startActivity(new Intent(PicturesActivity.this, SearchActivity.class));
+                            break;
+
+                        case R.id.nav_add_picture:
+                            startActivity(new Intent(PicturesActivity.this, AddPictureActivity.class));
+                            break;
+
+                        case R.id.nav_profile:
+                            startActivity(new Intent(PicturesActivity.this, ProfileActivity.class));
+
+                            break;
+                    }
+
+                    return true;
+                }
+            };
 
 }

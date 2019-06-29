@@ -215,7 +215,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
                         String userIdOfReporter = mAuth.getUid();
 
-                        String userIdWhoGotReported = HomePeopleActivity.user.getUserId();
+                        String userIdWhoGotReported = ProfilePeopleActivity.user.getUserId();
                         String pictureIdWhichReported = picture.getPictureId();
                         String picuteUrlWhichReported = picture.getPictureUrl();
 
@@ -362,7 +362,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
                 return true;
 
             case android.R.id.home:
-                goBack();
+                onBackPressed();
                 return true;
 
             case R.id.likePicturePeopleMenu:
@@ -389,7 +389,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
             case R.id.likesPicturePeopleMenu:
 
                 LikesActivity.flag = 1;
-                LikesActivity.userId = HomePeopleActivity.user.getUserId();
+                LikesActivity.userId = ProfilePeopleActivity.user.getUserId();
                 LikesActivity.pictureId = picture.getPictureId();
 
                 startActivity(new Intent(PicturePeopleActivity.this, LikesActivity.class));
@@ -456,7 +456,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
                 clickedItemIndex = position;
 
                 databaseReferenceLikes = FirebaseDatabase.getInstance().getReference().child("Users")
-                        .child(HomePeopleActivity.user.getUserId()).child("Pictures").child(picture.getPictureId()).child("Likes");
+                        .child(ProfilePeopleActivity.user.getUserId()).child("Pictures").child(picture.getPictureId()).child("Likes");
 
                 checkIfILikePicture();
                 checkNumberOfLikes();
@@ -472,10 +472,10 @@ public class PicturePeopleActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         databaseReferenceLikes = FirebaseDatabase.getInstance().getReference().child("Users")
-                .child(HomePeopleActivity.user.getUserId()).child("Pictures").child(picture.getPictureId()).child("Likes");
+                .child(ProfilePeopleActivity.user.getUserId()).child("Pictures").child(picture.getPictureId()).child("Likes");
 
         databaseReferenceLikedPictures = FirebaseDatabase.getInstance().getReference().child("Users")
-                .child(mAuth.getUid()).child("LikedPictures").child(HomePeopleActivity.user.getUserId());
+                .child(mAuth.getUid()).child("LikedPictures").child(ProfilePeopleActivity.user.getUserId());
 
 
 
@@ -599,20 +599,20 @@ public class PicturePeopleActivity extends AppCompatActivity {
     }
 
 
-    private void goBack() {
-        finish();
-        if(isPictureFromAlbum) {
-            startActivity(new Intent(PicturePeopleActivity.this, PicturesPeopleActivity.class));
-        }
-        else {
-            startActivity(new Intent(PicturePeopleActivity.this, HomePeopleActivity.class));
-        }
-    }
+//    private void goBack() {
+//        finish();
+//        if(isPictureFromAlbum) {
+//            startActivity(new Intent(PicturePeopleActivity.this, PicturesPeopleActivity.class));
+//        }
+//        else {
+//            startActivity(new Intent(PicturePeopleActivity.this, HomePeopleActivity.class));
+//        }
+//    }
 
-    @Override
-    public void onBackPressed() {
-        goBack();
-    }
+//    @Override
+//    public void onBackPressed() {
+//        goBack();
+//    }
 
 
     private void popUpAlertDialogConnectionError() {

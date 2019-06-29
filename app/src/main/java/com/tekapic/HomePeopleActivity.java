@@ -39,11 +39,15 @@ import java.util.Collections;
 
 public class HomePeopleActivity extends AppCompatActivity implements PicturesRecyclerViewAdapter.ListItemClickListener {
 
+    //Profile
+    private MenuItem item;
+    private boolean isInFavorites;
+
+    private android.support.v7.app.ActionBar actionBar;
+
 
     private TextView noPicturesText;
     private boolean isUserhasPics = false;
-    private MenuItem item;
-    private boolean isInFavorites;
     private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
     private DatabaseReference mStatusDB;
@@ -53,9 +57,7 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
     private ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
     private PicturesRecyclerViewAdapter.ListItemClickListener mOnClickListener;
     private Context context;
-    private android.support.v7.app.ActionBar actionBar;
     private boolean isPrivate = true;
-
 
     public static int flag;
     public static User user;
@@ -221,7 +223,6 @@ public class HomePeopleActivity extends AppCompatActivity implements PicturesRec
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_people_menu, menu);
-
 
         return super.onCreateOptionsMenu(menu);
     }

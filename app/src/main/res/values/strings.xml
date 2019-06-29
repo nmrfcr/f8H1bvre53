@@ -34,7 +34,7 @@
     <string name="section_format">Hello World from section: %1$d</string>
 
     <string name="all_pictures">When you share pictures, <br>they will appear on your profile.</br></string>
-
+    <string name="title_activity_profile_people">ProfilePeopleActivity</string>
 
 
 </resources>

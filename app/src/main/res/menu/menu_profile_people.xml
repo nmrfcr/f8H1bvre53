@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.tekapic.ProfilePeopleActivity">
+
+
+    <item
+        android:icon="@drawable/ic_star_border_black_24dp"
+        android:title="Add to favorites"
+        android:id="@+id/favorites_people"
+        app:showAsAction="always" />
+
+
+</menu>

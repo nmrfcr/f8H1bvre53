@@ -162,12 +162,19 @@
             android:name=".AddPictureActivity"
             android:grantUriPermissions="true"
             android:label="@string/add_picture"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
-            android:screenOrientation="portrait"
             android:name=".ProfileActivity"
             android:label="@string/profile"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".ProfilePeopleActivity"
+            android:label="@string/title_activity_profile_people"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
     </application>
 
 </manifest>
