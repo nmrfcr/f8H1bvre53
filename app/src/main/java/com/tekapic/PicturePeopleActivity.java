@@ -48,7 +48,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
     private AlertDialog alertDialog;
 
 
-
+    public static int index;
     public static Picture picture;
     public static boolean isPictureFromAlbum;
     public static int clickedItemIndex;
@@ -388,7 +388,8 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
             case R.id.likesPicturePeopleMenu:
 
-                LikesActivity.flag = 1;
+//                LikesActivity.flag = 1;
+                LikesActivity.index = index;
                 LikesActivity.userId = ProfilePeopleActivity.user.getUserId();
                 LikesActivity.pictureId = picture.getPictureId();
 

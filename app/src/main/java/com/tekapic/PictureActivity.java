@@ -283,7 +283,9 @@ public class PictureActivity extends AppCompatActivity {
 
             case R.id.likesPictureMenu:
 
-                LikesActivity.flag = 0;
+//                LikesActivity.flag = 0;
+                LikesActivity.index = 3;
+
                 LikesActivity.userId = mAuth.getUid();
                 LikesActivity.pictureId = picture.getPictureId();
 

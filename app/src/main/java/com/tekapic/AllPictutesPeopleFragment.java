@@ -207,6 +207,7 @@ public class AllPictutesPeopleFragment extends Fragment  implements PicturesRecy
 
 
                                     isPrivate = false;
+
                                     getPictures();
 
                                     break;
@@ -404,6 +405,7 @@ public class AllPictutesPeopleFragment extends Fragment  implements PicturesRecy
 
         PicturePeopleActivity.isPictureFromAlbum = false;
 
+        PicturePeopleActivity.index = ProfilePeopleActivity.index;
         Intent intent = new Intent(getActivity(), PicturePeopleActivity.class);
         startActivity(intent);
 

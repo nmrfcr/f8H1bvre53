@@ -5,12 +5,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,13 +38,29 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
 
     public static String wantedAlbum;
     public static int fVisibleItemPosition = 0;
+    private BottomNavigationView bottomNavigationView;
+    public static int index = 0;
 
 
 
-    private void getPicturesByAlbum() {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+    private void checkIfAlbumExists() {
 
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference usersdRef = rootRef.child("Users").child(HomePeopleActivity.user.getUserId()).child("Pictures");
+        DatabaseReference usersdRef = rootRef.child("Users").child(ProfilePeopleActivity.user.getUserId()).child("Pictures");
 
         ValueEventListener eventListener = new ValueEventListener() {
 
@@ -47,6 +68,58 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                boolean hasAnyPicture = false;
+
+                if(wasCalled) {
+                    picturesList.clear();
+
+                }
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                    String albumValue = ds.child(wantedAlbum).getValue(String.class);
+                    if(albumValue.equals("1")) {
+
+                        hasAnyPicture = true;
+                        break;
+                    }
+                }
+
+                if(hasAnyPicture == false) {
+//                    finish();
+//                    startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
+//                    return;
+                    onBackPressed();
+                    return;
+                }
+
+
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        usersdRef.addValueEventListener(eventListener);
+
+    }
+    private void getPicturesByAlbum() {
+
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference usersdRef = rootRef.child("Users").child(ProfilePeopleActivity.user.getUserId()).child("Pictures");
+
+        ValueEventListener eventListener = new ValueEventListener() {
+
+            boolean wasCalled = false;
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 boolean hasAnyPicture = false;
 
                 if(wasCalled) {
@@ -95,8 +168,10 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
                 }
 
                 if(hasAnyPicture == false) {
-                    finish();
-                    startActivity(new Intent(PicturesPeopleActivity.this, AlbumsPeopleActivity.class));
+//                    finish();
+//                    startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
+//                    return;
+                    onBackPressed();
                     return;
                 }
 
@@ -118,10 +193,7 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
 
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        startActivity(new Intent(PicturesPeopleActivity.this, AlbumsPeopleActivity.class));
-//    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,12 +203,16 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
         String album = wantedAlbum.substring(0, 1).toUpperCase() + wantedAlbum.substring(1);
         setTitle(album);
 
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.pictures_people_nav);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
+
         actionBar = getSupportActionBar();
 
         context = this;
         mOnClickListener = this;
 
-        mRecyclerView = findViewById(R.id.picturesRecyclerViewPeople);
+        mRecyclerView = findViewById(R.id.picturesPeopleRecyclerView);
         mRecyclerView.setHasFixedSize(true);
 
         layoutManager = new GridLayoutManager(getApplicationContext(),3);
@@ -178,9 +254,23 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
 
 
 
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(index);
+        menuItem.setChecked(true);
+
+        SpannableStringBuilder title = new SpannableStringBuilder(menuItem.getTitle());
+        StyleSpan styleSpan = new StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
+        title.setSpan(styleSpan, 0, title.length(), 0);
+        menuItem.setTitle((title));
+
+
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
+            return;
         }
+
+        //check if has pics
+        checkIfAlbumExists();
     }
 
     @Override
@@ -197,12 +287,13 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
             PicturePeopleActivity.picturesList.add(p);
         }
 
+        PicturePeopleActivity.index = index;
 
         PicturePeopleActivity.isPictureFromAlbum = true;
         Intent intent = new Intent(PicturesPeopleActivity.this, PicturePeopleActivity.class);
         startActivity(intent);
 
-        finish();
+//        finish();
     }
 
     @Override
@@ -213,9 +304,33 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
 
     }
 
-    public void goToProfile(View view) {
-        finish();
-        Intent intent = new Intent(PicturesPeopleActivity.this, HomeActivity.class);
-        startActivity(intent);
-    }
+
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                    switch (item.getItemId()) {
+
+                        case R.id.nav_explore:
+                            startActivity(new Intent(PicturesPeopleActivity.this, ExploreActivity.class));
+                            break;
+                        case R.id.nav_search:
+                            startActivity(new Intent(PicturesPeopleActivity.this, SearchActivity.class));
+                            break;
+
+                        case R.id.nav_add_picture:
+                            startActivity(new Intent(PicturesPeopleActivity.this, AddPictureActivity.class));
+                            break;
+
+                        case R.id.nav_profile:
+                            startActivity(new Intent(PicturesPeopleActivity.this, ProfileActivity.class));
+                            break;
+                    }
+
+                    return true;
+                }
+            };
+
 }

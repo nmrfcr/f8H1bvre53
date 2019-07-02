@@ -70,7 +70,6 @@ public class ProfilePeopleActivity extends AppCompatActivity {
 
 
 
-
     private void deleteFromFavorites() {
         databaseReference.removeValue();
         isInFavorites = false;
@@ -404,6 +403,7 @@ public class ProfilePeopleActivity extends AppCompatActivity {
                     fragment = new AllPictutesPeopleFragment();
                     break;
                 case 1:
+                    AlbumsPeopleFragment.user = user;
                     fragment = new AlbumsPeopleFragment();
                     break;
             }

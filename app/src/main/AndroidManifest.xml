@@ -125,7 +125,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".PicturesPeopleActivity"
-            android:parentActivityName=".AlbumsPeopleActivity"
+            android:parentActivityName=".ProfilePeopleActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".FavoritesActivity"

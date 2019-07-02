@@ -289,6 +289,8 @@ public class AllPicturesFragment extends Fragment implements PicturesRecyclerVie
 
         PictureActivity.isPictureFromAlbum = false;
 
+
+
         Intent intent = new Intent(getActivity(), PictureActivity.class);
         startActivity(intent);
 

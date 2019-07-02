@@ -415,11 +415,13 @@ public class PictureExploreActivity extends AppCompatActivity {
 
 
 
-                LikesActivity.flag = 2;
+//                LikesActivity.flag = 2;
+                LikesActivity.index = 0;
                 LikesActivity.userId = usersIdList.get(clickedItemIndex);
                 LikesActivity.pictureId = picture.getPictureId();
 
                 startActivity(new Intent(PictureExploreActivity.this, LikesActivity.class));
+
                 return true;
 
         }

@@ -5,13 +5,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -46,9 +51,25 @@ public class LikesActivity extends AppCompatActivity {
     private android.support.v7.app.ActionBar actionBar;
     private String userIdOfDeletedUser = "";
 
+    private BottomNavigationView bottomNavigationView;
 
     public static String userId, pictureId;
-    public static int flag;
+//    public static int flag;
+    public static int index;
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
 
@@ -79,6 +100,10 @@ public class LikesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_likes);
 
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.likes_nav);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
+
         context = this;
 
         actionBar = getSupportActionBar();
@@ -97,21 +122,21 @@ public class LikesActivity extends AppCompatActivity {
         getLikesFromFirebase();
     }
 
-    private void goBack() {
-        finish();
-
-        switch (flag) {
-            case 0:
-                startActivity(new Intent(LikesActivity.this, PictureActivity.class));
-                break;
-            case 1:
-                startActivity(new Intent(LikesActivity.this, PicturePeopleActivity.class));
-                break;
-            case 2:
-                startActivity(new Intent(LikesActivity.this, PictureExploreActivity.class));
-                break;
-        }
-    }
+//    private void goBack() {
+//        finish();
+//
+//        switch (flag) {
+//            case 0:
+//                startActivity(new Intent(LikesActivity.this, PictureActivity.class));
+//                break;
+//            case 1:
+//                startActivity(new Intent(LikesActivity.this, PicturePeopleActivity.class));
+//                break;
+//            case 2:
+//                startActivity(new Intent(LikesActivity.this, PictureExploreActivity.class));
+//                break;
+//        }
+//    }
 
     private void getLikesFromFirebase() {
 
@@ -121,7 +146,7 @@ public class LikesActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists()) {
-                    goBack();
+                   onBackPressed();
                 }
                 else {
                     actionBar.setSubtitle("(" + Long.toString(dataSnapshot.getChildrenCount()) +")");
@@ -206,10 +231,14 @@ public class LikesActivity extends AppCompatActivity {
                                         return;
                                     }
 
-                                    HomePeopleActivity.flag = 2;
-                                    HomePeopleActivity.user = user;
-                                    HomePeopleActivity.firstVisibleItemPosition = 0;
-                                    startActivity(new Intent(LikesActivity.this, HomePeopleActivity.class));
+                                    ProfilePeopleActivity.user = user;
+                                    ProfilePeopleActivity.index = index;
+                                    startActivity(new Intent(LikesActivity.this, ProfilePeopleActivity.class));
+
+//                                    HomePeopleActivity.flag = 2;
+//                                    HomePeopleActivity.user = user;
+//                                    HomePeopleActivity.firstVisibleItemPosition = 0;
+//                                    startActivity(new Intent(LikesActivity.this, HomePeopleActivity.class));
 
 
                                 }
@@ -250,9 +279,20 @@ public class LikesActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(index);
+        menuItem.setChecked(true);
+
+        SpannableStringBuilder title = new SpannableStringBuilder(menuItem.getTitle());
+        StyleSpan styleSpan = new StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
+        title.setSpan(styleSpan, 0, title.length(), 0);
+        menuItem.setTitle((title));
+
+
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
         }
+
     }
 
     public static class UserViewHolder extends RecyclerView.ViewHolder {
@@ -323,6 +363,34 @@ public class LikesActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder1.create();
         alertDialog.show();
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                    switch (item.getItemId()) {
+
+                        case R.id.nav_explore:
+                            startActivity(new Intent(LikesActivity.this, ExploreActivity.class));
+                            break;
+                        case R.id.nav_search:
+                            startActivity(new Intent(LikesActivity.this, SearchActivity.class));
+                            break;
+
+                        case R.id.nav_add_picture:
+                            startActivity(new Intent(LikesActivity.this, AddPictureActivity.class));
+                            break;
+
+                        case R.id.nav_profile:
+                            startActivity(new Intent(LikesActivity.this, ProfileActivity.class));
+
+                            break;
+                    }
+
+                    return true;
+                }
+            };
     //    @Override
 //    public void onBackPressed() {
 //        finish();
