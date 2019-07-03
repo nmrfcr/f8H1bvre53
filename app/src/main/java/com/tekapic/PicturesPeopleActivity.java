@@ -40,7 +40,7 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
     public static int fVisibleItemPosition = 0;
     private BottomNavigationView bottomNavigationView;
     public static int index = 0;
-
+    public static String username = "";
 
 
     @Override
@@ -201,6 +201,7 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
         setContentView(R.layout.activity_pictures_people);
 
         String album = wantedAlbum.substring(0, 1).toUpperCase() + wantedAlbum.substring(1);
+//        setTitle(username + "/" + album);
         setTitle(album);
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.pictures_people_nav);

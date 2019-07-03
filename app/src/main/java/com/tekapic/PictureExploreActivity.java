@@ -358,8 +358,7 @@ public class PictureExploreActivity extends AppCompatActivity {
             case R.id.gotoProfileExploreMenu:
 
                 if(usersIdList.get(clickedItemIndex).equals(mAuth.getUid())) {
-                    finish();
-                    startActivity(new Intent(PictureExploreActivity.this, HomeActivity.class));
+                    startActivity(new Intent(PictureExploreActivity.this, ProfileActivity.class));
                     return true;
                 }
 
@@ -367,10 +366,14 @@ public class PictureExploreActivity extends AppCompatActivity {
                 user.setUserId(usersIdList.get(clickedItemIndex));
                 user.setUsername(username);
 
-                HomePeopleActivity.flag = 3;
-                HomePeopleActivity.user = user;
-                HomePeopleActivity.firstVisibleItemPosition = 0;
-                startActivity(new Intent(PictureExploreActivity.this, HomePeopleActivity.class));
+//                HomePeopleActivity.flag = 3;
+//                HomePeopleActivity.user = user;
+//                HomePeopleActivity.firstVisibleItemPosition = 0;
+//                startActivity(new Intent(PictureExploreActivity.this, HomePeopleActivity.class));
+
+                ProfilePeopleActivity.user = user;
+                ProfilePeopleActivity.index = 0;
+                startActivity(new Intent(PictureExploreActivity.this, ProfilePeopleActivity.class));
 
                 return true;
 

@@ -359,7 +359,6 @@ public class AlbumsPeopleFragment extends Fragment implements AlbumsRecyclerView
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        getUserAlbums();
 
 
 
@@ -374,6 +373,7 @@ public class AlbumsPeopleFragment extends Fragment implements AlbumsRecyclerView
             public void onDataChange(DataSnapshot snapshot) {
                 if(snapshot.getValue().equals("public")) {
                     isPrivate = false;
+                    getUserAlbums();
 
                 }
                 else {
@@ -468,6 +468,7 @@ public class AlbumsPeopleFragment extends Fragment implements AlbumsRecyclerView
             return;
         }
 
+        PicturesPeopleActivity.username = user.getUsername();
         PicturesPeopleActivity.index = ProfilePeopleActivity.index;
         PicturesPeopleActivity.wantedAlbum = album;
         Intent intent = new Intent(getActivity(), PicturesPeopleActivity.class);
