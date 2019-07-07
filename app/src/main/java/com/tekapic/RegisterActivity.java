@@ -424,6 +424,7 @@ public class RegisterActivity extends AppCompatActivity {
                            currentUser.updateProfile(profileUpdates).addOnSuccessListener(new OnSuccessListener<Void>() {
                                @Override
                                public void onSuccess(Void aVoid) {
+
                                    userRegisteredSuccessfully = true;
 
                                    String username = mUsernameEditText.getText().toString().trim();
@@ -432,12 +433,17 @@ public class RegisterActivity extends AppCompatActivity {
                                            new com.tekapic.model.User(currentUser.getEmail(), username, currentUser.getUid(), "public", 0, false, "none");
                                    mUsersDB.child(currentUser.getUid()).setValue(newUser);
 
+                                   Intent intent = new Intent(RegisterActivity.this,ExploreActivity.class);
+                                   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                   startActivity(intent);
+                                   finish();
+
                                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                                    SharedPreferences.Editor editor = preferences.edit();
                                    editor.putString("email", currentUser.getEmail());
                                    editor.apply();
 
-                                   showAlertDialog("", "You have registered successfully.");
+//                                   showAlertDialog("", "You have registered successfully.");
 
                                    if(profilePictureUri != null) {
                                        uploadProfilePictureToFirebaseStorage();

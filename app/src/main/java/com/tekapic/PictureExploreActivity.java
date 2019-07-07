@@ -50,6 +50,7 @@ public class PictureExploreActivity extends AppCompatActivity {
     private Button button;
     private boolean flag;
     private AlertDialog alertDialog;
+    private DatabaseReference picDatabaseReference;
 
 
 
@@ -347,7 +348,7 @@ public class PictureExploreActivity extends AppCompatActivity {
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
 
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
@@ -386,7 +387,26 @@ public class PictureExploreActivity extends AppCompatActivity {
                 return true;
 
             case R.id.reportAbusePictureExplore:
-                setPictureReportReason();
+
+                picDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()) {
+                            setPictureReportReason();
+                        }
+                        else {
+                            Toast.makeText(PictureExploreActivity.this, "Picture was deleted by the user.", Toast.LENGTH_LONG).show();
+                            onBackPressed();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
                 return true;
 
 //            case android.R.id.home:
@@ -394,25 +414,42 @@ public class PictureExploreActivity extends AppCompatActivity {
 //                return true;
 
             case R.id.likePictureExploreMenu:
-                if(liked) {
-                    liked = false;
-                    item.setIcon(R.drawable.ic_heart);
-                    databaseReferenceLikes.child(mAuth.getUid()).removeValue();
 
-                    databaseReferenceLikedPictures.child(picture.getPictureId()).removeValue();
+                picDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()) {
+                            if(liked) {
+                                liked = false;
+                                item.setIcon(R.drawable.ic_heart);
+                                databaseReferenceLikes.child(mAuth.getUid()).removeValue();
 
-                }
+                                databaseReferenceLikedPictures.child(picture.getPictureId()).removeValue();
 
-                else {
-                    liked = true;
-                    item.setIcon(R.drawable.ic_like);
-                    databaseReferenceLikes.child(mAuth.getUid()).child("userId").setValue(mAuth.getUid());
+                            }
 
-                    databaseReferenceLikedPictures.child(picture.getPictureId()).child("pictureId").setValue(picture.getPictureId());
-                }
-                checkNumberOfLikes();
+                            else {
+                                liked = true;
+                                item.setIcon(R.drawable.ic_like);
+                                databaseReferenceLikes.child(mAuth.getUid()).child("userId").setValue(mAuth.getUid());
+
+                                databaseReferenceLikedPictures.child(picture.getPictureId()).child("pictureId").setValue(picture.getPictureId());
+                            }
+                            checkNumberOfLikes();
+                        }
+                        else {
+                            Toast.makeText(PictureExploreActivity.this, "Picture was deleted by the user.", Toast.LENGTH_LONG).show();
+                            onBackPressed();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
                 return true;
-
 
             case R.id.likesPictureExploreMenu:
 
@@ -520,6 +557,10 @@ public class PictureExploreActivity extends AppCompatActivity {
         });
 
         mAuth = FirebaseAuth.getInstance();
+
+        picDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users")
+                .child(usersIdList.get(clickedItemIndex)).child("Pictures").child(picture.getPictureId());
+
 
         databaseReferenceUser = FirebaseDatabase.getInstance().getReference().child("Users");
 

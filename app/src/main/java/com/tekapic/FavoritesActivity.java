@@ -116,6 +116,7 @@ public class FavoritesActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists()) {
+                    actionBar.setSubtitle("(0)");
                     indicatorText.setVisibility(View.VISIBLE);
                     mRecyclerView.setVisibility(View.GONE);
 

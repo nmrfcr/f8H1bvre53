@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -57,8 +58,11 @@ public class AlbumsPeopleFragment extends Fragment implements AlbumsRecyclerView
     private Map<String, Boolean> albumsMap = new HashMap<>();
     private Context context;
     private AlbumsRecyclerViewAdapter.ListItemClickListener mOnClickListener;
+    private DatabaseReference databaseReference2;
+    private DatabaseReference databaseReference3;
 
-    public static int firstVisibleItemPosition = 0;
+
+    public static int firstVisibleItemPosition;
     public static int flag;
     public static User user;
 
@@ -76,6 +80,9 @@ public class AlbumsPeopleFragment extends Fragment implements AlbumsRecyclerView
     public AlbumsPeopleFragment() {
         // Required empty public constructor
     }
+
+
+
 
     private void getUserAlbums() {
 
@@ -248,6 +255,7 @@ public class AlbumsPeopleFragment extends Fragment implements AlbumsRecyclerView
                     }
                 }
 
+
                 if(wasCalled) {
                     adapter.notifyDataSetChanged();
                 }
@@ -255,6 +263,7 @@ public class AlbumsPeopleFragment extends Fragment implements AlbumsRecyclerView
 
                 ////////////////set here number of alubmsssssssssssssssssssssssss
                 textView2.setText("(" + Integer.toString(albumsList.size()) + ")");
+
 
                 if(albumsList.size() == 0) {
                     ///////////////////////////hereeeeeeeeeeeeeeeeeeeeeeeee
@@ -271,6 +280,8 @@ public class AlbumsPeopleFragment extends Fragment implements AlbumsRecyclerView
                 mRecyclerView.setLayoutManager(mGridLayoutManager);
 
                 wasCalled = true;
+
+                mRecyclerView.scrollToPosition(firstVisibleItemPosition);
             }
 
             @Override
@@ -278,12 +289,12 @@ public class AlbumsPeopleFragment extends Fragment implements AlbumsRecyclerView
 
             }
         };
-        usersdRef.addValueEventListener(eventListener);
+        usersdRef.addListenerForSingleValueEvent(eventListener);
     }
     private void checkIfUserHasAnyPictures() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(ProfilePeopleActivity.user.getUserId());
 
-        databaseReference.child("Pictures").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("Pictures").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
 
@@ -330,6 +341,7 @@ public class AlbumsPeopleFragment extends Fragment implements AlbumsRecyclerView
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        firstVisibleItemPosition = 0;
 
         View view = getLayoutInflater().inflate(R.layout.albums_tab, null);
         TabLayout tabLayout = getActivity().findViewById(R.id.tabs_people);
@@ -343,7 +355,7 @@ public class AlbumsPeopleFragment extends Fragment implements AlbumsRecyclerView
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_albums_people, container, false);
-
+        isPrivate = true;
         noPicturesText = rootView.findViewById(R.id.textAlbumsPeopleNoPics);
 
         mOnClickListener = this;
@@ -360,66 +372,10 @@ public class AlbumsPeopleFragment extends Fragment implements AlbumsRecyclerView
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
 
-
-
-
         //here******************
 
-        final DatabaseReference databaseReference2 =   FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUserId());
-        final DatabaseReference databaseReference3 = databaseReference2;
-
-        databaseReference2.child("accountPrivacy").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if(snapshot.getValue().equals("public")) {
-                    isPrivate = false;
-                    getUserAlbums();
-
-                }
-                else {
-
-                    databaseReference3.child("Favorites").addListenerForSingleValueEvent(new ValueEventListener() {
-
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-
-                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
-                                String id = ds.child("userId").getValue(String.class);
-
-                                Log.i("id", ds.child("userId").getValue(String.class));
-
-                                if(id.equals(mAuth.getUid())) {
-
-                                    Log.i("xxx", "yyyyyyyyyyyyyyyyyyyyy");
-
-
-                                    isPrivate = false;
-
-                                   getUserAlbums();
-
-                                    return;
-                                }
-                            }
-
-                            isPrivate = true;
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
-                }
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+        databaseReference2 =   FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUserId());
+        databaseReference3 = databaseReference2;
 
 
 
@@ -536,9 +492,66 @@ public class AlbumsPeopleFragment extends Fragment implements AlbumsRecyclerView
     public void onResume() {
         super.onResume();
 
-        if(isNetworkConnected() == false) {
-            popUpAlertDialogConnectionError();
-        }
+        albumsList.clear();
+
+        databaseReference2.child("accountPrivacy").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if(snapshot.getValue().equals("public")) {
+                    isPrivate = false;
+                    getUserAlbums();
+                }
+
+                else {
+
+                    databaseReference3.child("Favorites").addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                                String id = ds.child("userId").getValue(String.class);
+
+                                Log.i("id", ds.child("userId").getValue(String.class));
+
+                                if(id.equals(mAuth.getUid())) {
+
+                                    Log.i("xxx", "yyyyyyyyyyyyyyyyyyyyy");
+
+
+                                    isPrivate = false;
+
+                                    getUserAlbums();
+
+                                    break;
+                                }
+
+                            }
+
+                            if(isPrivate) {
+                                getUserAlbums();
+                            }
+
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+
     }
     @Override
     public void onPause() {

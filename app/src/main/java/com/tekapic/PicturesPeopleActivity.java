@@ -91,7 +91,10 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
 //                    startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
 //                    return;
                     onBackPressed();
+                    finish();
                     return;
+                }else {
+                    getPicturesByAlbum();
                 }
 
 
@@ -105,7 +108,7 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
 
             }
         };
-        usersdRef.addValueEventListener(eventListener);
+        usersdRef.addListenerForSingleValueEvent(eventListener);
 
     }
     private void getPicturesByAlbum() {
@@ -182,6 +185,8 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
 
                 wasCalled = true;
 
+                mRecyclerView.scrollToPosition(fVisibleItemPosition);
+
             }
 
             @Override
@@ -189,7 +194,7 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
 
             }
         };
-        usersdRef.addValueEventListener(eventListener);
+        usersdRef.addListenerForSingleValueEvent(eventListener);
 
     }
 
@@ -199,6 +204,8 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pictures_people);
+
+        fVisibleItemPosition = 0;
 
         String album = wantedAlbum.substring(0, 1).toUpperCase() + wantedAlbum.substring(1);
 //        setTitle(username + "/" + album);
@@ -220,10 +227,7 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new SpacesItemDecoration(3));
 
-        getPicturesByAlbum();
 
-        ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPosition(fVisibleItemPosition);
-        fVisibleItemPosition = 0;
     }
 
 
@@ -269,9 +273,12 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
             popUpAlertDialogConnectionError();
             return;
         }
-
+        picturesList.clear();
         //check if has pics
         checkIfAlbumExists();
+
+
+
     }
 
     @Override

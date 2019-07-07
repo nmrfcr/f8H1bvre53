@@ -56,10 +56,12 @@ public class AllPictutesPeopleFragment extends Fragment  implements PicturesRecy
     private PicturesRecyclerViewAdapter.ListItemClickListener mOnClickListener;
     private Context context;
     private boolean isPrivate = true;
+    private DatabaseReference databaseReference2;
+    private DatabaseReference databaseReference3;
 
     public static int flag;
     public static User user;
-    public static int firstVisibleItemPosition = 0;
+    public static int firstVisibleItemPosition;
 
 
 
@@ -135,7 +137,7 @@ public class AllPictutesPeopleFragment extends Fragment  implements PicturesRecy
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
+        firstVisibleItemPosition = 0;
         View view = getLayoutInflater().inflate(R.layout.all_pictures_tab, null);
         TabLayout tabLayout = getActivity().findViewById(R.id.tabs_people);
         tabLayout.getTabAt(0).setCustomView(view);
@@ -176,76 +178,8 @@ public class AllPictutesPeopleFragment extends Fragment  implements PicturesRecy
 
         //here******************
 
-        final DatabaseReference databaseReference2 =   FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUserId());
-        final DatabaseReference databaseReference3 = databaseReference2;
-
-        databaseReference2.child("accountPrivacy").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if(snapshot.getValue().equals("public")) {
-                    isPrivate = false;
-                    getPictures();
-
-                }
-                else {
-
-                    databaseReference3.child("Favorites").addListenerForSingleValueEvent(new ValueEventListener() {
-
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-
-                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
-                                String id = ds.child("userId").getValue(String.class);
-
-                                Log.i("id", ds.child("userId").getValue(String.class));
-
-                                if(id.equals(mAuth.getUid())) {
-
-                                    Log.i("xxx", "yyyyyyyyyyyyyyyyyyyyy");
-
-
-                                    isPrivate = false;
-
-                                    getPictures();
-
-                                    break;
-                                }
-                            }
-                            if(isPrivate) {
-
-                                noPicturesText.setVisibility(View.VISIBLE);
-                                noPicturesText.setText("This Account is Private");
-
-
-                                picturesDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        textView2.setText("(" + Long.toString(dataSnapshot.getChildrenCount()) +")");
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                    }
-                                });
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
-                }
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+       databaseReference2 =   FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUserId());
+       databaseReference3 = databaseReference2;
 
 
 
@@ -290,7 +224,7 @@ public class AllPictutesPeopleFragment extends Fragment  implements PicturesRecy
      */
 
     private void checkIfUserHasAnyPictures() {
-        picturesDatabaseReference.addValueEventListener(new ValueEventListener() {
+        picturesDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
 
@@ -376,7 +310,7 @@ public class AllPictutesPeopleFragment extends Fragment  implements PicturesRecy
                 mRecyclerView.setAdapter(adapter);
 
                 wasCalled = true;
-
+                mRecyclerView.scrollToPosition(firstVisibleItemPosition);
             }
 
             @Override
@@ -384,7 +318,7 @@ public class AllPictutesPeopleFragment extends Fragment  implements PicturesRecy
 
             }
         };
-        usersdRef.addValueEventListener(eventListener);
+        usersdRef.addListenerForSingleValueEvent(eventListener);
 
     }
 
@@ -416,6 +350,79 @@ public class AllPictutesPeopleFragment extends Fragment  implements PicturesRecy
         void onFragmentInteraction(Uri uri);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        picturesList.clear();
+
+        databaseReference2.child("accountPrivacy").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if(snapshot.getValue().equals("public")) {
+                    isPrivate = false;
+                    getPictures();
+
+                }
+                else {
+
+                    databaseReference3.child("Favorites").addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
 
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                                String id = ds.child("userId").getValue(String.class);
+
+                                Log.i("id", ds.child("userId").getValue(String.class));
+
+                                if(id.equals(mAuth.getUid())) {
+
+                                    Log.i("xxx", "yyyyyyyyyyyyyyyyyyyyy");
+
+
+                                    isPrivate = false;
+
+                                    getPictures();
+
+                                    break;
+                                }
+                            }
+                            if(isPrivate) {
+
+                                noPicturesText.setVisibility(View.VISIBLE);
+                                noPicturesText.setText("This Account is Private");
+
+
+                                picturesDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        textView2.setText("(" + Long.toString(dataSnapshot.getChildrenCount()) +")");
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+    }
 }

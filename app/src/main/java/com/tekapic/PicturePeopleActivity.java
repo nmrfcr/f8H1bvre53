@@ -37,6 +37,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
     private android.support.v7.app.ActionBar actionBar;
     private String album;
     private DatabaseReference databaseReferenceLikes, databaseReferenceLikedPictures;
+    private DatabaseReference picDatabaseReference;
     private boolean liked = false;
     private MenuItem item, itemLikes;
     private long numberOfLikes;
@@ -341,7 +342,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
 
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
@@ -358,7 +359,26 @@ public class PicturePeopleActivity extends AppCompatActivity {
                 return true;
 
             case R.id.reportAbusePicturePeople:
-               setPictureReportReason();
+
+
+                picDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()) {
+                            setPictureReportReason();
+                        }
+                        else {
+                            Toast.makeText(PicturePeopleActivity.this, "Picture was deleted by the user.", Toast.LENGTH_LONG).show();
+                            onBackPressed();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
                 return true;
 
             case android.R.id.home:
@@ -366,23 +386,48 @@ public class PicturePeopleActivity extends AppCompatActivity {
                 return true;
 
             case R.id.likePicturePeopleMenu:
-                if(liked) {
-                    liked = false;
-                    item.setIcon(R.drawable.ic_heart);
-                    databaseReferenceLikes.child(mAuth.getUid()).removeValue();
 
-                    databaseReferenceLikedPictures.child(picture.getPictureId()).removeValue();
+                //here need to check if the user didn't delete the picture
+                //if pic was deleted, show long toast "Picture was deleted by the user and
+                //fire onbackpress()
 
-                }
+                picDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()) {
+                            if(liked) {
+                                liked = false;
+                                item.setIcon(R.drawable.ic_heart);
+                                databaseReferenceLikes.child(mAuth.getUid()).removeValue();
 
-                else {
-                    liked = true;
-                    item.setIcon(R.drawable.ic_like);
-                    databaseReferenceLikes.child(mAuth.getUid()).child("userId").setValue(mAuth.getUid());
+                                databaseReferenceLikedPictures.child(picture.getPictureId()).removeValue();
 
-                    databaseReferenceLikedPictures.child(picture.getPictureId()).child("pictureId").setValue(picture.getPictureId());
-                }
-                checkNumberOfLikes();
+                            }
+
+                            else {
+                                liked = true;
+                                item.setIcon(R.drawable.ic_like);
+                                databaseReferenceLikes.child(mAuth.getUid()).child("userId").setValue(mAuth.getUid());
+
+                                databaseReferenceLikedPictures.child(picture.getPictureId()).child("pictureId").setValue(picture.getPictureId());
+                            }
+                            checkNumberOfLikes();
+                        }
+                        else {
+                            Toast.makeText(PicturePeopleActivity.this, "Picture was deleted by the user.", Toast.LENGTH_LONG).show();
+                            onBackPressed();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
                 return true;
 
 
@@ -441,6 +486,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
         hideSystemUI();
         showSystemUI();
 
+
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -469,6 +515,9 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
             }
         });
+
+        picDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users")
+                .child(ProfilePeopleActivity.user.getUserId()).child("Pictures").child(picture.getPictureId());
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -527,7 +576,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
     private void checkIfILikePicture() {
 
-        databaseReferenceLikes.child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
+        databaseReferenceLikes.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -550,7 +599,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
     }
 
     private void checkNumberOfLikes() {
-        databaseReferenceLikes.addValueEventListener(new ValueEventListener() {
+        databaseReferenceLikes.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 numberOfLikes = dataSnapshot.getChildrenCount();

@@ -90,7 +90,11 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
 
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
+            return;
         }
+        picturesList.clear();
+        getDataFromFirebase();
+
     }
 
 
@@ -208,7 +212,6 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
         mOnClickListener = this;
         context = this;
 
-        getDataFromFirebase();
 
         ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPosition(firstVisibleItemPosition);
         firstVisibleItemPosition = 0;
