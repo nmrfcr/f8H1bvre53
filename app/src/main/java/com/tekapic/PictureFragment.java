@@ -51,6 +51,7 @@ public class PictureFragment extends Fragment {
                         Log.i("onLoadFailed", "Failed to load picture");
 //                        Toast.makeText(context, "Failed to load picture.", Toast.LENGTH_LONG).show();
 
+
                         //1. go back?
                         //2. delete that data?
 

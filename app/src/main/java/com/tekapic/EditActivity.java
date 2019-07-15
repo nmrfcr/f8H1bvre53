@@ -116,15 +116,15 @@ public class EditActivity extends AppCompatActivity {
             return;
         }
 
-        String albums[] = new String[Picture.numberOfAlbums];
+        Boolean albums[] = new Boolean[Picture.numberOfAlbums];
         boolean userDidNotSelectAnyAlbum = true;
 
         for(int i = 0; i < checkBoxesArray.length; i++) {
             if(checkBoxesArray[i].isChecked()) {
-                albums[i] = "1";
+                albums[i] = true;
             }
             else {
-                albums[i] = "0";
+                albums[i] = false;
             }
         }
         for(int i = 0; i < checkBoxesArray.length; i++) {
@@ -200,58 +200,59 @@ public class EditActivity extends AppCompatActivity {
                 .apply(new RequestOptions().placeholder(R.drawable.b))
                 .into(imageView);
 
+
         getAlbums();
 
     }
 
     private void getAlbums() {
 
-        if(picture.getMe().equals("1")) {
+        if(picture.getMe()) {
             me.setChecked(true);
         }
-        if(picture.getFamily().equals("1")) {
+        if(picture.getFamily()) {
             family.setChecked(true);
         }
-        if(picture.getFriends().equals("1")) {
+        if(picture.getFriends()) {
             friends.setChecked(true);
         }
-        if(picture.getLove().equals("1")) {
+        if(picture.getLove()) {
             love.setChecked(true);
         }
-        if(picture.getPets().equals("1")) {
+        if(picture.getPets()) {
             pets.setChecked(true);
         }
-        if(picture.getNature().equals("1")) {
+        if(picture.getNature()) {
             nature.setChecked(true);
         }
-        if(picture.getSport().equals("1")) {
+        if(picture.getSport()) {
             sport.setChecked(true);
         }
-        if(picture.getPersons().equals("1")) {
+        if(picture.getPersons()) {
             persons.setChecked(true);
         }
-        if(picture.getAnimals().equals("1")) {
+        if(picture.getAnimals()) {
             animals.setChecked(true);
         }
-        if(picture.getVehicles().equals("1")) {
+        if(picture.getVehicles()) {
             vehicles.setChecked(true);
         }
-        if(picture.getViews().equals("1")) {
+        if(picture.getViews()) {
             views.setChecked(true);
         }
-        if(picture.getFood().equals("1")) {
+        if(picture.getFood()) {
             food.setChecked(true);
         }
-        if(picture.getThings().equals("1")) {
+        if(picture.getThings()) {
             things.setChecked(true);
         }
-        if(picture.getFunny().equals("1")) {
+        if(picture.getFunny()) {
             funny.setChecked(true);
         }
-        if(picture.getPlaces().equals("1")) {
+        if(picture.getPlaces()) {
             places.setChecked(true);
         }
-        if(picture.getArt().equals("1")) {
+        if(picture.getArt()) {
             art.setChecked(true);
         }
 

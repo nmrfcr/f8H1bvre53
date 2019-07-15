@@ -58,6 +58,7 @@ public class PictureActivity extends AppCompatActivity {
     private MenuItem item, itemLikes;
     private long numberOfLikes;
     private FragmentCollectionAdapter fragmentCollectionAdapter;
+    private DatabaseReference picDatabaseReference;
 
 
     public static Picture picture;
@@ -146,52 +147,52 @@ public class PictureActivity extends AppCompatActivity {
 
         ArrayList<String> albumsList = new ArrayList<String>();
 
-        if(picture.getMe().equals("1")) {
+        if(picture.getMe()) {
             albumsList.add(Picture.albumsNamesUpperCase[0]);
         }
-        if(picture.getFamily().equals("1")) {
+        if(picture.getFamily()) {
             albumsList.add(Picture.albumsNamesUpperCase[1]);
         }
-        if(picture.getFriends().equals("1")) {
+        if(picture.getFriends()) {
             albumsList.add(Picture.albumsNamesUpperCase[2]);
         }
-        if(picture.getLove().equals("1")) {
+        if(picture.getLove()) {
             albumsList.add(Picture.albumsNamesUpperCase[3]);
         }
-        if(picture.getPets().equals("1")) {
+        if(picture.getPets()) {
             albumsList.add(Picture.albumsNamesUpperCase[4]);
         }
-        if(picture.getNature().equals("1")) {
+        if(picture.getNature()) {
             albumsList.add(Picture.albumsNamesUpperCase[5]);
         }
-        if(picture.getSport().equals("1")) {
+        if(picture.getSport()) {
             albumsList.add(Picture.albumsNamesUpperCase[6]);
         }
-        if(picture.getPersons().equals("1")) {
+        if(picture.getPersons()) {
             albumsList.add(Picture.albumsNamesUpperCase[7]);
         }
-        if(picture.getAnimals().equals("1")) {
+        if(picture.getAnimals()) {
             albumsList.add(Picture.albumsNamesUpperCase[8]);
         }
-        if(picture.getVehicles().equals("1")) {
+        if(picture.getVehicles()) {
             albumsList.add(Picture.albumsNamesUpperCase[9]);
         }
-        if(picture.getViews().equals("1")) {
+        if(picture.getViews()) {
             albumsList.add(Picture.albumsNamesUpperCase[10]);
         }
-        if(picture.getFood().equals("1")) {
+        if(picture.getFood()) {
             albumsList.add(Picture.albumsNamesUpperCase[11]);
         }
-        if(picture.getThings().equals("1")) {
+        if(picture.getThings()) {
             albumsList.add(Picture.albumsNamesUpperCase[12]);
         }
-        if(picture.getFunny().equals("1")) {
+        if(picture.getFunny()) {
             albumsList.add(Picture.albumsNamesUpperCase[13]);
         }
-        if(picture.getPlaces().equals("1")) {
+        if(picture.getPlaces()) {
             albumsList.add(Picture.albumsNamesUpperCase[14]);
         }
-        if(picture.getArt().equals("1")) {
+        if(picture.getArt()) {
             albumsList.add(Picture.albumsNamesUpperCase[15]);
         }
 
@@ -231,7 +232,7 @@ public class PictureActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
 
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
@@ -261,24 +262,49 @@ public class PictureActivity extends AppCompatActivity {
                 return true;
 
             case R.id.likePictureMenu:
-                if(liked) {
-                    liked = false;
-                    item.setIcon(R.drawable.ic_heart);
-                    databaseReferenceLikes.child(mAuth.getUid()).removeValue();
 
-                    databaseReferenceLikedPictures.child(picture.getPictureId()).removeValue();
 
-                }
 
-                else {
-                    liked = true;
-                    item.setIcon(R.drawable.ic_like);
-                    databaseReferenceLikes.child(mAuth.getUid()).child("userId").setValue(mAuth.getUid());
 
-                    databaseReferenceLikedPictures.child(picture.getPictureId()).child("pictureId").setValue(picture.getPictureId());
 
-                }
-                checkNumberOfLikes();
+                picDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()) {
+
+                            if(liked) {
+                                liked = false;
+                                item.setIcon(R.drawable.ic_heart);
+                                databaseReferenceLikes.child(mAuth.getUid()).removeValue();
+
+                                databaseReferenceLikedPictures.child(picture.getPictureId()).removeValue();
+
+                            }
+
+                            else {
+                                liked = true;
+                                item.setIcon(R.drawable.ic_like);
+                                databaseReferenceLikes.child(mAuth.getUid()).child("userId").setValue(mAuth.getUid());
+
+                                databaseReferenceLikedPictures.child(picture.getPictureId()).child("pictureId").setValue(picture.getPictureId());
+
+                            }
+                            checkNumberOfLikes();
+
+                        }
+                        else {
+                            Toast.makeText(PictureActivity.this, "This picture was deleted.", Toast.LENGTH_LONG).show();
+                            onBackPressed();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
                 return true;
 
             case R.id.likesPictureMenu:
@@ -426,6 +452,9 @@ public class PictureActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mStatusDB = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid()).child("Pictures");
         storageReference =  FirebaseStorage.getInstance().getReference().getStorage();
+
+        picDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users")
+                .child(mAuth.getUid()).child("Pictures").child(picture.getPictureId());
 
         databaseReferenceLikes = FirebaseDatabase.getInstance().getReference().child("Users")
                 .child(mAuth.getUid()).child("Pictures").child(picture.getPictureId()).child("Likes");

@@ -8,31 +8,36 @@ public class User {
     private String email;
     private String username;
     private String userId;
-    private String accountPrivacy;
-    private int numberOfViolatingTermsOfUse;
-    private boolean warnForViolatingTermsOfUse;
+    private Boolean privateAccount;
     private String profilePictureUrl;
+
+    private Integer numberOfViolatingTermsOfUse;
+    private Boolean warnForViolatingTermsOfUse;
+    private Boolean sharingPicturesEnabled;
 
     public User() {
         this.profilePictureUrl = "none";
         this.email = "none";
         this.username = "none";
         this.userId = "none";
-        this.accountPrivacy = "none";
+        this.privateAccount = false;
         this.numberOfViolatingTermsOfUse = -1;
         this.warnForViolatingTermsOfUse = false;
+        this.sharingPicturesEnabled = false;
     }
 
-    public User(String email, String username, String userId, String accountPrivacy, int numberOfViolatingTermsOfUse,
-                boolean warnForViolatingTermsOfUse, String profilePictureUrl) {
+    public User(String email, String username, String userId, Boolean privateAccount, Integer numberOfViolatingTermsOfUse,
+                Boolean warnForViolatingTermsOfUse, String profilePictureUrl, Boolean sharingPicturesEnabled) {
         this.email = email;
         this.username = username;
         this.userId = userId;
-        this.accountPrivacy = accountPrivacy;
+        this.privateAccount = privateAccount;
         this.numberOfViolatingTermsOfUse = numberOfViolatingTermsOfUse;
         this.warnForViolatingTermsOfUse = warnForViolatingTermsOfUse;
         this.profilePictureUrl = profilePictureUrl;
+        this.sharingPicturesEnabled = sharingPicturesEnabled;
     }
+
 
     public String getEmail() {
         return email;
@@ -40,22 +45,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getAccountPrivacy() {
-        return accountPrivacy;
-    }
-
-    public void setAccountPrivacy(String accountPrivacy) {
-        this.accountPrivacy = accountPrivacy;
     }
 
     public String getUsername() {
@@ -66,19 +55,35 @@ public class User {
         this.username = username;
     }
 
-    public int getNumberOfViolatingTermsOfUse() {
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public Boolean getPrivateAccount() {
+        return privateAccount;
+    }
+
+    public void setPrivateAccount(Boolean privateAccount) {
+        this.privateAccount = privateAccount;
+    }
+
+    public Integer getNumberOfViolatingTermsOfUse() {
         return numberOfViolatingTermsOfUse;
     }
 
-    public void setNumberOfViolatingTermsOfUse(int numberOfViolatingTermsOfUse) {
+    public void setNumberOfViolatingTermsOfUse(Integer numberOfViolatingTermsOfUse) {
         this.numberOfViolatingTermsOfUse = numberOfViolatingTermsOfUse;
     }
 
-    public boolean isWarnForViolatingTermsOfUse() {
+    public Boolean getWarnForViolatingTermsOfUse() {
         return warnForViolatingTermsOfUse;
     }
 
-    public void setWarnForViolatingTermsOfUse(boolean warnForViolatingTermsOfUse) {
+    public void setWarnForViolatingTermsOfUse(Boolean warnForViolatingTermsOfUse) {
         this.warnForViolatingTermsOfUse = warnForViolatingTermsOfUse;
     }
 
@@ -88,5 +93,13 @@ public class User {
 
     public void setProfilePictureUrl(String profilePictureUrl) {
         this.profilePictureUrl = profilePictureUrl;
+    }
+
+    public Boolean getSharingPicturesEnabled() {
+        return sharingPicturesEnabled;
+    }
+
+    public void setSharingPicturesEnabled(Boolean sharingPicturesEnabled) {
+        this.sharingPicturesEnabled = sharingPicturesEnabled;
     }
 }

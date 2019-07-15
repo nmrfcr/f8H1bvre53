@@ -97,84 +97,84 @@ public class AlbumsFragment extends Fragment implements AlbumsRecyclerViewAdapte
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-                    String me = ds.child("me").getValue(String.class);
-                    String family = ds.child("family").getValue(String.class);
-                    String friends = ds.child("friends").getValue(String.class);
-                    String love = ds.child("love").getValue(String.class);
-                    String pets = ds.child("pets").getValue(String.class);
-                    String nature = ds.child("nature").getValue(String.class);
-                    String sport = ds.child("sport").getValue(String.class);
-                    String persons = ds.child("persons").getValue(String.class);
-                    String animals = ds.child("animals").getValue(String.class);
-                    String vehicles = ds.child("vehicles").getValue(String.class);
-                    String views = ds.child("views").getValue(String.class);
-                    String food = ds.child("food").getValue(String.class);
-                    String things = ds.child("things").getValue(String.class);
-                    String funny = ds.child("funny").getValue(String.class);
-                    String places = ds.child("places").getValue(String.class);
-                    String art = ds.child("art").getValue(String.class);
+                    Boolean me = (Boolean)ds.child("me").getValue();
+                    Boolean family = (Boolean)ds.child("family").getValue();
+                    Boolean friends = (Boolean)ds.child("friends").getValue();
+                    Boolean love = (Boolean)ds.child("love").getValue();
+                    Boolean pets = (Boolean)ds.child("pets").getValue();
+                    Boolean nature = (Boolean)ds.child("nature").getValue();
+                    Boolean sport = (Boolean)ds.child("sport").getValue();
+                    Boolean persons = (Boolean)ds.child("persons").getValue();
+                    Boolean animals = (Boolean)ds.child("animals").getValue();
+                    Boolean vehicles = (Boolean)ds.child("vehicles").getValue();
+                    Boolean views = (Boolean)ds.child("views").getValue();
+                    Boolean food = (Boolean)ds.child("food").getValue();
+                    Boolean things = (Boolean)ds.child("things").getValue();
+                    Boolean funny = (Boolean)ds.child("funny").getValue();
+                    Boolean places = (Boolean)ds.child("places").getValue();
+                    Boolean art = (Boolean)ds.child("art").getValue();
 
-                    if(me.equals("1") && meDoesntExist) {
+                    if(me && meDoesntExist) {
                         albumsMap.put("me", true);
                         meDoesntExist = false;
                     }
-                    if(family.equals("1") && familyDoesntExist) {
+                    if(family && familyDoesntExist) {
                         albumsMap.put("family", true);
                         familyDoesntExist = false;
                     }
-                    if(friends.equals("1") && friendsDoesntExist) {
+                    if(friends && friendsDoesntExist) {
                         albumsMap.put("friends", true);
                         friendsDoesntExist = false;
                     }
-                    if(love.equals("1") && loveDoesntExist) {
+                    if(love && loveDoesntExist) {
                         albumsMap.put("love", true);
                         loveDoesntExist = false;
                     }
-                    if(pets.equals("1") && petsDoesntExist) {
+                    if(pets && petsDoesntExist) {
                         albumsMap.put("pets", true);
                         petsDoesntExist = false;
                     }
-                    if(nature.equals("1") && natureDoesntExist) {
+                    if(nature && natureDoesntExist) {
                         albumsMap.put("nature", true);
                         natureDoesntExist = false;
                     }
-                    if(sport.equals("1") && sportDoesntExist) {
+                    if(sport && sportDoesntExist) {
                         albumsMap.put("sport", true);
                         sportDoesntExist = false;
                     }
-                    if(persons.equals("1") && personsDoesntExist) {
+                    if(persons && personsDoesntExist) {
                         albumsMap.put("persons", true);
                         personsDoesntExist = false;
                     }
-                    if(animals.equals("1") && animalsDoesntExist) {
+                    if(animals && animalsDoesntExist) {
                         albumsMap.put("animals", true);
                         animalsDoesntExist = false;
                     }
-                    if(vehicles.equals("1") && vehiclesDoesntExist) {
+                    if(vehicles && vehiclesDoesntExist) {
                         albumsMap.put("vehicles", true);
                         vehiclesDoesntExist = false;
                     }
-                    if(views.equals("1") && viewsDoesntExist) {
+                    if(views && viewsDoesntExist) {
                         albumsMap.put("views", true);
                         viewsDoesntExist = false;
                     }
-                    if(food.equals("1") && foodDoesntExist) {
+                    if(food && foodDoesntExist) {
                         albumsMap.put("food", true);
                         foodDoesntExist = false;
                     }
-                    if(things.equals("1") && thingsDoesntExist) {
+                    if(things && thingsDoesntExist) {
                         albumsMap.put("things", true);
                         thingsDoesntExist = false;
                     }
-                    if(funny.equals("1") && funnyDoesntExist) {
+                    if(funny && funnyDoesntExist) {
                         albumsMap.put("funny", true);
                         funnyDoesntExist = false;
                     }
-                    if(places.equals("1") && placesDoesntExist) {
+                    if(places && placesDoesntExist) {
                         albumsMap.put("places", true);
                         placesDoesntExist = false;
                     }
-                    if(art.equals("1") && artDoesntExist) {
+                    if(art && artDoesntExist) {
                         albumsMap.put("art", true);
                         artDoesntExist = false;
                     }

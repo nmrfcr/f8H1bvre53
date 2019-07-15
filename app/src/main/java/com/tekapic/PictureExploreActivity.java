@@ -66,54 +66,55 @@ public class PictureExploreActivity extends AppCompatActivity {
 
         ArrayList<String> albumsList = new ArrayList<String>();
 
-        if(picture.getMe().equals("1")) {
+        if(picture.getMe()) {
             albumsList.add(Picture.albumsNamesUpperCase[0]);
         }
-        if(picture.getFamily().equals("1")) {
+        if(picture.getFamily()) {
             albumsList.add(Picture.albumsNamesUpperCase[1]);
         }
-        if(picture.getFriends().equals("1")) {
+        if(picture.getFriends()) {
             albumsList.add(Picture.albumsNamesUpperCase[2]);
         }
-        if(picture.getLove().equals("1")) {
+        if(picture.getLove()) {
             albumsList.add(Picture.albumsNamesUpperCase[3]);
         }
-        if(picture.getPets().equals("1")) {
+        if(picture.getPets()) {
             albumsList.add(Picture.albumsNamesUpperCase[4]);
         }
-        if(picture.getNature().equals("1")) {
+        if(picture.getNature()) {
             albumsList.add(Picture.albumsNamesUpperCase[5]);
         }
-        if(picture.getSport().equals("1")) {
+        if(picture.getSport()) {
             albumsList.add(Picture.albumsNamesUpperCase[6]);
         }
-        if(picture.getPersons().equals("1")) {
+        if(picture.getPersons()) {
             albumsList.add(Picture.albumsNamesUpperCase[7]);
         }
-        if(picture.getAnimals().equals("1")) {
+        if(picture.getAnimals()) {
             albumsList.add(Picture.albumsNamesUpperCase[8]);
         }
-        if(picture.getVehicles().equals("1")) {
+        if(picture.getVehicles()) {
             albumsList.add(Picture.albumsNamesUpperCase[9]);
         }
-        if(picture.getViews().equals("1")) {
+        if(picture.getViews()) {
             albumsList.add(Picture.albumsNamesUpperCase[10]);
         }
-        if(picture.getFood().equals("1")) {
+        if(picture.getFood()) {
             albumsList.add(Picture.albumsNamesUpperCase[11]);
         }
-        if(picture.getThings().equals("1")) {
+        if(picture.getThings()) {
             albumsList.add(Picture.albumsNamesUpperCase[12]);
         }
-        if(picture.getFunny().equals("1")) {
+        if(picture.getFunny()) {
             albumsList.add(Picture.albumsNamesUpperCase[13]);
         }
-        if(picture.getPlaces().equals("1")) {
+        if(picture.getPlaces()) {
             albumsList.add(Picture.albumsNamesUpperCase[14]);
         }
-        if(picture.getArt().equals("1")) {
+        if(picture.getArt()) {
             albumsList.add(Picture.albumsNamesUpperCase[15]);
         }
+
 
         String albums = "";
 
@@ -181,8 +182,8 @@ public class PictureExploreActivity extends AppCompatActivity {
 
 
         BackgroundMail.newBuilder(this)
-                .withUsername("tatyanakon45@gmail.com")
-                .withPassword("Ey5NmHcS1z")
+                .withUsername("tekapicreporter@gmail.com")
+                .withPassword("K67vDe3VzAq7i")
                 .withMailto("tekapic2018@gmail.com")
                 .withType(BackgroundMail.TYPE_PLAIN)
                 .withSubject("Report Abuse")
@@ -222,7 +223,7 @@ public class PictureExploreActivity extends AppCompatActivity {
 
                         String userIdOfReporter = mAuth.getUid();
 
-                        String userIdWhoGotReported = HomePeopleActivity.user.getUserId();
+                        String userIdWhoGotReported = usersIdList.get(clickedItemIndex);
                         String pictureIdWhichReported = picture.getPictureId();
                         String picuteUrlWhichReported = picture.getPictureUrl();
 

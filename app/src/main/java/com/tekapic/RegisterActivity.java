@@ -308,11 +308,20 @@ public class RegisterActivity extends AppCompatActivity {
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-                        String usnm = ds.child("username").getValue(String.class);
+
+                       Log.i("ds", ds.getValue().toString());
 
 
+                    String usnm = null;
+                    try {
+                        usnm = ds.child("username").getValue(String.class);
+                    } catch (Exception e) {
+                        usnm = "xxx";
+                        e.printStackTrace();
+                    }
 
-                        Log.i("username", usnm);
+
+                    Log.i("username", usnm);
 
                             if(usnm.equals(username)) {
                                 isUsernametaken = true;
@@ -430,7 +439,7 @@ public class RegisterActivity extends AppCompatActivity {
                                    String username = mUsernameEditText.getText().toString().trim();
 
                                    com.tekapic.model.User newUser =
-                                           new com.tekapic.model.User(currentUser.getEmail(), username, currentUser.getUid(), "public", 0, false, "none");
+                                           new com.tekapic.model.User(currentUser.getEmail(), username, currentUser.getUid(), false, 0, false, "none", true);
                                    mUsersDB.child(currentUser.getUid()).setValue(newUser);
 
                                    Intent intent = new Intent(RegisterActivity.this,ExploreActivity.class);
@@ -511,13 +520,59 @@ public class RegisterActivity extends AppCompatActivity {
         mPasswordEditText = findViewById(R.id.passwordEditTextRegister);
 
         mAuth = FirebaseAuth.getInstance();
-        mUsersDB = FirebaseDatabase.getInstance().getReference().child("Users");
         mStorage = FirebaseStorage.getInstance().getReference();
+        mUsersDB = FirebaseDatabase.getInstance().getReference().child("Users");
+
 
 
         mDialog = new ProgressDialog(this);
 
         userRegisteredSuccessfully = false;
+
+
+
+//        mUsersDB.child("ammtNNCyK7dqZTllS00LWQI6Rio1").removeValue();
+//        mUsersDB.child("b2wct2PRw0b44jB7YLR89vEJWfo2").removeValue();
+
+
+
+
+////        mUsersDB.addListenerForSingleValueEvent(new ValueEventListener() {
+////            @Override
+////            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+////
+////                Log.i("Children Count", Long.toString(dataSnapshot.getChildrenCount()));
+////
+////
+////                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+////
+////                    String userId = ds.child("userId").getValue(String.class);
+////                    Log.i("userId", userId);
+////
+////
+////
+////
+////                }
+////
+////                Log.i("Children Count", Long.toString(dataSnapshot.getChildrenCount()));
+////
+////               String value =  dataSnapshot.getValue().toString();
+////               Log.i("dataSnapshot", value);
+////
+////
+//
+//
+//
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                Log.i("Children Count", databaseError.getMessage().toString());
+//            }
+//        });
+
+
     }
 
 

@@ -21,11 +21,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".HomeActivity"
-            android:grantUriPermissions="true"
-            android:label="@string/profile"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".RegisterActivity"
             android:grantUriPermissions="true"
             android:label="@string/sign_up"
@@ -51,11 +46,6 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".AlbumsActivity"
-            android:label="@string/albums"
-            android:parentActivityName=".HomeActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".PictureActivity"
             android:label="@string/picture"
@@ -109,20 +99,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".HomePeopleActivity"
-            android:parentActivityName=".SearchActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".PicturePeopleActivity"
             android:label="@string/picture"
             android:parentActivityName=".HomePeopleActivity"
             android:screenOrientation="portrait"
             android:theme="@style/PictureTheme" />
-        <activity
-            android:name=".AlbumsPeopleActivity"
-            android:label="@string/albums"
-            android:parentActivityName=".HomePeopleActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".PicturesPeopleActivity"
             android:parentActivityName=".ProfilePeopleActivity"

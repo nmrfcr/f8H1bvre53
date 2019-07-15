@@ -119,7 +119,6 @@ public class LikesActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        getLikesFromFirebase();
     }
 
 //    private void goBack() {
@@ -192,6 +191,7 @@ public class LikesActivity extends AppCompatActivity {
                 mDatabaseReference.child(model.getUserId()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
 
                         if(!dataSnapshot.exists()) {
                             holder.setUsername("Deleted User");
@@ -291,7 +291,11 @@ public class LikesActivity extends AppCompatActivity {
 
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
+            return;
         }
+
+        getLikesFromFirebase();
+
 
     }
 

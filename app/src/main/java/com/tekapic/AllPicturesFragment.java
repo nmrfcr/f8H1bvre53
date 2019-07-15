@@ -176,22 +176,23 @@ public class AllPicturesFragment extends Fragment implements PicturesRecyclerVie
 
                     String pictureId = ds.child("pictureId").getValue(String.class);
 
-                    String me = ds.child("me").getValue(String.class);
-                    String family = ds.child("family").getValue(String.class);
-                    String friends = ds.child("friends").getValue(String.class);
-                    String love = ds.child("love").getValue(String.class);
-                    String pets = ds.child("pets").getValue(String.class);
-                    String nature = ds.child("nature").getValue(String.class);
-                    String sport = ds.child("sport").getValue(String.class);
-                    String persons = ds.child("persons").getValue(String.class);
-                    String animals = ds.child("animals").getValue(String.class);
-                    String vehicles = ds.child("vehicles").getValue(String.class);
-                    String views = ds.child("views").getValue(String.class);
-                    String food = ds.child("food").getValue(String.class);
-                    String things = ds.child("things").getValue(String.class);
-                    String funny = ds.child("funny").getValue(String.class);
-                    String places = ds.child("places").getValue(String.class);
-                    String art = ds.child("art").getValue(String.class);
+
+                    Boolean me = (Boolean)ds.child("me").getValue();
+                    Boolean family = (Boolean)ds.child("family").getValue();
+                    Boolean friends = (Boolean)ds.child("friends").getValue();
+                    Boolean love = (Boolean)ds.child("love").getValue();
+                    Boolean pets = (Boolean)ds.child("pets").getValue();
+                    Boolean nature = (Boolean)ds.child("nature").getValue();
+                    Boolean sport = (Boolean)ds.child("sport").getValue();
+                    Boolean persons = (Boolean)ds.child("persons").getValue();
+                    Boolean animals = (Boolean)ds.child("animals").getValue();
+                    Boolean vehicles = (Boolean)ds.child("vehicles").getValue();
+                    Boolean views = (Boolean)ds.child("views").getValue();
+                    Boolean food = (Boolean)ds.child("food").getValue();
+                    Boolean things = (Boolean)ds.child("things").getValue();
+                    Boolean funny = (Boolean)ds.child("funny").getValue();
+                    Boolean places = (Boolean)ds.child("places").getValue();
+                    Boolean art = (Boolean)ds.child("art").getValue();
 
                     Picture picture = new Picture(pictureId, pictureUrl, date, me, family, friends, love, pets, nature, sport, persons, animals, vehicles, views, food, things, funny, places, art);
 

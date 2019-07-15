@@ -84,15 +84,15 @@ public class PostActivity extends AppCompatActivity {
             return;
         }
 
-        String albums[] = new String[Picture.numberOfAlbums];
+        Boolean albums[] = new Boolean[Picture.numberOfAlbums];
         boolean userDidNotSelectAnyAlbum = true;
 
         for(int i = 0; i < checkBoxesArray.length; i++) {
             if(checkBoxesArray[i].isChecked()) {
-                albums[i] = "1";
+                albums[i] = true;
             }
             else {
-                albums[i] = "0";
+                albums[i] = false;
             }
         }
         for(int i = 0; i < checkBoxesArray.length; i++) {

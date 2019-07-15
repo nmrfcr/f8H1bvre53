@@ -33,9 +33,16 @@ public class AccountPrivacyActivity extends AppCompatActivity {
 
 
 
-    public void popUpPrivacyAlertDialog(final String privacy, int message) {
+    public void popUpPrivacyAlertDialog(final boolean privateAccount, int message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(AccountPrivacyActivity.this);
-        builder.setTitle("Change to " + privacy + " Account?");
+
+        if(privateAccount) {
+            builder.setTitle("Change to private Account?");
+        }
+        else{
+            builder.setTitle("Change to public Account?");
+        }
+
 
         builder.setMessage(message);
 
@@ -44,11 +51,11 @@ public class AccountPrivacyActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(privacy.equals("Private")) {
-                    databaseReference.child("accountPrivacy").setValue("private");
+                if(privateAccount) {
+                    databaseReference.child("privateAccount").setValue(true);
                 }
                 else {
-                    databaseReference.child("accountPrivacy").setValue("public");
+                    databaseReference.child("privateAccount").setValue(false);
                 }
             }
         });
@@ -57,7 +64,7 @@ public class AccountPrivacyActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 isSwitchCheckSetted = true;
-                if(privacy.equals("Private")) {
+                if(privateAccount) {
                     aSwitch.setChecked(false);
                 }
                 else {
@@ -105,7 +112,7 @@ public class AccountPrivacyActivity extends AppCompatActivity {
                         return;
                     }
 
-                    popUpPrivacyAlertDialog("Private", R.string.privacy_private_description);
+                    popUpPrivacyAlertDialog(true, R.string.privacy_private_description);
                 }
                 else {
 
@@ -115,17 +122,20 @@ public class AccountPrivacyActivity extends AppCompatActivity {
                         return;
                     }
 
-                    popUpPrivacyAlertDialog("Public", R.string.privacy_public_description);
+                    popUpPrivacyAlertDialog(false, R.string.privacy_public_description);
                 }
             }
         });
 
 
 
-        databaseReference.child("accountPrivacy").addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child("privateAccount").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                if(snapshot.getValue().equals("private")) {
+
+                Boolean privateAccount = (Boolean) snapshot.getValue();
+
+                if(privateAccount) {
                     isSwitchCheckSetted = true;
                     aSwitch.setChecked(true);
                 }
