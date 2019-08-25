@@ -92,8 +92,8 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
             popUpAlertDialogConnectionError();
             return;
         }
-//        picturesList.clear();
-//        getDataFromFirebase();
+        picturesList.clear();
+        getDataFromFirebase();
 
     }
 
@@ -217,7 +217,6 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
         firstVisibleItemPosition = 0;
 
 
-
     }
     @Override
     protected void onPause() {
@@ -320,7 +319,78 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
 
 
 
+    private void change() {
 
+        final DatabaseReference databaseReference1;
+        databaseReference1 = FirebaseDatabase.getInstance().getReference().child("Users").child("ho75vUJo0VPup1d4ln0JDu89Cf62").
+                child("Pictures");
+
+        ValueEventListener eventListener = new ValueEventListener() {
+
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                    String pictureId = ds.child("pictureId").getValue(String.class);
+
+                    for(int i = 0; i < Picture.albumsNames.length; i++) {
+                        String album = ds.child(Picture.albumsNames[i]).getValue(String.class);
+
+//                        databaseReference1.child(pictureId).child(Picture.albumsNames[i]).removeValue();
+
+
+                        if(album.equals("0")) {
+                            databaseReference1.child(pictureId).child(Picture.albumsNames[i]).setValue(false);
+                        }
+                        else {
+                            databaseReference1.child(pictureId).child(Picture.albumsNames[i]).setValue(true);
+                        }
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        databaseReference1.addValueEventListener(eventListener);
+
+    }
+
+    private void delete() {
+
+        final DatabaseReference databaseReference1;
+        databaseReference1 = FirebaseDatabase.getInstance().getReference().child("Users").child("3rssB9giMBQ4nzmwm2cpfs8KABb2");
+
+        ValueEventListener eventListener = new ValueEventListener() {
+
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                   if(ds.getKey().charAt(0) == '-') {
+                       databaseReference1.child(ds.getKey()).removeValue();
+                   }
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        databaseReference1.addValueEventListener(eventListener);
+    }
 
 
 

@@ -1,6 +1,7 @@
 package com.tekapic;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,15 +26,21 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -211,7 +218,26 @@ public class ProfilePeopleActivity extends AppCompatActivity {
             }
         });
 
+        if(user.getProfilePictureUrl().equals("none")) {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUserId());
 
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String url = dataSnapshot.child("profilePictureUrl").getValue(String.class);
+                    if(!url.equals("none")) {
+                        user.setProfilePictureUrl(url);
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }
 
     }
 
@@ -256,6 +282,132 @@ public class ProfilePeopleActivity extends AppCompatActivity {
         });
     }
 
+    private void showStatusReport(String message) {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setMessage(message);
+
+        builder1.setPositiveButton(
+                "Close",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
+    }
+
+    private void sendEmail(){
+
+        String report;
+
+        String userIdOfReporter = mAuth.getUid();
+
+        String userIdWhoGotReported = user.getUserId();
+        String picuteUrlWhichReported = user.getProfilePictureUrl();
+
+
+        report = "Report Profile Picture\n\n";
+
+
+        report = report + "Picute url which reported:\n"  + picuteUrlWhichReported + "\n";
+
+        report = report + "User Id who got reported:\n" + userIdWhoGotReported + "\n\n";
+
+        report = report + "User Id of reporter:\n" + userIdOfReporter;
+
+        BackgroundMail.newBuilder(this)
+                .withUsername("tekapicreporter@gmail.com")
+                .withPassword("K67vDe3VzAq7i")
+                .withMailto("tekapic2018@gmail.com")
+                .withType(BackgroundMail.TYPE_PLAIN)
+                .withSubject("Report Profile Picture Abuse")
+                .withBody(report)
+
+                .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
+                    @Override
+                    public void onSuccess() {
+                        showStatusReport("Your report has been submitted successfully.");
+                    }
+                })
+                .withOnFailCallback(new BackgroundMail.OnFailCallback() {
+                    @Override
+                    public void onFail() {
+                        showStatusReport("Unfortunately unable to submit your report at this time, please try again");
+                    }
+                })
+
+                .send();
+
+    }
+
+    private void reportProfilePicture() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Report profile picture");
+        builder.setMessage("Are you sure you want to report " +  user.getUsername() + "'s profile picture?");
+
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                sendEmail();
+            }
+        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogLayout = inflater.inflate(R.layout.circle_image, null);
+        dialog.setView(dialogLayout);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface d) {
+
+                Log.i("dialog", user.getProfilePictureUrl());
+
+                ImageView image = (ImageView) dialog.findViewById(R.id.profile_CircleImageView);
+
+                Glide.with(getApplicationContext())
+                        .load(user.getProfilePictureUrl())
+                        .into(image);
+            }
+        });
+        dialog.show();
+
+
+    }
+
+    private void userWithNoProfilePicture() {
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setTitle("Report profile picture");
+        builder1.setMessage(user.getUsername() + " doesn't have a profile picture.");
+
+        builder1.setPositiveButton(
+                "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
+
+    }
+
+
+
+
+
+
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
 
@@ -265,6 +417,18 @@ public class ProfilePeopleActivity extends AppCompatActivity {
         }
 
         switch (item.getItemId()) {
+
+            case R.id.report_profile_pic:
+
+                if(user.getProfilePictureUrl().equals("none")) {
+                    userWithNoProfilePicture();
+                }
+                else {
+                    reportProfilePicture();
+                }
+
+                return true;
+
 
             case android.R.id.home:
                 onBackPressed();

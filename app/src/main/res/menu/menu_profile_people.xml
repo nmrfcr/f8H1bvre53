@@ -11,4 +11,11 @@
         app:showAsAction="always" />
 
 
+    <item
+        android:title="Report..."
+        android:id="@+id/report_profile_pic"
+        app:showAsAction="never" />
+
+
+
 </menu>

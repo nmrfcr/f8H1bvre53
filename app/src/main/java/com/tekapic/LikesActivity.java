@@ -190,7 +190,7 @@ public class LikesActivity extends AppCompatActivity {
 
                 mDatabaseReference.child(model.getUserId()).addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
 
 
                         if(!dataSnapshot.exists()) {
@@ -201,7 +201,11 @@ public class LikesActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onClick(View v) {
-                                    removeDeletedUserFromLikes();
+
+                                    if(mAuth.getUid().equals(userId)) {
+                                        removeDeletedUserFromLikes();
+                                    }
+
                                 }
                             });
 

@@ -35,7 +35,7 @@
             android:name=".PostActivity"
             android:grantUriPermissions="true"
             android:label="@string/new_picture"
-            android:parentActivityName=".HomeActivity"
+            android:parentActivityName=".ProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/EditPictureTheme">
             <intent-filter>
@@ -101,7 +101,7 @@
         <activity
             android:name=".PicturePeopleActivity"
             android:label="@string/picture"
-            android:parentActivityName=".HomePeopleActivity"
+            android:parentActivityName=".ProfilePeopleActivity"
             android:screenOrientation="portrait"
             android:theme="@style/PictureTheme" />
         <activity
@@ -111,18 +111,18 @@
         <activity
             android:name=".FavoritesActivity"
             android:label="@string/favorites"
-            android:parentActivityName=".HomeActivity"
+            android:parentActivityName=".ProfileActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".AccountPrivacyActivity"
             android:label="@string/account_privacy"
-            android:parentActivityName=".HomeActivity"
+            android:parentActivityName=".ProfileActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".EditProfileActivity"
             android:grantUriPermissions="true"
             android:label="@string/edit_profile"
-            android:parentActivityName=".HomeActivity"
+            android:parentActivityName=".ProfileActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".LikesActivity"

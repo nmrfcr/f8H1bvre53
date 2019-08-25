@@ -302,33 +302,15 @@ public class RegisterActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 boolean isUsernametaken = false;
 
-                Log.i("count", Long.toString(dataSnapshot.getChildrenCount()));
-
-
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-
-                       Log.i("ds", ds.getValue().toString());
-
-
-                    String usnm = null;
-                    try {
-                        usnm = ds.child("username").getValue(String.class);
-                    } catch (Exception e) {
-                        usnm = "xxx";
-                        e.printStackTrace();
-                    }
-
-
-                    Log.i("username", usnm);
+                        String usnm = ds.child("username").getValue(String.class);
 
                             if(usnm.equals(username)) {
                                 isUsernametaken = true;
                                 break;
                             }
-
-
 
                     }
 
