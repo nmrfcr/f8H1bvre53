@@ -217,6 +217,10 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
         firstVisibleItemPosition = 0;
 
 
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Reports");
+//        databaseReference.removeValue();
+
+
     }
     @Override
     protected void onPause() {
@@ -364,33 +368,33 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
 
     }
 
-    private void delete() {
-
-        final DatabaseReference databaseReference1;
-        databaseReference1 = FirebaseDatabase.getInstance().getReference().child("Users").child("3rssB9giMBQ4nzmwm2cpfs8KABb2");
-
-        ValueEventListener eventListener = new ValueEventListener() {
-
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                   if(ds.getKey().charAt(0) == '-') {
-                       databaseReference1.child(ds.getKey()).removeValue();
-                   }
-                }
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-        databaseReference1.addValueEventListener(eventListener);
-    }
+//    private void delete() {
+//
+//        final DatabaseReference databaseReference1;
+//        databaseReference1 = FirebaseDatabase.getInstance().getReference().child("Users").child("3rssB9giMBQ4nzmwm2cpfs8KABb2");
+//
+//        ValueEventListener eventListener = new ValueEventListener() {
+//
+//
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+//                   if(ds.getKey().charAt(0) == '-') {
+//                       databaseReference1.child(ds.getKey()).removeValue();
+//                   }
+//                }
+//
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        };
+//        databaseReference1.addValueEventListener(eventListener);
+//    }
 
 
 

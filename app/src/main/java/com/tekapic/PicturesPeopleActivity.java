@@ -132,6 +132,7 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
+
                     Boolean albumExists = (Boolean)ds.child(wantedAlbum).getValue();
                     if(albumExists) {
 

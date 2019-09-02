@@ -49,6 +49,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tekapic.model.User;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ProfilePeopleActivity extends AppCompatActivity {
 
     /**
@@ -73,6 +76,8 @@ public class ProfilePeopleActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private TextView textView1, textView2, textView3, textView4;
     private MenuItem item;
+    private String reportReason = "";
+    private AlertDialog alertDialog;
 
 
 
@@ -298,6 +303,117 @@ public class ProfilePeopleActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    private void setPictureReportReason() {
+
+        reportReason = "";
+
+        final String[] reasons =
+                {"Sexual content", "Violent or repulsive content", "Hateful or abusive content",
+                        "Harmful or dangerous acts", "Spam or misleading"};
+
+        final AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+
+        builder1.setTitle("Report Picture");
+
+        builder1.setSingleChoiceItems(reasons, -1, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int item) {
+
+                ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+
+                switch (item) {
+                    case 0:
+                        reportReason = reasons[0];
+                        break;
+                    case 1:
+                        reportReason = reasons[1];
+                        break;
+                    case 2:
+                        reportReason = reasons[2];
+                        break;
+                    case 3:
+                        reportReason = reasons[3];
+                        break;
+                    case 4:
+                        reportReason = reasons[4];
+                        break;
+                }
+
+
+            }
+        });
+
+        builder1.setPositiveButton(
+                "REPORT",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        if(isNetworkConnected() == false) {
+                            popUpAlertDialogConnectionError();
+                            return;
+                        }
+
+                        makePictureReportToFirebase();
+
+                    }
+                });
+
+        builder1.setNegativeButton(
+                "CANCEL",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+
+
+        alertDialog = builder1.create();
+
+        alertDialog.show();
+
+        // Initially disable the button
+        ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+
+//        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+//            @Override
+//            public void onShow(DialogInterface dialog) {
+//
+//                     button = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+//                    if (button != null) {
+//                        button.setEnabled(false);
+//                    }
+//
+//            }
+//        });
+
+
+
+    }
+
+    private void makePictureReportToFirebase() {
+
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Reports");
+
+        String reportId = databaseReference.push().getKey();
+
+        databaseReference.child(reportId).child("reportId").setValue(reportId);
+
+        databaseReference.child(reportId).child("reportReason").setValue(reportReason);
+        databaseReference.child(reportId).child("pictureUrl").setValue(user.getProfilePictureUrl());
+        databaseReference.child(reportId).child("userIdWhoGotReported").setValue(user.getUserId());
+        databaseReference.child(reportId).child("userIdOfReporter").setValue(mAuth.getUid());
+        databaseReference.child(reportId).child("pictureId").setValue("none");
+
+        String timeStamp;
+        timeStamp = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
+
+        databaseReference.child(reportId).child("date").setValue(timeStamp);
+
+
+        Toast.makeText(this, "Thank you for your report!", Toast.LENGTH_SHORT).show();
+
+    }
+
     private void sendEmail(){
 
         String report;
@@ -353,7 +469,7 @@ public class ProfilePeopleActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                sendEmail();
+                setPictureReportReason();
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override

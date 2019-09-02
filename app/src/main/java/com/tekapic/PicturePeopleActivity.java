@@ -28,7 +28,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tekapic.model.Picture;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class PicturePeopleActivity extends AppCompatActivity {
@@ -199,6 +202,31 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
     }
 
+    private void makePictureReportToFirebase() {
+
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Reports");
+
+        String reportId = databaseReference.push().getKey();
+
+        databaseReference.child(reportId).child("reportId").setValue(reportId);
+
+        databaseReference.child(reportId).child("reportReason").setValue(reportReason);
+        databaseReference.child(reportId).child("pictureUrl").setValue(picture.getPictureUrl());
+        databaseReference.child(reportId).child("userIdWhoGotReported").setValue(ProfilePeopleActivity.user.getUserId());
+        databaseReference.child(reportId).child("pictureId").setValue(picture.getPictureId());
+        databaseReference.child(reportId).child("userIdOfReporter").setValue(mAuth.getUid());
+
+        String timeStamp;
+        timeStamp = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
+
+        databaseReference.child(reportId).child("date").setValue(timeStamp);
+
+
+        Toast.makeText(this, "Thank you for your report!", Toast.LENGTH_SHORT).show();
+
+    }
+
     private void reportAbuse() {
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
@@ -210,33 +238,35 @@ public class PicturePeopleActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        String report;
+                        makePictureReportToFirebase();
 
-//                        String reason = "Abusive Content";
-
-                        String userIdOfReporter = mAuth.getUid();
-
-                        String userIdWhoGotReported = ProfilePeopleActivity.user.getUserId();
-                        String pictureIdWhichReported = picture.getPictureId();
-                        String picuteUrlWhichReported = picture.getPictureUrl();
-
-
-                        report = "Report reason: " + reportReason + "\n\n";
-
-
-                        report = report + "Picute url which reported:\n"  + picuteUrlWhichReported + "\n";
-
-                        report = report + "User Id who got reported:\n" + userIdWhoGotReported + "\n\n";
-
-                        report = report + "Picture Id which reported:\n" + pictureIdWhichReported + "\n\n";
-
-
-                        report = report + "User Id of reporter:\n" + userIdOfReporter;
-
-
-                        Log.i("Report Abuse", report);
-
-                        sendEmail(report);
+//                        String report;
+//
+////                        String reason = "Abusive Content";
+//
+//                        String userIdOfReporter = mAuth.getUid();
+//
+//                        String userIdWhoGotReported = ProfilePeopleActivity.user.getUserId();
+//                        String pictureIdWhichReported = picture.getPictureId();
+//                        String picuteUrlWhichReported = picture.getPictureUrl();
+//
+//
+//                        report = "Report reason: " + reportReason + "\n\n";
+//
+//
+//                        report = report + "Picute url which reported:\n"  + picuteUrlWhichReported + "\n";
+//
+//                        report = report + "User Id who got reported:\n" + userIdWhoGotReported + "\n\n";
+//
+//                        report = report + "Picture Id which reported:\n" + pictureIdWhichReported + "\n\n";
+//
+//
+//                        report = report + "User Id of reporter:\n" + userIdOfReporter;
+//
+//
+//                        Log.i("Report Abuse", report);
+//
+//                        sendEmail(report);
 
                     }
                 });

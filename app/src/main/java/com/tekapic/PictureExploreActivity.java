@@ -31,7 +31,18 @@ import com.google.firebase.database.ValueEventListener;
 import com.tekapic.model.Picture;
 import com.tekapic.model.User;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 
 public class PictureExploreActivity extends AppCompatActivity {
@@ -167,6 +178,124 @@ public class PictureExploreActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+
+    private void sendMailUsingGmailSSL() {
+
+        Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try  {
+                    //Your code goes here
+                    final String username = "tekapicreporter@gmail.com";
+                    final String password = "K67vDe3VzAq7i";
+
+                    Properties props = new Properties();
+                    props.put("mail.smtp.host", "smtp.gmail.com");
+                    props.put("mail.smtp.socketFactory.port", "465");
+                    props.put("mail.smtp.socketFactory.class",
+                            "javax.net.ssl.SSLSocketFactory");
+                    props.put("mail.smtp.auth", "true");
+                    props.put("mail.smtp.port", "465");
+
+                    Session session = Session.getInstance(props,
+                            new javax.mail.Authenticator() {
+                                protected PasswordAuthentication getPasswordAuthentication() {
+                                    return new PasswordAuthentication(username,password);
+                                }
+                            });
+
+                    try {
+
+                        Message message = new MimeMessage(session);
+                        message.setFrom(new InternetAddress(username));
+                        message.setRecipients(Message.RecipientType.TO,
+                                InternetAddress.parse("tekapic2018@gmail.com"));
+                        message.setSubject("Test JCG Example");
+                        message.setText("Hi," +
+                                "This is a Test mail for JCG Example!");
+
+                        Transport.send(message);
+
+                        Log.i("Mail Gmail SSL", "Mail sent succesfully!");
+
+
+                    } catch (MessagingException e) {
+                        throw new RuntimeException(e);
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
+
+
+
+    }
+
+    private void sendMailUsingTLSAuthentication() {
+
+
+        Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try  {
+                    //Your code goes here
+
+
+                    final String username = "tekapicreporter@gmail.com";
+                    final String password = "K67vDe3VzAq7i";
+
+                    Properties props = new Properties();
+                    props.put("mail.smtp.auth", "true");
+                    props.put("mail.smtp.starttls.enable", "true");
+                    props.put("mail.smtp.host", "smtp.gmail.com");
+                    props.put("mail.smtp.port", "587");
+
+                    Session session = Session.getInstance(props,
+                            new javax.mail.Authenticator() {
+                                protected PasswordAuthentication getPasswordAuthentication() {
+                                    return new PasswordAuthentication(username, password);
+                                }
+                            });
+
+                    try {
+
+                        Message message = new MimeMessage(session);
+                        message.setFrom(new InternetAddress(username));
+                        message.setRecipients(Message.RecipientType.TO,
+                                InternetAddress.parse("tekapic2018@gmail.com"));
+                        message.setSubject("Test JCG Example");
+                        message.setText("Hi," +
+                                "This is a Test mail for JCG Example!");
+
+                        Transport.send(message);
+
+//            System.out.println("Mail sent succesfully!");
+                        Log.i("javax.mail", "Mail sent succesfully!");
+
+                    } catch (MessagingException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
+
+
+
+
+    }
+
     private void sendEmail(final String report){
 
 
@@ -206,6 +335,34 @@ public class PictureExploreActivity extends AppCompatActivity {
 
     }
 
+    private void makePictureReportToFirebase() {
+
+
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Reports");
+
+        String reportId = databaseReference.push().getKey();
+
+        databaseReference.child(reportId).child("reportId").setValue(reportId);
+
+        databaseReference.child(reportId).child("reportReason").setValue(reportReason);
+        databaseReference.child(reportId).child("pictureUrl").setValue(picture.getPictureUrl());
+        databaseReference.child(reportId).child("userIdWhoGotReported").setValue(usersIdList.get(clickedItemIndex));
+        databaseReference.child(reportId).child("pictureId").setValue(picture.getPictureId());
+        databaseReference.child(reportId).child("userIdOfReporter").setValue(mAuth.getUid());
+
+        String timeStamp;
+        timeStamp = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
+
+        databaseReference.child(reportId).child("date").setValue(timeStamp);
+
+
+
+
+        Toast.makeText(this, "Thank you for your report!", Toast.LENGTH_SHORT).show();
+
+    }
+
     private void reportAbuse() {
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
@@ -217,34 +374,37 @@ public class PictureExploreActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        String report;
+                        makePictureReportToFirebase();
 
-//                        String reason = "Abusive Content";
+//                        String report;
+//
+////                        String reason = "Abusive Content";
+//
+//                        String userIdOfReporter = mAuth.getUid();
+//
+//                        String userIdWhoGotReported = usersIdList.get(clickedItemIndex);
+//                        String pictureIdWhichReported = picture.getPictureId();
+//                        String picuteUrlWhichReported = picture.getPictureUrl();
+//
+//
+//                        report = "Report reason: " + reportReason + "\n\n";
+//
+//
+//                        report = report + "Picute url which reported:\n"  + picuteUrlWhichReported + "\n";
+//
+//                        report = report + "User Id who got reported:\n" + userIdWhoGotReported + "\n\n";
+//
+//                        report = report + "Picture Id which reported:\n" + pictureIdWhichReported + "\n\n";
+//
+//
+//                        report = report + "User Id of reporter:\n" + userIdOfReporter;
+//
+//
+//                        Log.i("Report Abuse", report);
+//
+//                        sendEmail(report);
 
-                        String userIdOfReporter = mAuth.getUid();
-
-                        String userIdWhoGotReported = usersIdList.get(clickedItemIndex);
-                        String pictureIdWhichReported = picture.getPictureId();
-                        String picuteUrlWhichReported = picture.getPictureUrl();
-
-
-                        report = "Report reason: " + reportReason + "\n\n";
-
-
-                        report = report + "Picute url which reported:\n"  + picuteUrlWhichReported + "\n";
-
-                        report = report + "User Id who got reported:\n" + userIdWhoGotReported + "\n\n";
-
-                        report = report + "Picture Id which reported:\n" + pictureIdWhichReported + "\n\n";
-
-
-                        report = report + "User Id of reporter:\n" + userIdOfReporter;
-
-
-                        Log.i("Report Abuse", report);
-
-                        sendEmail(report);
-
+//                        sendMailUsingGmailSSL();
                     }
                 });
         builder1.setNegativeButton(
@@ -388,6 +548,11 @@ public class PictureExploreActivity extends AppCompatActivity {
                 return true;
 
             case R.id.reportAbusePictureExplore:
+
+                if(mAuth.getUid().equals(usersIdList.get(clickedItemIndex))) {
+                    Toast.makeText(this, "You can't report your own picture.", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
 
                 picDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
