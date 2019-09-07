@@ -293,8 +293,9 @@ public class PictureActivity extends AppCompatActivity {
 
                         }
                         else {
-                            Toast.makeText(PictureActivity.this, "This picture was deleted.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(PictureActivity.this, "Picture was deleted.", Toast.LENGTH_LONG).show();
                             onBackPressed();
+                            finish();
                         }
                     }
 

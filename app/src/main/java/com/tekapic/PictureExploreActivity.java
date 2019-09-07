@@ -561,8 +561,9 @@ public class PictureExploreActivity extends AppCompatActivity {
                             setPictureReportReason();
                         }
                         else {
-                            Toast.makeText(PictureExploreActivity.this, "Picture was deleted by the user.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(PictureExploreActivity.this, "Picture was deleted.", Toast.LENGTH_LONG).show();
                             onBackPressed();
+                            finish();
                         }
                     }
 
@@ -604,8 +605,9 @@ public class PictureExploreActivity extends AppCompatActivity {
                             checkNumberOfLikes();
                         }
                         else {
-                            Toast.makeText(PictureExploreActivity.this, "Picture was deleted by the user.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(PictureExploreActivity.this, "Picture was deleted.", Toast.LENGTH_LONG).show();
                             onBackPressed();
+                            finish();
                         }
                     }
 
