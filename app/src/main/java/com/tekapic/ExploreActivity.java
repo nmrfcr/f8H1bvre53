@@ -25,6 +25,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,12 +45,13 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
     private RecyclerView mRecyclerView;
     private LinearLayoutManager linearLayoutManager;
     private PicturesRecyclerViewAdapter.ListItemClickListener mOnClickListener;
-    private Context context;
     public static int firstVisibleItemPosition = 0;
     private ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
     private PicturesRecyclerViewAdapter adapter;
     private ArrayList<String> usersIdList=new ArrayList<String>() ;
     private BottomNavigationView bottomNavigationView;
+    private FirebaseAuth mAuth;
+    private Context context;
 
 
     private boolean isNetworkConnected() {
@@ -95,9 +99,47 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
         picturesList.clear();
         getDataFromFirebase();
 
+        checkWarnings();
+
     }
 
+    private void checkWarnings() {
 
+            databaseReference.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    boolean warnForViolatingTermsOfUse = (Boolean)dataSnapshot.child("warnForViolatingTermsOfUse").getValue();
+                    if(warnForViolatingTermsOfUse) {
+                        //warn
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                        builder1.setCancelable(false);
+                        builder1.setMessage("You upload and share illigal content, " +
+                                "therefore this illegal content was deleted, your option for sharing and uploading pictures might be blocked.");
+
+                        builder1.setPositiveButton(
+                                "Ok",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        databaseReference.child(mAuth.getUid()).child("warnForViolatingTermsOfUse").setValue(false);
+                                    }
+                                });
+
+                        AlertDialog alertDialog = builder1.create();
+                        alertDialog.show();
+
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }
 
 
     private void getDataFromFirebase() {
@@ -219,6 +261,8 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
 
 //        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Reports");
 //        databaseReference.removeValue();
+        mAuth = FirebaseAuth.getInstance();
+
 
 
     }

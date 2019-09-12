@@ -2,6 +2,7 @@ package com.tekapic;
 
 import android.*;
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,6 +28,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -42,6 +50,9 @@ public class AddPictureActivity extends AppCompatActivity {
     private String picName;
     private Uri mPhotoUri;
     private String mCurrentPhotoPath;
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabaseReference;
+    private Context context;
 
     private static final String dstDir = Environment.getExternalStorageDirectory().getAbsolutePath() +
             File.separator + Environment.DIRECTORY_PICTURES + File.separator + "Tekapic";
@@ -329,6 +340,12 @@ public class AddPictureActivity extends AppCompatActivity {
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.add_picture_nav);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
+
+        mAuth = FirebaseAuth.getInstance();
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users");
+
+        context = this;
+
     }
 
     @Override
@@ -346,6 +363,45 @@ public class AddPictureActivity extends AppCompatActivity {
 
         popUpAlertDialog();
 
+        checkWarnings();
+
+    }
+
+    private void checkWarnings() {
+        mDatabaseReference.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                boolean warnForViolatingTermsOfUse = (Boolean)dataSnapshot.child("warnForViolatingTermsOfUse").getValue();
+                if(warnForViolatingTermsOfUse) {
+                    //warn
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                    builder1.setCancelable(false);
+
+                    builder1.setMessage("You upload and share illigal content, " +
+                            "therefore this illegal content was deleted, your option for sharing and uploading pictures might be blocked.");
+
+                    builder1.setPositiveButton(
+                            "Ok",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    mDatabaseReference.child(mAuth.getUid()).child("warnForViolatingTermsOfUse").setValue(false);
+                                }
+                            });
+
+                    AlertDialog alertDialog = builder1.create();
+                    alertDialog.show();
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =

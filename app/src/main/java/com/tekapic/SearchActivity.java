@@ -44,13 +44,14 @@ public class SearchActivity extends AppCompatActivity {
 
     private SearchView searchView;
     private RecyclerView mRecyclerView;
-    private DatabaseReference mDatabaseReference;
     private TextView indicatorText;
     private String profileEmail;
     private Context context;
     private BottomNavigationView bottomNavigationView;
     private ProgressBar progressBar;
     private LinearLayout linearLayout;
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabaseReference;
 
 
     private static String searchText = "";
@@ -91,7 +92,7 @@ public class SearchActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 
 
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         profileEmail = mAuth.getCurrentUser().getEmail();
 
         linearLayout = findViewById(R.id.textAndProBarLayoutSearch);
@@ -150,6 +151,10 @@ public class SearchActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        mAuth = FirebaseAuth.getInstance();
+
+
     }
 
     private void firebaseUserSearch(String searchText) {
@@ -265,6 +270,45 @@ public class SearchActivity extends AppCompatActivity {
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
         }
+
+        checkWarnings();
+
+    }
+
+    private void checkWarnings() {
+        mDatabaseReference.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                boolean warnForViolatingTermsOfUse = (Boolean)dataSnapshot.child("warnForViolatingTermsOfUse").getValue();
+                if(warnForViolatingTermsOfUse) {
+                    //warn
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                    builder1.setCancelable(false);
+                    builder1.setMessage("You upload and share illigal content, " +
+                            "therefore this illegal content was deleted, your option for sharing and uploading pictures might be blocked.");
+
+                    builder1.setPositiveButton(
+                            "Ok",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    mDatabaseReference.child(mAuth.getUid()).child("warnForViolatingTermsOfUse").setValue(false);
+                                }
+                            });
+
+                    AlertDialog alertDialog = builder1.create();
+                    alertDialog.show();
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public static class UserViewHolder extends RecyclerView.ViewHolder {
