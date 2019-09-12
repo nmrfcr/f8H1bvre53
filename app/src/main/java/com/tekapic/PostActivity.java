@@ -91,10 +91,11 @@ public class PostActivity extends AppCompatActivity {
         if(sharingPicturesEnabled == false) {
 
             AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-            builder1.setMessage("You violated the service rules therefore your access to share pictures has been blocked.");
+            builder1.setMessage("You upload and share illigal content multiple times, " +
+                    "therefore you can't upload and share pictures at the moment, for more information please contact tekapic2018@gmail.com");
 
             builder1.setPositiveButton(
-                    "TRY AGAIN",
+                    "Close",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                         }
@@ -342,6 +343,7 @@ public class PostActivity extends AppCompatActivity {
         mStorage = FirebaseStorage.getInstance().getReference();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         mUsersDB = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUser.getUid()).child("Pictures");
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUser.getUid());
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {

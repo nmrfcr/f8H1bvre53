@@ -85,6 +85,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private String profilePictureUrl;
     private boolean toRemoveOnly = false;
     private BottomNavigationView bottomNavigationView;
+    private boolean sharingPicturesEnabled;
 
 
 
@@ -115,6 +116,25 @@ public class EditProfileActivity extends AppCompatActivity {
 
         if(isNetworkConnected() == false) {
             popUpAlertDialogConnectionError();
+            return;
+        }
+
+        if(sharingPicturesEnabled == false) {
+
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+            builder1.setMessage("You upload and share illigal content multiple times, " +
+                    "therefore you can't upload and share pictures at the moment, for more information please contact tekapic2018@gmail.com");
+
+            builder1.setPositiveButton(
+                    "Close",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    });
+
+            AlertDialog alertDialog = builder1.create();
+            alertDialog.show();
+
             return;
         }
 
@@ -782,6 +802,7 @@ public class EditProfileActivity extends AppCompatActivity {
                             .into(imageView);
 
                 }
+                sharingPicturesEnabled = (Boolean)dataSnapshot.child("sharingPicturesEnabled").getValue();
 
 
             }
