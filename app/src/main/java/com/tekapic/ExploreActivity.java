@@ -1,14 +1,11 @@
 package com.tekapic;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
-import android.support.design.internal.BottomNavigationItemView;
-import android.support.design.internal.BottomNavigationMenuView;
+
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -21,12 +18,9 @@ import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,9 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tekapic.model.Picture;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class ExploreActivity extends AppCompatActivity implements PicturesRecyclerViewAdapter.ListItemClickListener {
 
@@ -110,6 +102,16 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                     boolean warnForViolatingTermsOfUse = (Boolean)dataSnapshot.child("warnForViolatingTermsOfUse").getValue();
+
+                    if(warnForViolatingTermsOfUse) {
+                        Log.i("warn", "true");
+
+                    }else {
+                        Log.i("warn", "false");
+
+                    }
+
+
                     if(warnForViolatingTermsOfUse) {
                         //warn
                         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
@@ -259,9 +261,8 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
         firstVisibleItemPosition = 0;
 
 
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Reports");
-//        databaseReference.removeValue();
         mAuth = FirebaseAuth.getInstance();
+
 
 
 
@@ -274,12 +275,7 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
 
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        finish();
-//        Intent intent = new Intent(ExploreActivity.this, HomeActivity.class);
-//        startActivity(intent);
-//    }
+
 
     @Override
     public void onListItemClick(int clickedItemIndex, Picture picture, int picturesListSize, ArrayList<Picture> picturesList) {
@@ -317,23 +313,6 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
         }
 
 
-
-
-
-
-
-
-//        int clickedPosition = getAdapterPosition();
-//        int x = 0;
-//
-//        for(Picture picture : picturesList) {
-//            if(x++ == clickedPosition) {
-//
-//
-//                mOnClickListener.onListItemClick(clickedPosition, picture, getItemCount(), picturesList);
-//                break;
-//            }
-//        }
     }
 
 
@@ -388,8 +367,6 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
                     for(int i = 0; i < Picture.albumsNames.length; i++) {
                         String album = ds.child(Picture.albumsNames[i]).getValue(String.class);
 
-//                        databaseReference1.child(pictureId).child(Picture.albumsNames[i]).removeValue();
-
 
                         if(album.equals("0")) {
                             databaseReference1.child(pictureId).child(Picture.albumsNames[i]).setValue(false);
@@ -411,36 +388,6 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
         databaseReference1.addValueEventListener(eventListener);
 
     }
-
-//    private void delete() {
-//
-//        final DatabaseReference databaseReference1;
-//        databaseReference1 = FirebaseDatabase.getInstance().getReference().child("Users").child("3rssB9giMBQ4nzmwm2cpfs8KABb2");
-//
-//        ValueEventListener eventListener = new ValueEventListener() {
-//
-//
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-//                   if(ds.getKey().charAt(0) == '-') {
-//                       databaseReference1.child(ds.getKey()).removeValue();
-//                   }
-//                }
-//
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        };
-//        databaseReference1.addValueEventListener(eventListener);
-//    }
-
-
 
 
 }

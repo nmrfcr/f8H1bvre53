@@ -73,14 +73,7 @@ public class EditActivity extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         mDialog.dismiss();
 
-//                        finish();
-//
-//                        if(PictureActivity.isPictureFromAlbum) {
-//                            startActivity(new Intent(EditActivity.this, PicturesActivity.class));
-//                        }
-//                        else {
-//                            startActivity(new Intent(EditActivity.this, HomeActivity.class));
-//                        }
+
                     onBackPressed();
 
                         Toast.makeText(EditActivity.this, "Albums updated.", Toast.LENGTH_SHORT).show();

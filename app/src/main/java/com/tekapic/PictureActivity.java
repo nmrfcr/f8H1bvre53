@@ -6,11 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -20,16 +18,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,7 +44,6 @@ public class PictureActivity extends AppCompatActivity {
     private FirebaseStorage storageReference;
     private ProgressDialog mDialog;
     private android.support.v7.app.ActionBar actionBar;
-    private String album;
     private boolean liked = false;
     private DatabaseReference databaseReferenceLikes, databaseReferenceLikedPictures;
     private MenuItem item, itemLikes;
@@ -390,9 +381,7 @@ public class PictureActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 
         setContentView(R.layout.activity_picture);
 
@@ -520,23 +509,6 @@ public class PictureActivity extends AppCompatActivity {
     }
 
 
-
-
-//    private void goBack() {
-//        finish();
-//        if(isPictureFromAlbum) {
-//            startActivity(new Intent(PictureActivity.this, PicturesActivity.class));
-//        }
-//        else {
-//            startActivity(new Intent(PictureActivity.this, ProfileActivity.class));
-//
-//        }
-//    }
-//
-//    @Override
-//    public void onBackPressed() {
-//        goBack();
-//    }
 
 
     private void popUpAlertDialogConnectionError() {

@@ -175,10 +175,6 @@ public class FavoritesActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onClick(View v) {
-//                                    HomePeopleActivity.flag = 1;
-//                                    HomePeopleActivity.user = user;
-//                                    HomePeopleActivity.firstVisibleItemPosition = 0;
-//                                    startActivity(new Intent(FavoritesActivity.this, HomePeopleActivity.class));
                                     ProfilePeopleActivity.user = user;
                                     ProfilePeopleActivity.index = 3;
                                     startActivity(new Intent(FavoritesActivity.this, ProfilePeopleActivity.class));
@@ -186,9 +182,7 @@ public class FavoritesActivity extends AppCompatActivity {
                                 }
                             });
 
-
                         }
-
 
 
 
@@ -327,11 +321,5 @@ public class FavoritesActivity extends AppCompatActivity {
             };
 
 
-//    @Override
-//    public void onBackPressed() {
-//        finish();
-//        Intent intent = new Intent(FavoritesActivity.this, HomeActivity.class);
-//        startActivity(intent);
-//    }
 
 }

@@ -11,17 +11,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.Toast;
 
-import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,13 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+
 
 
 public class PictureExploreActivity extends AppCompatActivity {
@@ -50,7 +39,6 @@ public class PictureExploreActivity extends AppCompatActivity {
     private String username;
     private HackyViewPager mViewPager;
     private android.support.v7.app.ActionBar actionBar;
-    private String album;
     private DatabaseReference databaseReferenceLikes, databaseReferenceLikedPictures, databaseReferenceUser;
     private boolean liked = false;
     private MenuItem item, itemLikes;
@@ -58,15 +46,12 @@ public class PictureExploreActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FragmentCollectionAdapter fragmentCollectionAdapter;
     private String reportReason = "";
-    private Button button;
-    private boolean flag;
     private AlertDialog alertDialog;
     private DatabaseReference picDatabaseReference;
 
 
 
     public static Picture picture;
-    public static boolean isPictureFromAlbum;
     public static int clickedItemIndex;
     public static ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
     public static ArrayList<String> usersIdList=new ArrayList<String>() ;
@@ -162,178 +147,13 @@ public class PictureExploreActivity extends AppCompatActivity {
 
     }
 
-    private void showStatusReport(String message) {
-
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setMessage(message);
-
-        builder1.setPositiveButton(
-                "Close",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                });
-
-        AlertDialog alertDialog = builder1.create();
-        alertDialog.show();
-    }
-
-
-    private void sendMailUsingGmailSSL() {
-
-        Thread thread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try  {
-                    //Your code goes here
-                    final String username = "tekapicreporter@gmail.com";
-                    final String password = "K67vDe3VzAq7i";
-
-                    Properties props = new Properties();
-                    props.put("mail.smtp.host", "smtp.gmail.com");
-                    props.put("mail.smtp.socketFactory.port", "465");
-                    props.put("mail.smtp.socketFactory.class",
-                            "javax.net.ssl.SSLSocketFactory");
-                    props.put("mail.smtp.auth", "true");
-                    props.put("mail.smtp.port", "465");
-
-                    Session session = Session.getInstance(props,
-                            new javax.mail.Authenticator() {
-                                protected PasswordAuthentication getPasswordAuthentication() {
-                                    return new PasswordAuthentication(username,password);
-                                }
-                            });
-
-                    try {
-
-                        Message message = new MimeMessage(session);
-                        message.setFrom(new InternetAddress(username));
-                        message.setRecipients(Message.RecipientType.TO,
-                                InternetAddress.parse("tekapic2018@gmail.com"));
-                        message.setSubject("Test JCG Example");
-                        message.setText("Hi," +
-                                "This is a Test mail for JCG Example!");
-
-                        Transport.send(message);
-
-                        Log.i("Mail Gmail SSL", "Mail sent succesfully!");
-
-
-                    } catch (MessagingException e) {
-                        throw new RuntimeException(e);
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        thread.start();
-
-
-
-    }
-
-    private void sendMailUsingTLSAuthentication() {
-
-
-        Thread thread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try  {
-                    //Your code goes here
-
-
-                    final String username = "tekapicreporter@gmail.com";
-                    final String password = "K67vDe3VzAq7i";
-
-                    Properties props = new Properties();
-                    props.put("mail.smtp.auth", "true");
-                    props.put("mail.smtp.starttls.enable", "true");
-                    props.put("mail.smtp.host", "smtp.gmail.com");
-                    props.put("mail.smtp.port", "587");
-
-                    Session session = Session.getInstance(props,
-                            new javax.mail.Authenticator() {
-                                protected PasswordAuthentication getPasswordAuthentication() {
-                                    return new PasswordAuthentication(username, password);
-                                }
-                            });
-
-                    try {
-
-                        Message message = new MimeMessage(session);
-                        message.setFrom(new InternetAddress(username));
-                        message.setRecipients(Message.RecipientType.TO,
-                                InternetAddress.parse("tekapic2018@gmail.com"));
-                        message.setSubject("Test JCG Example");
-                        message.setText("Hi," +
-                                "This is a Test mail for JCG Example!");
-
-                        Transport.send(message);
-
-//            System.out.println("Mail sent succesfully!");
-                        Log.i("javax.mail", "Mail sent succesfully!");
-
-                    } catch (MessagingException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        thread.start();
 
 
 
 
-    }
-
-    private void sendEmail(final String report){
-
-
-//        BackgroundMail backgroundMail = new BackgroundMail(this);
-//        backgroundMail.setGmailUserName("tatyanakon45@gmail.com");
-//        backgroundMail.setGmailPassword("Ey5NmHcS1z");
-//        backgroundMail.setMailTo("tekapic2018@gmail.com");
-//        backgroundMail.setType(BackgroundMail.TYPE_PLAIN);
-//        backgroundMail.setFormSubject("Report Abuse");
-//        backgroundMail.setFormBody(report);
-//        backgroundMail.send();
 
 
 
-        BackgroundMail.newBuilder(this)
-                .withUsername("tekapicreporter@gmail.com")
-                .withPassword("K67vDe3VzAq7i")
-                .withMailto("tekapic2018@gmail.com")
-                .withType(BackgroundMail.TYPE_PLAIN)
-                .withSubject("Report Abuse")
-                .withBody(report)
-
-                .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
-                    @Override
-                    public void onSuccess() {
-                        showStatusReport("Your report has been submitted successfully.");
-                    }
-                })
-                .withOnFailCallback(new BackgroundMail.OnFailCallback() {
-                    @Override
-                    public void onFail() {
-                        showStatusReport("Unfortunately unable to submit your report at this time, please try again");
-                    }
-                })
-
-                .send();
-
-    }
 
     private void makePictureReportToFirebase() {
 
@@ -376,35 +196,6 @@ public class PictureExploreActivity extends AppCompatActivity {
 
                         makePictureReportToFirebase();
 
-//                        String report;
-//
-////                        String reason = "Abusive Content";
-//
-//                        String userIdOfReporter = mAuth.getUid();
-//
-//                        String userIdWhoGotReported = usersIdList.get(clickedItemIndex);
-//                        String pictureIdWhichReported = picture.getPictureId();
-//                        String picuteUrlWhichReported = picture.getPictureUrl();
-//
-//
-//                        report = "Report reason: " + reportReason + "\n\n";
-//
-//
-//                        report = report + "Picute url which reported:\n"  + picuteUrlWhichReported + "\n";
-//
-//                        report = report + "User Id who got reported:\n" + userIdWhoGotReported + "\n\n";
-//
-//                        report = report + "Picture Id which reported:\n" + pictureIdWhichReported + "\n\n";
-//
-//
-//                        report = report + "User Id of reporter:\n" + userIdOfReporter;
-//
-//
-//                        Log.i("Report Abuse", report);
-//
-//                        sendEmail(report);
-
-//                        sendMailUsingGmailSSL();
                     }
                 });
         builder1.setNegativeButton(
@@ -491,17 +282,7 @@ public class PictureExploreActivity extends AppCompatActivity {
         // Initially disable the button
         ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 
-//        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-//            @Override
-//            public void onShow(DialogInterface dialog) {
-//
-//                     button = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-//                    if (button != null) {
-//                        button.setEnabled(false);
-//                    }
-//
-//            }
-//        });
+
 
 
 
@@ -528,10 +309,6 @@ public class PictureExploreActivity extends AppCompatActivity {
                 user.setUserId(usersIdList.get(clickedItemIndex));
                 user.setUsername(username);
 
-//                HomePeopleActivity.flag = 3;
-//                HomePeopleActivity.user = user;
-//                HomePeopleActivity.firstVisibleItemPosition = 0;
-//                startActivity(new Intent(PictureExploreActivity.this, HomePeopleActivity.class));
 
                 ProfilePeopleActivity.user = user;
                 ProfilePeopleActivity.index = 0;
@@ -576,9 +353,7 @@ public class PictureExploreActivity extends AppCompatActivity {
 
                 return true;
 
-//            case android.R.id.home:
-//                goBack();
-//                return true;
+
 
             case R.id.likePictureExploreMenu:
 
@@ -623,7 +398,6 @@ public class PictureExploreActivity extends AppCompatActivity {
 
 
 
-//                LikesActivity.flag = 2;
                 LikesActivity.index = 0;
                 LikesActivity.userId = usersIdList.get(clickedItemIndex);
                 LikesActivity.pictureId = picture.getPictureId();
@@ -671,11 +445,6 @@ public class PictureExploreActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-//
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_picture_explore);
 
@@ -741,33 +510,6 @@ public class PictureExploreActivity extends AppCompatActivity {
 
 
 
-
-
-//        databaseReferenceLikedPictures.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if(dataSnapshot.exists()) {
-//
-//                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-//
-//                        String pictureId = ds.child("pictureId").getValue(String.class);
-//
-//                        Toast.makeText(PicturePeopleActivity.this, pictureId, Toast.LENGTH_LONG).show();
-//                    }
-//
-//                }
-//                else {
-//
-//                    Toast.makeText(PicturePeopleActivity.this, "no data", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-
     }
 
     @Override
@@ -822,8 +564,6 @@ public class PictureExploreActivity extends AppCompatActivity {
                     itemLikes.setTitle(Long.toString(numberOfLikes));
                 }
 
-//                actionBar.setSubtitle("Likes: " + numberOfLikes);
-
             }
 
             @Override
@@ -860,20 +600,7 @@ public class PictureExploreActivity extends AppCompatActivity {
     }
 
 
-//    private void goBack() {
-//        finish();
-//        if(isPictureFromAlbum) {
-//            startActivity(new Intent(PicturePeopleActivity.this, PicturesPeopleActivity.class));
-//        }
-//        else {
-//            startActivity(new Intent(PicturePeopleActivity.this, HomePeopleActivity.class));
-//        }
-//    }
-//
-//    @Override
-//    public void onBackPressed() {
-//        goBack();
-//    }
+
 
 
     private void popUpAlertDialogConnectionError() {

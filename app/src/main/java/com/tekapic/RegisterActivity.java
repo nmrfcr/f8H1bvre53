@@ -1,6 +1,5 @@
 package com.tekapic;
 
-import android.*;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -29,10 +28,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -56,8 +53,6 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -452,13 +447,6 @@ public class RegisterActivity extends AppCompatActivity {
 
 
 
-
-//    public void onBackPressed() {
-//        finish();
-//        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-//    }
-
-
     private void popUpAlertDialogConnectionError() {
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
@@ -510,49 +498,6 @@ public class RegisterActivity extends AppCompatActivity {
         mDialog = new ProgressDialog(this);
 
         userRegisteredSuccessfully = false;
-
-
-
-//        mUsersDB.child("ammtNNCyK7dqZTllS00LWQI6Rio1").removeValue();
-//        mUsersDB.child("b2wct2PRw0b44jB7YLR89vEJWfo2").removeValue();
-
-
-
-
-////        mUsersDB.addListenerForSingleValueEvent(new ValueEventListener() {
-////            @Override
-////            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-////
-////                Log.i("Children Count", Long.toString(dataSnapshot.getChildrenCount()));
-////
-////
-////                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-////
-////                    String userId = ds.child("userId").getValue(String.class);
-////                    Log.i("userId", userId);
-////
-////
-////
-////
-////                }
-////
-////                Log.i("Children Count", Long.toString(dataSnapshot.getChildrenCount()));
-////
-////               String value =  dataSnapshot.getValue().toString();
-////               Log.i("dataSnapshot", value);
-////
-////
-//
-//
-//
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Log.i("Children Count", databaseError.getMessage().toString());
-//            }
-//        });
 
 
     }

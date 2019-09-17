@@ -6,7 +6,6 @@
     <string name="sign_up">Sign Up</string>
     <string name="forgot_password">Forgot Password ?</string>
     <string name="profile">Profile</string>
-    <string name="albums">Albums</string>
     <string name="picture">Picture</string>
     <string name="update_albums">Update Albums</string>
     <string name="new_picture">New Picture</string>
@@ -17,7 +16,6 @@
      only people you have added to your favorites can see your pictures.</string>
     <string name="privacy_public_description">Anyone will be able to see your pictures.</string>
     <string name="edit_profile">Edit Profile</string>
-    <string name="title_activity_likes">LikesActivity</string>
     <string name="likes">Likes</string>
     <string name="explore">Explore</string>
     <string name="no_text"></string>
@@ -25,12 +23,8 @@
 
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_profile">Profile</string>
     <string name="tab_text_1">All Pictures</string>
     <string name="tab_text_2">Albums</string>
-    <string name="tab_text_3">Tab 3</string>
-    <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
     <string name="all_pictures">When you share pictures, <br>they will appear on your profile.</br></string>

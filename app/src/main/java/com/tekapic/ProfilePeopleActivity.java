@@ -1,20 +1,16 @@
 package com.tekapic;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -39,8 +35,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -54,19 +48,10 @@ import java.util.Date;
 
 public class ProfilePeopleActivity extends AppCompatActivity {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
+
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
+
     private ViewPager mViewPager;
     private boolean isInFavorites;
     public static User user;
@@ -175,19 +160,6 @@ public class ProfilePeopleActivity extends AppCompatActivity {
                     textView3.setTypeface(textView3.getTypeface(), Typeface.BOLD);
                     textView4.setTypeface(textView4.getTypeface(), Typeface.BOLD);
                 }
-
-                //do stuff here
-//                Toast.makeText(ProfileActivity.this, "selected: " + Integer.toString(tab.getPosition()), Toast.LENGTH_SHORT).show();
-//                textView3.setTypeface(textView3.getTypeface(), Typeface.BOLD);
-//                textView4.setTypeface(textView4.getTypeface(), Typeface.BOLD);
-
-
-
-
-                /////////////////////////
-
-
-
 
             }
 
@@ -373,17 +345,7 @@ public class ProfilePeopleActivity extends AppCompatActivity {
         // Initially disable the button
         ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 
-//        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-//            @Override
-//            public void onShow(DialogInterface dialog) {
-//
-//                     button = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-//                    if (button != null) {
-//                        button.setEnabled(false);
-//                    }
-//
-//            }
-//        });
+
 
 
 
@@ -414,49 +376,7 @@ public class ProfilePeopleActivity extends AppCompatActivity {
 
     }
 
-    private void sendEmail(){
 
-        String report;
-
-        String userIdOfReporter = mAuth.getUid();
-
-        String userIdWhoGotReported = user.getUserId();
-        String picuteUrlWhichReported = user.getProfilePictureUrl();
-
-
-        report = "Report Profile Picture\n\n";
-
-
-        report = report + "Picute url which reported:\n"  + picuteUrlWhichReported + "\n";
-
-        report = report + "User Id who got reported:\n" + userIdWhoGotReported + "\n\n";
-
-        report = report + "User Id of reporter:\n" + userIdOfReporter;
-
-        BackgroundMail.newBuilder(this)
-                .withUsername("tekapicreporter@gmail.com")
-                .withPassword("K67vDe3VzAq7i")
-                .withMailto("tekapic2018@gmail.com")
-                .withType(BackgroundMail.TYPE_PLAIN)
-                .withSubject("Report Profile Picture Abuse")
-                .withBody(report)
-
-                .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
-                    @Override
-                    public void onSuccess() {
-                        showStatusReport("Your report has been submitted successfully.");
-                    }
-                })
-                .withOnFailCallback(new BackgroundMail.OnFailCallback() {
-                    @Override
-                    public void onFail() {
-                        showStatusReport("Unfortunately unable to submit your report at this time, please try again");
-                    }
-                })
-
-                .send();
-
-    }
 
     private void reportProfilePicture() {
 

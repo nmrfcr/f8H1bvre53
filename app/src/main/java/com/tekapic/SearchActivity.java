@@ -13,19 +13,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -108,14 +105,7 @@ public class SearchActivity extends AppCompatActivity {
         searchView = findViewById(R.id.search);
 
 
-//        searchView.setIconifiedByDefault(false);
 
-//        searchView.setIconified(false);
-//
-//        searchView.setFocusable(true);
-
-//        InputMethodManager imm = (InputMethodManager)   getSystemService(Context.INPUT_METHOD_SERVICE);
-//        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         if(!searchText.isEmpty()) {
             searchView.setQuery(searchText, false);
@@ -218,10 +208,7 @@ public class SearchActivity extends AppCompatActivity {
                         ProfilePeopleActivity.index = 1;
                         startActivity(new Intent(SearchActivity.this, ProfilePeopleActivity.class));
 
-//                        HomePeopleActivity.flag = 0;
-//                        HomePeopleActivity.user = model;
-//                        HomePeopleActivity.firstVisibleItemPosition = 0;
-//                        startActivity(new Intent(SearchActivity.this, HomePeopleActivity.class));
+
                     }
                 });
 
@@ -242,15 +229,6 @@ public class SearchActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
     }
-
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//
-//        InputMethodManager imm = (InputMethodManager)getSystemService(
-//                Context.INPUT_METHOD_SERVICE);
-//        imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-//    }
 
     @Override
     protected void onResume() {
@@ -348,15 +326,7 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    public void onBackPressed() {
-//
-//        finish();
-//        Intent intent = new Intent(SearchActivity.this, HomeActivity.class);
-//        startActivity(intent);
-//
-//
-//    }
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {

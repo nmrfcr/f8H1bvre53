@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -121,21 +120,7 @@ public class LikesActivity extends AppCompatActivity {
 
     }
 
-//    private void goBack() {
-//        finish();
-//
-//        switch (flag) {
-//            case 0:
-//                startActivity(new Intent(LikesActivity.this, PictureActivity.class));
-//                break;
-//            case 1:
-//                startActivity(new Intent(LikesActivity.this, PicturePeopleActivity.class));
-//                break;
-//            case 2:
-//                startActivity(new Intent(LikesActivity.this, PictureExploreActivity.class));
-//                break;
-//        }
-//    }
+
 
     private void getLikesFromFirebase() {
 
@@ -161,22 +146,6 @@ public class LikesActivity extends AppCompatActivity {
 
 
 
-//        query.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if(!dataSnapshot.exists()) {
-//                goBack();
-//                }
-//                else {
-//                    actionBar.setSubtitle("(" + Long.toString(dataSnapshot.getChildrenCount()) +")");
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
 
         final FirebaseRecyclerOptions<User> options = new FirebaseRecyclerOptions.Builder<User>()
                 .setQuery(query, User.class)
@@ -238,11 +207,6 @@ public class LikesActivity extends AppCompatActivity {
                                     ProfilePeopleActivity.user = user;
                                     ProfilePeopleActivity.index = index;
                                     startActivity(new Intent(LikesActivity.this, ProfilePeopleActivity.class));
-
-//                                    HomePeopleActivity.flag = 2;
-//                                    HomePeopleActivity.user = user;
-//                                    HomePeopleActivity.firstVisibleItemPosition = 0;
-//                                    startActivity(new Intent(LikesActivity.this, HomePeopleActivity.class));
 
 
                                 }
@@ -399,10 +363,6 @@ public class LikesActivity extends AppCompatActivity {
                     return true;
                 }
             };
-    //    @Override
-//    public void onBackPressed() {
-//        finish();
-//        startActivity(new Intent(LikesActivity.this, HomeActivity.class));
-//    }
+
 
 }

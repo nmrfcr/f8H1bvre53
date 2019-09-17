@@ -17,13 +17,6 @@
         <item name="android:layoutDirection" tools:ignore="NewApi">ltr</item>
     </style>
 
-    <style name="ProgressBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Main theme colors -->
-        ....
-        <!-- Color for circle in progress bar -->
-        <item name="colorControlActivated">@color/colorPrimary</item>
-    </style>
-
     <style name="MainActivityTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:layoutDirection" tools:ignore="NewApi">ltr</item>
 
@@ -32,31 +25,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
 
-    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
-        ...
-        <item name="iconifiedByDefault">true</item>
-        <item name="colorControlActivated">@color/colorPrimaryDark</item>
-    </style>
-
     <style name="PictureTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimaryDark">@color/grey_transparent</item>
         <item name="android:layoutDirection" tools:ignore="NewApi">ltr</item>
     </style>
 
-
-    <style name="SearchTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:layoutDirection" tools:ignore="NewApi">ltr</item>
-        <item name="searchViewStyle">@style/AppTheme.SearchView</item>
-    </style>
-
-
-    <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
-        <item name="closeIcon">@android:color/transparent</item>
-    </style>
 
     <style name="EditPictureTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
@@ -78,18 +52,6 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="NoBar" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:layoutDirection" tools:ignore="NewApi">ltr</item>
-    </style>
-
-    <style name="Widget.BottomNavigationView" parent="Widget.Design.BottomNavigationView">
-        <item name="android:textStyle">bold</item>
-    </style>
 
 
 </resources>

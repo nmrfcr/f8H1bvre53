@@ -11,16 +11,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
+
 import android.widget.Toast;
 
-import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,7 +34,6 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
     private HackyViewPager mViewPager;
     private android.support.v7.app.ActionBar actionBar;
-    private String album;
     private DatabaseReference databaseReferenceLikes, databaseReferenceLikedPictures;
     private DatabaseReference picDatabaseReference;
     private boolean liked = false;
@@ -47,8 +42,6 @@ public class PicturePeopleActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FragmentCollectionAdapter fragmentCollectionAdapter;
     private String reportReason = "";
-    private Button button;
-    private boolean flag;
     private AlertDialog alertDialog;
 
 
@@ -163,44 +156,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void sendEmail(final String report){
 
-
-//        BackgroundMail backgroundMail = new BackgroundMail(this);
-//        backgroundMail.setGmailUserName("tatyanakon45@gmail.com");
-//        backgroundMail.setGmailPassword("Ey5NmHcS1z");
-//        backgroundMail.setMailTo("tekapic2018@gmail.com");
-//        backgroundMail.setType(BackgroundMail.TYPE_PLAIN);
-//        backgroundMail.setFormSubject("Report Abuse");
-//        backgroundMail.setFormBody(report);
-//        backgroundMail.send();
-
-
-
-        BackgroundMail.newBuilder(this)
-                .withUsername("tekapicreporter@gmail.com")
-                .withPassword("K67vDe3VzAq7i")
-                .withMailto("tekapic2018@gmail.com")
-                .withType(BackgroundMail.TYPE_PLAIN)
-                .withSubject("Report Abuse")
-                .withBody(report)
-
-                .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
-                    @Override
-                    public void onSuccess() {
-                        showStatusReport("Your report has been submitted successfully.");
-                    }
-                })
-                .withOnFailCallback(new BackgroundMail.OnFailCallback() {
-                    @Override
-                    public void onFail() {
-                        showStatusReport("Unfortunately unable to submit your report at this time, please try again");
-                    }
-                })
-
-                .send();
-
-    }
 
     private void makePictureReportToFirebase() {
 
@@ -240,33 +196,6 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
                         makePictureReportToFirebase();
 
-//                        String report;
-//
-////                        String reason = "Abusive Content";
-//
-//                        String userIdOfReporter = mAuth.getUid();
-//
-//                        String userIdWhoGotReported = ProfilePeopleActivity.user.getUserId();
-//                        String pictureIdWhichReported = picture.getPictureId();
-//                        String picuteUrlWhichReported = picture.getPictureUrl();
-//
-//
-//                        report = "Report reason: " + reportReason + "\n\n";
-//
-//
-//                        report = report + "Picute url which reported:\n"  + picuteUrlWhichReported + "\n";
-//
-//                        report = report + "User Id who got reported:\n" + userIdWhoGotReported + "\n\n";
-//
-//                        report = report + "Picture Id which reported:\n" + pictureIdWhichReported + "\n\n";
-//
-//
-//                        report = report + "User Id of reporter:\n" + userIdOfReporter;
-//
-//
-//                        Log.i("Report Abuse", report);
-//
-//                        sendEmail(report);
 
                     }
                 });
@@ -353,20 +282,6 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
         // Initially disable the button
         ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-
-//        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-//            @Override
-//            public void onShow(DialogInterface dialog) {
-//
-//                     button = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-//                    if (button != null) {
-//                        button.setEnabled(false);
-//                    }
-//
-//            }
-//        });
-
-
 
     }
 
@@ -465,7 +380,6 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
             case R.id.likesPicturePeopleMenu:
 
-//                LikesActivity.flag = 1;
                 LikesActivity.index = index;
                 LikesActivity.userId = ProfilePeopleActivity.user.getUserId();
                 LikesActivity.pictureId = picture.getPictureId();
@@ -497,9 +411,6 @@ public class PicturePeopleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_picture_people);
 
@@ -564,31 +475,6 @@ public class PicturePeopleActivity extends AppCompatActivity {
 
 
 
-//        databaseReferenceLikedPictures.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if(dataSnapshot.exists()) {
-//
-//                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-//
-//                        String pictureId = ds.child("pictureId").getValue(String.class);
-//
-//                        Toast.makeText(PicturePeopleActivity.this, pictureId, Toast.LENGTH_LONG).show();
-//                    }
-//
-//                }
-//                else {
-//
-//                    Toast.makeText(PicturePeopleActivity.this, "no data", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-
     }
 
     @Override
@@ -643,7 +529,6 @@ public class PicturePeopleActivity extends AppCompatActivity {
                     itemLikes.setTitle(Long.toString(numberOfLikes));
                 }
 
-//                actionBar.setSubtitle("Likes: " + numberOfLikes);
 
             }
 
@@ -656,9 +541,7 @@ public class PicturePeopleActivity extends AppCompatActivity {
     }
 
     private void hideSystemUI() {
-        // Enables regular immersive mode.
-        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
-        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE
@@ -681,20 +564,6 @@ public class PicturePeopleActivity extends AppCompatActivity {
     }
 
 
-//    private void goBack() {
-//        finish();
-//        if(isPictureFromAlbum) {
-//            startActivity(new Intent(PicturePeopleActivity.this, PicturesPeopleActivity.class));
-//        }
-//        else {
-//            startActivity(new Intent(PicturePeopleActivity.this, HomePeopleActivity.class));
-//        }
-//    }
-
-//    @Override
-//    public void onBackPressed() {
-//        goBack();
-//    }
 
 
     private void popUpAlertDialogConnectionError() {

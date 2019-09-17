@@ -1,7 +1,6 @@
 package com.tekapic;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -57,7 +56,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
 
     @Override
     public int getItemCount() {
-        return picturesList.size(); //mNumberOfItems;
+        return picturesList.size();
     }
 
 

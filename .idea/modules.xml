@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Tekapic.iml" filepath="$PROJECT_DIR$/Tekapic.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/gmailbackgroundlibrary/gmailbackgroundlibrary.iml" filepath="$PROJECT_DIR$/gmailbackgroundlibrary/gmailbackgroundlibrary.iml" />
+      <module fileurl="file://C:\Users\LEV\AndroidStudioProjects\Tekapic\gmailbackgroundlibrary\gmailbackgroundlibrary.iml" filepath="C:\Users\LEV\AndroidStudioProjects\Tekapic\gmailbackgroundlibrary\gmailbackgroundlibrary.iml" />
     </modules>
   </component>
 </project>

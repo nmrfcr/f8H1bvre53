@@ -4,18 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -34,10 +29,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.RelativeLayout;
-import android.widget.Switch;
+
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -55,19 +48,10 @@ public class ProfileActivity extends AppCompatActivity  {
     private DatabaseReference mDatabaseReference;
 
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
+
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
+
     private ViewPager mViewPager;
 
     public void share(View v) {
@@ -219,18 +203,6 @@ public class ProfileActivity extends AppCompatActivity  {
                     textView3.setTypeface(textView3.getTypeface(), Typeface.BOLD);
                     textView4.setTypeface(textView4.getTypeface(), Typeface.BOLD);
                 }
-
-                //do stuff here
-//                Toast.makeText(ProfileActivity.this, "selected: " + Integer.toString(tab.getPosition()), Toast.LENGTH_SHORT).show();
-//                textView3.setTypeface(textView3.getTypeface(), Typeface.BOLD);
-//                textView4.setTypeface(textView4.getTypeface(), Typeface.BOLD);
-
-
-
-
-                /////////////////////////
-
-
 
 
             }

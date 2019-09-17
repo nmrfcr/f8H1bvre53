@@ -3,16 +3,13 @@ package com.tekapic;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
+
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -33,15 +30,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.tekapic.model.Picture;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 public class PostActivity extends AppCompatActivity {
@@ -219,15 +211,7 @@ public class PostActivity extends AppCompatActivity {
                         databaseReference.updateChildren(updatePhotoMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                //////////////Posting picture completed//////////////////
 
-//                                try {
-//                                    mViewPager.getAdapter().notifyDataSetChanged();
-//                                    ++PictureActivity.picturesListSize;
-//                                }
-//                                catch (Exception e) {
-//                                    Log.i("Exception", "mViewPager PostActivity");
-//                                }
 
                                 Toast.makeText(getApplicationContext(), "Picture has been added.", Toast.LENGTH_LONG).show();
                             }
@@ -302,20 +286,7 @@ public class PostActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.imageViewPost);
 
-//        Intent intent = getIntent();
-//        if(intent != null) {
-//            if (Intent.ACTION_SEND.equals(intent.getAction())) {
-//
-//                if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-//                    startActivity(new Intent(PostActivity.this, MainActivity.class));
-//                    finish();
-//                    return;
-//                }
-//                else {
-//                    pictureUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-//                }
-//            }
-//        }
+
 
 
         Glide.with(this).load(pictureUri).into(imageView);
@@ -376,13 +347,6 @@ public class PostActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder1.create();
         alertDialog.show();
     }
-
-//    @Override
-//    public void onBackPressed() {
-////        super.onBackPressed();
-//        finish();
-//        startActivity(new Intent(PostActivity.this, HomeActivity.class));
-//    }
 
 
 }

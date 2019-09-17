@@ -87,9 +87,7 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
                 }
 
                 if(hasAnyPicture == false) {
-//                    finish();
-//                    startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
-//                    return;
+
                     onBackPressed();
                     finish();
                     return;
@@ -172,9 +170,7 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
                 }
 
                 if(hasAnyPicture == false) {
-//                    finish();
-//                    startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
-//                    return;
+
                     onBackPressed();
                     return;
                 }
@@ -209,7 +205,6 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
         fVisibleItemPosition = 0;
 
         String album = wantedAlbum.substring(0, 1).toUpperCase() + wantedAlbum.substring(1);
-//        setTitle(username + "/" + album);
         setTitle(album);
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.pictures_people_nav);
@@ -302,7 +297,6 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
         Intent intent = new Intent(PicturesPeopleActivity.this, PicturePeopleActivity.class);
         startActivity(intent);
 
-//        finish();
     }
 
     @Override

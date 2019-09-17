@@ -12,8 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -24,14 +23,10 @@ import com.bumptech.glide.request.target.Target;
 import com.github.chrisbanes.photoview.PhotoView;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class PictureFragment extends Fragment {
 
     private PhotoView photoView;
     private ImageView imageView;
-//    private boolean isSystemUIHidden = false;
 
 
     public PictureFragment() {
@@ -49,8 +44,6 @@ public class PictureFragment extends Fragment {
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 
                         Log.i("onLoadFailed", "Failed to load picture");
-//                        Toast.makeText(context, "Failed to load picture.", Toast.LENGTH_LONG).show();
-
 
                         //1. go back?
                         //2. delete that data?

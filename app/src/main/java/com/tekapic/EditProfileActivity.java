@@ -1,6 +1,5 @@
 package com.tekapic;
 
-import android.*;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,11 +18,9 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputFilter;
 import android.text.InputType;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.method.DigitsKeyListener;
+
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.Gravity;
@@ -34,7 +31,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -297,10 +293,7 @@ public class EditProfileActivity extends AppCompatActivity {
                         return;
                     }
 
-//                    if(Character.isDigit(usernameLowerCase.charAt(0))) {
-//                        showAlertDialog("Error", "Username cannot start with a digit.");
-//                        return;
-//                    }
+
 
                 }
                 else {

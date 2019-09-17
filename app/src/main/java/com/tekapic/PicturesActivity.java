@@ -85,9 +85,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
                 }
 
                 if(hasAnyPicture == false) {
-//                    finish();
-//                    startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
-//                    return;
+
                     onBackPressed();
                     return;
                 }
@@ -169,9 +167,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
                 }
 
                 if(hasAnyPicture == false) {
-//                    finish();
-//                    startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
-//                    return;
+
                     onBackPressed();
                     return;
                 }
@@ -194,11 +190,6 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
 
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        startActivity(new Intent(PicturesActivity.this, AlbumsActivity.class));
-//
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -302,7 +293,6 @@ public class PicturesActivity extends AppCompatActivity implements PicturesRecyc
         Intent intent = new Intent(PicturesActivity.this, PictureActivity.class);
         startActivity(intent);
 
-//        finish();
     }
 
 
