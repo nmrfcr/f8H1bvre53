@@ -4,19 +4,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,7 +34,7 @@ public class  PicturesPeopleActivity extends AppCompatActivity implements Pictur
     private PicturesRecyclerViewAdapter.ListItemClickListener mOnClickListener;
     private ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
     private RecyclerView.LayoutManager layoutManager;
-    private android.support.v7.app.ActionBar actionBar;
+    private androidx.appcompat.app.ActionBar actionBar;
 
     public static String wantedAlbum;
     public static int fVisibleItemPosition = 0;

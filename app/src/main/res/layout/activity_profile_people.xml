@@ -12,7 +12,7 @@
 
 
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
 
         android:id="@+id/appbarpoeple"
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
         android:paddingTop="@dimen/appbar_padding_top"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbarpeople"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -31,11 +31,11 @@
             app:title="@string/app_name">
 
 
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
 
 
-        <android.support.design.widget.TabLayout
+        <com.google.android.material.tabs.TabLayout
             app:tabSelectedTextColor="@color/colorPrimaryDark"
             app:tabTextColor="@color/colorPrimary"
             android:background="@color/white"
@@ -44,13 +44,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.design.widget.TabItem
+            <com.google.android.material.tabs.TabItem
                 android:id="@+id/tabItem_people"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tab_text_1" />
 
-            <android.support.design.widget.TabItem
+            <com.google.android.material.tabs.TabItem
                 android:id="@+id/tabItem2_people"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -58,10 +58,10 @@
 
 
 
-        </android.support.design.widget.TabLayout>
-    </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.tabs.TabLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:layout_marginTop="5dp"
         android:layout_weight="9"
         android:id="@+id/profile_container_people"
@@ -70,8 +70,8 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
-    <android.support.design.widget.BottomNavigationView
-
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        app:labelVisibilityMode="labeled"
         app:itemTextColor="@color/bottom_nav_color"
         app:itemIconTint="@color/bottom_nav_color"
         android:id="@+id/profile_people_nav"

@@ -1,7 +1,7 @@
 package com.tekapic;
 
 import android.annotation.SuppressLint;
-import android.support.design.widget.BottomNavigationView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 /**
