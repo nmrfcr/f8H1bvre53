@@ -7,8 +7,12 @@ import android.net.ConnectivityManager;
 import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Build;
 import android.os.Bundle;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,7 +33,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tekapic.model.Picture;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class ExploreActivity extends AppCompatActivity implements PicturesRecyclerViewAdapter.ListItemClickListener {
 
@@ -38,7 +50,12 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
     private LinearLayoutManager linearLayoutManager;
     private PicturesRecyclerViewAdapter.ListItemClickListener mOnClickListener;
     public static int firstVisibleItemPosition = 0;
-    private ArrayList<Picture> picturesList=new ArrayList<Picture>() ;
+
+    private ArrayList<Picture> picturesList = new ArrayList<Picture>() ;
+    private ArrayList<String> datesList = new ArrayList<String>() ;
+    private ArrayList<Picture> newPicturesList=new ArrayList<Picture>() ;
+    private ArrayList<String> newUsersIdList=new ArrayList<String>() ;
+
     private PicturesRecyclerViewAdapter adapter;
     private ArrayList<String> usersIdList=new ArrayList<String>() ;
     private BottomNavigationView bottomNavigationView;
@@ -88,8 +105,8 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
             popUpAlertDialogConnectionError();
             return;
         }
-        picturesList.clear();
-        getDataFromFirebase();
+//        picturesList.clear();
+//        getDataFromFirebase();
 
         checkWarnings();
 
@@ -143,15 +160,40 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
 
         }
 
+    public static List<Picture> sortByYears(List<Picture> moviesList) {
+
+        Collections.sort(moviesList, new Comparator<Picture>() {
+
+
+            @Override
+            public int compare(Picture picture, Picture t1) {
+                return 0;
+            }
+        });
+        Collections.reverse(moviesList);
+
+        return moviesList;
+    }
+
+
 
     private void getDataFromFirebase() {
 
 
         ValueEventListener eventListener = new ValueEventListener() {
 
+            boolean wasCalled = false;
 
+
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(wasCalled) {
+                    newPicturesList.clear();
+
+                }
 
 
 
@@ -162,8 +204,8 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
                     DataSnapshot pictureDataSnapshot = userDataSnapshot.child("Pictures");
 
                     if(pictureDataSnapshot.hasChildren() && privateAccount == false) {
-                        usersIdList.add(userDataSnapshot.child("userId").getValue(String.class));
 
+//                        usersIdList.add(userDataSnapshot.child("userId").getValue(String.class));
 
                         int i = 0;
 
@@ -196,13 +238,24 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
 
                                 Picture picture = new Picture(pictureId, pictureUrl, date, me, family, friends, love, pets, nature, sport, persons, animals, vehicles, views, food, things, funny, places, art);
 
-
+                                datesList.add(date);
                                 picturesList.add(picture);
+                                usersIdList.add(userDataSnapshot.child("userId").getValue(String.class));
+
 
                             }
 
 
                         }
+
+
+
+
+
+
+
+
+
 
 
                     }
@@ -212,11 +265,54 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
 
                 }
 
+                if(wasCalled) {
+                    adapter.notifyDataSetChanged();
+                }
+
+                Collections.sort(datesList, new Comparator<String>() {
+                    DateFormat f = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                    @Override
+                    public int compare(String o1, String o2) {
+                        try {
+                            return f.parse(o1).compareTo(f.parse(o2));
+                        } catch (ParseException e) {
+                            throw new IllegalArgumentException(e);
+                        }
+                    }
+                });
+
+                for(String date: datesList) {
+
+                            Log.i("date", date);
+                            int i = 0;
+                            for(Picture picture: picturesList) {
+
+                                if(date.equals(picture.getDate())) {
+//                                    Log.i("newPicturesList", date);
+                                    newUsersIdList.add(usersIdList.get(i));
+                                    newPicturesList.add(picture);
+                                    break;
+                                }
+                                i++;
+                            }
+                        }
+
+                Collections.reverse(newUsersIdList);
 
 
-                adapter = new PicturesRecyclerViewAdapter(picturesList, mOnClickListener, context);
+
+
+                       usersIdList.clear();
+                        picturesList.clear();
+                        datesList.clear();
+
+
+                Collections.reverse(newPicturesList);
+
+                adapter = new PicturesRecyclerViewAdapter(newPicturesList, mOnClickListener, context);
                 mRecyclerView.setAdapter(adapter);
 
+                wasCalled = true;
 
             }
 
@@ -225,7 +321,7 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
 
             }
         };
-        databaseReference.addListenerForSingleValueEvent(eventListener);
+        databaseReference.addValueEventListener(eventListener);
 
     }
 
@@ -263,7 +359,7 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
 
         mAuth = FirebaseAuth.getInstance();
 
-
+        getDataFromFirebase();
 
 
     }
@@ -286,7 +382,7 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
         }
 
         int x = 0;
-        for(String userId: usersIdList) {
+        for(String userId: newUsersIdList) {
             if(clickedItemIndex == x++) {
 
                 PictureExploreActivity.clickedItemIndex = clickedItemIndex;
@@ -299,7 +395,7 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
 
                 PictureExploreActivity.usersIdList.clear();
 
-                for(String id : usersIdList) {
+                for(String id : newUsersIdList) {
                     PictureExploreActivity.usersIdList.add(id);
                 }
 

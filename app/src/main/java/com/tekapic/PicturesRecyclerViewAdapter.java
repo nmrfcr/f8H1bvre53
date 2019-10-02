@@ -3,6 +3,8 @@ package com.tekapic;
 import android.content.Context;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -47,6 +49,12 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
+
+        try {
+            Log.i("pic url", (picturesList.get(position).getPictureUrl()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Glide.with(context)
                 .load(picturesList.get(position).getPictureUrl())
