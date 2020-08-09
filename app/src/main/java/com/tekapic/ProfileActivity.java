@@ -274,7 +274,7 @@ public class ProfileActivity extends AppCompatActivity  {
 
     private void popUpAlertDialogLogOut() {
         AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
-        builder.setMessage("Log Out of Tekapic?");
+        builder.setMessage("Log Out of Tekapix?");
 
         builder.setPositiveButton("Log Out", new DialogInterface.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)

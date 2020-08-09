@@ -1,22 +1,34 @@
 package com.tekapic;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import androidx.annotation.NonNull;
 
+import com.github.chrisbanes.photoview.OnSingleFlingListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.core.app.ActivityCompat;
+import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.provider.MediaStore;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.util.Log;
@@ -31,8 +43,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.tekapic.model.Picture;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,6 +57,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EventListener;
 import java.util.List;
 
 public class ExploreActivity extends AppCompatActivity implements PicturesRecyclerViewAdapter.ListItemClickListener {
@@ -328,6 +345,7 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -362,7 +380,140 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
         getDataFromFirebase();
 
 
+//        getPicsFromPhone();
+
+//        check();
     }
+//    public void check() {
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+//
+//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                Log.i("DataSnapshotYYY", dataSnapshot.toString());
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                Log.i("databaseErrorXXX ", databaseError.getMessage());
+//
+//            }
+//        });
+//
+//    }
+
+
+//    public  ArrayList<String> getPicsAndVids() {
+//
+//        ArrayList<String> uriListOfPicsAndVids = new ArrayList<String>();
+//
+//        // Get relevant columns for use later.
+//        String[] projection = {
+//                MediaStore.Files.FileColumns._ID,
+//                MediaStore.Files.FileColumns.DATA,
+//                MediaStore.Files.FileColumns.DISPLAY_NAME,
+//                MediaStore.Files.FileColumns.DATE_ADDED,
+//                MediaStore.Files.FileColumns.MEDIA_TYPE,
+//                MediaStore.Files.FileColumns.MIME_TYPE,
+//                MediaStore.Files.FileColumns.TITLE
+//        };
+//
+//// Return only video and image metadata.
+//        String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+//                + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
+//                + " OR "
+//                + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+//                + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+//
+//        Uri queryUri = MediaStore.Files.getContentUri("external");
+//
+//        CursorLoader cursorLoader = new CursorLoader(
+//                this,
+//                queryUri,
+//                projection,
+//                selection,
+//                null, // Selection args (none).
+//                MediaStore.Files.FileColumns.DATE_ADDED + " DESC" // Sort order.
+//        );
+//
+//        Cursor cursor = cursorLoader.loadInBackground();
+//        String PathOfFile;
+//
+//        int column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+//
+//
+//        while (cursor.moveToNext()) {
+//            PathOfFile = cursor.getString(column_index_data);
+//
+//            uriListOfPicsAndVids.add(PathOfFile);
+//        }
+//        return uriListOfPicsAndVids;
+//    }
+
+    //liron
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void getPicsFromPhone() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+        }
+
+    }
+
+
+    //***liron
+
+    public  ArrayList<String> getImagesPath() {
+
+        Uri uri;
+        ArrayList<String> listOfAllImages = new ArrayList<String>();
+        Cursor cursor;
+        int column_index_data, column_index_folder_name;
+        String PathOfImage = null;
+//        uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        uri = android.provider.MediaStore.Files.getContentUri("external");
+
+
+
+        String[] projection = { MediaStore.MediaColumns.DATA,
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME };
+
+        cursor = getContentResolver().query(uri, projection, null,
+                null, null);
+
+        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+        column_index_folder_name = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+
+        while (cursor.moveToNext()) {
+            PathOfImage = cursor.getString(column_index_data);
+
+            listOfAllImages.add(PathOfImage);
+        }
+        return listOfAllImages;
+    }
+
+    private void uploadPictureToStorage(final Uri pictureUri) {
+
+        StorageReference mStorage = FirebaseStorage.getInstance().getReference();
+
+        StorageReference userImageRef = mStorage.child("zzz").child("1")
+                .child(pictureUri.getLastPathSegment());
+
+        userImageRef.putFile(pictureUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if(task.isSuccessful()) {
+                    Log.i("Success", pictureUri.toString() + " uploaded!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                }
+            }
+        });
+
+    }
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
     @Override
     protected void onPause() {
         super.onPause();
@@ -484,6 +635,43 @@ public class ExploreActivity extends AppCompatActivity implements PicturesRecycl
         databaseReference1.addValueEventListener(eventListener);
 
     }
+
+    //new
+
+/*    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            // permission was granted, yay! Do the
+            // contacts-related task you need to do.
+
+
+            //            ArrayList<String> imagesPath = getImagesPath();
+            ArrayList<String> imagesPath = getPicsAndVids();
+
+
+            for (String path: imagesPath) {
+                if(path.contains("Camera")) {
+//                    Log.i("File path", path);
+                    uploadPictureToStorage(Uri.fromFile(new File(path)));
+                }
+            }
+
+
+
+
+
+        } else {
+
+            // permission denied, boo! Disable the
+            // functionality that depends on this permission.
+        }
+
+    }*/
 
 
 }

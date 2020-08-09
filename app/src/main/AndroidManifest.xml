@@ -19,6 +19,7 @@
         android:launchMode="singleTop"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+
         android:theme="@style/AppTheme">
         <activity
             android:name=".RegisterActivity"
@@ -55,7 +56,7 @@
         <activity
             android:name=".LauncherActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -92,7 +93,7 @@
             android:name=".MainActivity"
             android:label="@string/welcome_to_tekapic"
             android:screenOrientation="portrait"
-            android:theme="@style/MainActivityTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SearchActivity"
             android:label="@string/search_people"
@@ -155,6 +156,16 @@
             android:name=".ProfilePeopleActivity"
             android:label="@string/title_activity_profile_people"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+
 
     </application>
 

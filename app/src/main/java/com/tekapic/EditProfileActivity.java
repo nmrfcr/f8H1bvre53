@@ -194,9 +194,13 @@ public class EditProfileActivity extends AppCompatActivity {
         negativeButton.setLayoutParams(negativeButtonLL);
         neutralButton.setLayoutParams(neutralButtonLL);
 
-        positiveButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_photo_camera_black_24dp, 0, 0, 0);
-        negativeButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_image_black_24dp, 0, 0, 0);
-        neutralButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_delete_black_24dp, 0, 0, 0);
+        try {
+            positiveButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_photo_camera_black_24dp, 0, 0, 0);
+            negativeButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_image_black_24dp, 0, 0, 0);
+            neutralButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_delete_black_24dp, 0, 0, 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 //
 //        negativeButtonLL.leftMargin = 45;
         negativeButton.setLayoutParams(negativeButtonLL);
